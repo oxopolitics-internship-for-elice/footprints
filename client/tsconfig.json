@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".", // relative to tsconfig.json
+    "paths": {
+      "@src/*": [
+        //@src로 시작하면 아래 줄의 디렉토리를 의미한다.
+        "src/*" //baseUrl을 기준으로 src/ 하위 디렉토리를 @src로 표현한다.
+      ],
+      "@components/*": ["src/components/*"] //@components로 시작하면 components/ 하위 디렉토리를 의미한다.
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
