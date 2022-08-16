@@ -1,21 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
+    "target": "ESNext", // es버젼을 사용하겠다.
+    "useDefineForClassFields": true, // class field를 사용하겠다.
+    "lib": ["DOM", "DOM.Iterable", "ESNext"], // 사용할 라이브러리를 설정한다.
+    "allowJs": false, // js를 사용하지 않겠다.
+    "skipLibCheck": true, // 모든 선언 파일(*.d.ts)의 타입 검사를 건너뜁니다
     "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+    // 런타임 바벨 생태계 호환성을 위한 __importStar와 __importDefault 헬퍼를 내보내고 타입 시스템 호환성을 위해 --allowSyntheticDefaultImports를 활성화합니다.
+    "allowSyntheticDefaultImports": true, // default export가 없는 모듈에서 default imports를 허용합니다. 코드 방출에는 영향을 주지 않으며, 타입 검사만 수행합니다
+    "strict": true, // strict mode에서 파싱하고 각 소스 파일에 대해 "use strict"를 내보냅니다.
+    "forceConsistentCasingInFileNames": true, // 동일 파일 참조에 대해 일관성 없는 대소문자를 비활성화합니다.
+    "module": "ESNext", // 모듈 코드 생성 지정: "ESNext"
+    "moduleResolution": "Node", // 모듈 해석 방법 결정
+    "resolveJsonModule": true, // .json 확장자로 import된 모듈을 포함합니다
+    "isolatedModules": true, // 추가 검사를 수행하여 별도의 컴파일 (예를 들어 트랜스파일된 모듈 혹은 @babel/plugin-transform-typescript) 이 안전한지 확인합니다.
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".", // relative to tsconfig.json
+    "baseUrl": ".", // baseUrl을 기준으로 관련된 위치에 모듈 이름의 경로 매핑 목록을 나열합니다.
     "paths": {
       "@src/*": [
         //@src로 시작하면 아래 줄의 디렉토리를 의미한다.
