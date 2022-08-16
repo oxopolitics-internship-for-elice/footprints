@@ -17,7 +17,9 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@vitejs/plugin-react": "^2.0.1",
+    "emotion": "^11.0.0",
     "prettier": "^2.7.1",
+    "recoil": "^0.7.5",
     "typescript": "^4.6.4",
     "vite": "^3.0.7",
     "vite-tsconfig-paths": "^3.5.0"
