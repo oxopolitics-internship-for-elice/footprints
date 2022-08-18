@@ -41,12 +41,9 @@ export class UserController {
   }
 
   @Post()
-  create(@Body() userData: CreateUserDto, @Res() response) {
+  async create(@Body() userData: CreateUserDto, @Res() response) {
     try {
-      const user = this.userService.create(userData);
-      if (!user) {
-        throw new BadRequestException('중복된 이메일입니다.');
-      }
+      const user = await this.userService.create(userData);
       return response.status(HttpStatus.OK).json({
         message: 'found successfully',
         user,
