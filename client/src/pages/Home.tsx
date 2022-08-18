@@ -6,6 +6,7 @@ const Home = () => {
       <Helmet>
         <title>정치 발자국</title>
       </Helmet>
+      sdgsdg
     </>
   );
 };
