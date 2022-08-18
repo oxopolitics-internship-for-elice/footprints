@@ -2,7 +2,7 @@
   {
     "_id": "23u5b23tikb345n3j4k2",
     "targetPolitician": "2f4943859883bf9a3fa30b9d",
-    "regiDate": "2022-07-22T17:29:33.346+00:00",
+    "createdAt": "2022-07-22T17:29:33.346+00:00",
     "regiUser": "3jkngk34ng34jgn34k343",
     "regiStatus": "inactive",
     "regi": {
@@ -15,7 +15,7 @@
   {
     "_id": "38on4hcrm398cr34or2i3j",
     "targetPolitician": "2f4943859883bf9a3fa30b9d",
-    "regiDate": "2022-07-22T17:29:33.346+00:00",
+    "createdAt": "2022-08-22T17:29:33.346+00:00",
     "regiUser": "3jkngk34ng34jgn34k343",
     "regiStatus": "inactive",
     "regi": {

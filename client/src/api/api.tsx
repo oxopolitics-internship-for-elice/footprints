@@ -1,8 +1,11 @@
-export default function api<T>(url: string): Promise<T> {
-  return fetch(url).then((response) => {
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    return response.json();
-  });
-}
+import axios, { AxiosResponse } from 'axios';
+
+const get = async (url: string): Promise<AxiosResponse> => {
+  const response = await axios.get(url);
+  if (response.status !== 200) {
+    throw new Error(response.statusText);
+  }
+  return response;
+};
+
+export { get };
