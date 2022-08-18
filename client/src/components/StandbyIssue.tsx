@@ -22,7 +22,13 @@ const StandbyIssue = (): JSX.Element => {
       <div>
         {issueList.map((issue) => {
           const { _id, createdAt, content } = issue;
-          const regiDate = new Date(createdAt).toDateString();
+          const createdDate = new Date(createdAt);
+          const year = createdDate.getFullYear();
+          const month = createdDate.getMonth() + 1;
+          const date = createdDate.getDate();
+          const regiDate = `${year}년 ${month >= 10 ? month : '0' + month}월 ${
+            date >= 10 ? date : '0' + date
+          }일`;
           return (
             <article key={_id}>
               <div>{regiDate}</div>
