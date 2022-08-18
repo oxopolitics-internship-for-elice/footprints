@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { User, UserDocument } from '../schemas/UserSchema';
 import { CreateUserDto } from './dto/User.dto';
 import { Model } from 'mongoose';
@@ -25,11 +29,17 @@ export class UserService {
   }
 
   async create(userData: CreateUserDto): Promise<User> {
+    const existingUser = this.getOne(userData.email);
+    if (existingUser) {
+      throw new BadRequestException('중복된 이메일입니다.');
+    }
     const user = new this.userModel();
+    console.log('from service: ', user);
 
     user.userName = userData.userName;
     user.email = userData.email;
     user.password = userData.password;
+
     const result = await user.save();
     return result;
   }

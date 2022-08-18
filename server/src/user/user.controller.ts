@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -8,7 +9,6 @@ import {
   Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from '../schemas/UserSchema';
 import { CreateUserDto } from './dto/User.dto';
 
 @Controller('user')
@@ -41,8 +41,18 @@ export class UserController {
   }
 
   @Post()
-  create(@Body() userData: CreateUserDto) {
-    console.log('user created');
-    return this.userService.create(userData);
+  create(@Body() userData: CreateUserDto, @Res() response) {
+    try {
+      const user = this.userService.create(userData);
+      if (!user) {
+        throw new BadRequestException('중복된 이메일입니다.');
+      }
+      return response.status(HttpStatus.OK).json({
+        message: 'found successfully',
+        user,
+      });
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 }
