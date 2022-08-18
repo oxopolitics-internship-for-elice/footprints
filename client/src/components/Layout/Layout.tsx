@@ -2,7 +2,10 @@ import { flexCenter } from '@/styles/flex';
 import styled from '@emotion/styled';
 import Header from '../Base/Header';
 import FullHeightPage from '../System/FullHeightPage';
-import { LayoutProps } from './types';
+
+export interface LayoutProps {
+  children: JSX.Element;
+}
 
 const Layout = ({ children }: LayoutProps) => {
   return (

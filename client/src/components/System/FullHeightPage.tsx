@@ -1,11 +1,5 @@
 import styled from '@emotion/styled';
 
-// const GlobalFullHeight = createGlobalStyle`
-//   html, body {
-//     height: 100%;
-//   }
-// `
-
 interface Props {
   children: React.ReactNode;
 }
@@ -13,7 +7,6 @@ function FullHeightPage({ children }: Props) {
   return (
     <>
       <Page>{children}</Page>
-      {/* <GlobalFullHeight /> */}
     </>
   );
 }
