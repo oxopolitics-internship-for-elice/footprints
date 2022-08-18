@@ -16,6 +16,7 @@
     "isolatedModules": true, // 추가 검사를 수행하여 별도의 컴파일 (예를 들어 트랜스파일된 모듈 혹은 @babel/plugin-transform-typescript) 이 안전한지 확인합니다.
     "noEmit": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react", // emotion 사용을 위한 옵션
     "baseUrl": ".", // baseUrl을 기준으로 관련된 위치에 모듈 이름의 경로 매핑 목록을 나열합니다.
     "paths": {
       "@/*": [
