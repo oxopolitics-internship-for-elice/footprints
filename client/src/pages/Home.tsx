@@ -1,4 +1,4 @@
-import Politician from '@/components/Home/Politician';
+import Politicians from '@/components/Home/Politicians';
 import ServiceInfo from '@/components/Home/ServiceInfo';
 import styled from '@emotion/styled';
 import { Helmet } from 'react-helmet-async';
@@ -11,7 +11,7 @@ const Home = () => {
       </Helmet>
       <HomeContainer>
         <ServiceInfo />
-        <Politician />
+        <Politicians />
       </HomeContainer>
     </>
   );

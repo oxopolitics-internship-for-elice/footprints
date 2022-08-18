@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 
-const Politician = () => {
+const Politicians = () => {
   return (
     <>
       <Container>
@@ -19,7 +19,7 @@ const Politician = () => {
   );
 };
 
-export default Politician;
+export default Politicians;
 
 const Container = styled.div`
   width: 810px;
