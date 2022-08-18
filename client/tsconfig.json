@@ -18,9 +18,9 @@
     "jsx": "react-jsx",
     "baseUrl": ".", // baseUrl을 기준으로 관련된 위치에 모듈 이름의 경로 매핑 목록을 나열합니다.
     "paths": {
-      "@src/*": [
-        //@src로 시작하면 아래 줄의 디렉토리를 의미한다.
-        "src/*" //baseUrl을 기준으로 src/ 하위 디렉토리를 @src로 표현한다.
+      "@/*": [
+        //@로 시작하면 src의 하위 디렉토리를 의미한다.
+        "src/*" //baseUrl을 기준으로 src/ 하위 디렉토리를 @로 표현한다.
       ],
       "@components/*": ["src/components/*"] //@components로 시작하면 components/ 하위 디렉토리를 의미한다.
     }
