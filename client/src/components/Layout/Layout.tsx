@@ -1,13 +1,16 @@
 import { flexCenter } from '@/styles/flex';
 import styled from '@emotion/styled';
 import Header from '../Base/Header';
+import FullHeightPage from '../System/FullHeightPage';
 import { LayoutProps } from './types';
 
 const Layout = ({ children }: LayoutProps) => {
   return (
     <>
-      <Header />
-      <Container>{children}</Container>
+      <FullHeightPage>
+        <Header />
+        <Container>{children}</Container>
+      </FullHeightPage>
     </>
   );
 };
