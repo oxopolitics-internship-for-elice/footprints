@@ -17,20 +17,16 @@ export class UserService {
   }
 
   async getOne(email: string): Promise<User> {
-    try {
-      const user = await this.userModel.findOne({ email }).lean();
-      if (!user) {
-        throw new NotFoundException(`User with email ${email} not found`);
-      }
-      return user;
-    } catch (err) {
-      console.log(err);
+    const user = await this.userModel.findOne({ email }).lean();
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
     }
+    return user;
   }
 
   async create(userData: CreateUserDto): Promise<User> {
     const user = new this.userModel();
-    // this.users.push({ ...userData });
+
     user.userName = userData.userName;
     user.email = userData.email;
     user.password = userData.password;
