@@ -1,26 +1,40 @@
 import React from 'react';
 import { Global, css } from '@emotion/react';
+import reset from 'emotion-reset';
 
-const style = css`
-  html {
-    font-size: 16px;
+const styles = css`
+  ${reset}
+  a {
+    text-decoration: none;
+    color: inherit;
   }
-
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
+  * {
+    box-sizing: border-box;
   }
-
-  select,
   input,
-  button,
   textarea {
-    border: 0;
-    outline: 0 !important;
+    -moz-user-select: auto;
+    -webkit-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
+  }
+  input:focus {
+    outline: none;
+  }
+  button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
   }
 `;
 
 const GlobalStyle = () => {
-  return <Global styles={style} />;
+  return (
+    <>
+      <Global styles={styles} />
+    </>
+  );
 };
 
 export default GlobalStyle;
