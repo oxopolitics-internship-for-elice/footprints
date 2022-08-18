@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { Issue } from './schemas/IssueSchmea';
+import { IssueController } from './issue/issue.controller';
+import { IssueModule } from './issue/issue.module';
 
 @Module({
   imports: [
@@ -21,8 +23,9 @@ import { Issue } from './schemas/IssueSchmea';
         return connection;
       },
     }),
+    IssueModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, IssueController],
   providers: [AppService],
 })
 export class AppModule {}
