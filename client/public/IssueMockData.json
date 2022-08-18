@@ -1,5 +1,6 @@
 [
   {
+    "_id": "23u5b23tikb345n3j4k2",
     "targetPolitician": "2f4943859883bf9a3fa30b9d",
     "regiDate": "2022-07-22T17:29:33.346+00:00",
     "regiUser": "3jkngk34ng34jgn34k343",
@@ -8,10 +9,11 @@
       "pro": "30",
       "con": "19"
     },
-    "issueDate": "2022-00-00",
-    "content": "윤석열 대통령 당선"
+    "issueDate": "2000-00-00",
+    "content": "대선 출마"
   },
   {
+    "_id": "38on4hcrm398cr34or2i3j",
     "targetPolitician": "2f4943859883bf9a3fa30b9d",
     "regiDate": "2022-07-22T17:29:33.346+00:00",
     "regiUser": "3jkngk34ng34jgn34k343",
@@ -21,6 +23,6 @@
       "con": "19"
     },
     "issueDate": "2022-00-00",
-    "content": "윤석열 대통령 당선"
+    "content": "대통령 당선"
   }
 ]
