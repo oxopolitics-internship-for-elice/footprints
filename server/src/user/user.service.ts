@@ -3,7 +3,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { User, UserDocument } from '../schemas/UserSchema';
+import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from './dto/User.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';

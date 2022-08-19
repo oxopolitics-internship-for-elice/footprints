@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User, Politician } from './';
 import * as mongoose from 'mongoose';
 
-export type IssueDocument = Issue & Document;
+export type IssueDocument = Issue & mongoose.Document;
 
 @Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class Issue {
@@ -29,16 +29,16 @@ export class Issue {
   @Prop({ default: { pro: 0, neu: 0, con: 0 } })
   poll: object;
 
-  @Prop()
+  @Prop({ required: true })
   issueDate: Date;
 
-  @Prop()
+  @Prop({ required: true })
   pollDate: Date;
 
-  @Prop()
-  content?: string;
+  @Prop({ required: true })
+  content: string;
 
-  @Prop({ default: true })
+  @Prop({ required: true, default: true })
   isPollActive: boolean;
 }
 

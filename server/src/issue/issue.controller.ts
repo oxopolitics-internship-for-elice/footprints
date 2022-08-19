@@ -6,9 +6,12 @@ import {
   Patch,
   Post,
   Query,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
+import { response } from 'express';
 import {
-  AddIssueDto,
+  CreateIssueDto,
   SetIssueContentDto,
   SetIssuePollDto,
   SetIssueRegiDto,
@@ -23,34 +26,53 @@ export class IssueController {
 
   // 이슈 등록
   @Post()
-  addIssue(@Body() addIssueDto: AddIssueDto): object {
-    return this.issueService.addIssue(addIssueDto);
+  async addIssue(@Body() issueData: CreateIssueDto, @Res() response) {
+    try {
+      const issue = await this.issueService.addIssu(issueData);
+      return response.status(HttpStatus.OK).json({
+        message: 'create successfully',
+        issue,
+      });
+    } catch (err) {}
   }
 
   // 모든 이슈 가져오기(인생 전체 그래프)
   @Get()
-  getAllIssues(): object {
-    return this.issueService.getIssues();
+  async getAllIssues(@Res() response) {
+    try {
+      const issues = await this.issueService.getAllIssues();
+      return response.status(HttpStatus.OK).json({ issues });
+    } catch (err) {}
   }
 
   // 정치인 별 이슈 가져오기(10개 사건 그래프)
   @Get(':politicianId')
-  getIssuesByPolitician(
+  async getIssuesByPolitician(
     @Param('politicianId') politicianId: string,
     @Query() pageOptionsDto: PageOptionsDto,
-  ): object {
-    return this.issueService.getIssuesByPolitician(
-      politicianId,
-      pageOptionsDto,
-    );
+    @Res() response,
+  ) {
+    try {
+      const issues = await this.issueService.getIssuesByPolitician(
+        politicianId,
+        pageOptionsDto,
+      );
+      return response.status(HttpStatus.OK).json({ issues });
+    } catch (err) {}
   }
 
   @Patch(':issueId/content')
-  setIssueContent(
+  async setIssueContent(
     @Param('issueId') id: string,
     @Body() setIssueContentDto: SetIssueContentDto,
-  ): object {
-    return this.issueService.setIssueContent(id, setIssueContentDto);
+    @Res() response,
+  ) {
+    try {
+      const issue = await this.issueService.setIssueContent(
+        id,
+        setIssueContentDto,
+      );
+    } catch (err) {}
   }
 
   @Patch(':issueId/status')

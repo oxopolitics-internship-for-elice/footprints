@@ -1,17 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Issue, IssueDocument } from '../schemas/IssueSchema';
-import { AddIssueDto } from './dto/issue.addIssue.dto';
-
+import { Issue } from '../schemas';
 @Injectable()
 export class IssueService {
-  constructor(
-    @InjectModel('issues')
-    private readonly issueModel: Model<IssueDocument>,
-  ) {}
+  private issues: Issue[] = [];
 
-  async addIssue(addIssueDto: AddIssueDto): Promise<Issue> {
+  getAllIssues(): Issue[] {
+    return this.issues;
+  }
 
+  getOne(id: number): Issue {
+    const issue = this.issues.find((issue) => issue.id === Number(id));
   }
 }
