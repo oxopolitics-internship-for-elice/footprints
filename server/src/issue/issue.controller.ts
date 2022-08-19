@@ -28,7 +28,7 @@ export class IssueController {
   @Post()
   async addIssue(@Body() issueData: CreateIssueDto, @Res() response) {
     try {
-      const issue = await this.issueService.addIssu(issueData);
+      const issue = await this.issueService.addIssue(issueData);
       return response.status(HttpStatus.OK).json({
         message: 'create successfully',
         issue,
