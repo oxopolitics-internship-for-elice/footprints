@@ -15,11 +15,11 @@ import {
   PageOptionsDto,
   SetIssueStatusDto,
 } from './dto';
-import { IssuesService } from './issues.service';
+import { IssueService } from './issue.service';
 
 @Controller('issues')
-export class IssuesController {
-  constructor(private issueService: IssuesService) {}
+export class IssueController {
+  constructor(private issueService: IssueService) {}
 
   // 이슈 등록
   @Post()
