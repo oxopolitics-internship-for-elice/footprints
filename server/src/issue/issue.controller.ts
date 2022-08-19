@@ -11,12 +11,12 @@ import {
 } from '@nestjs/common';
 import { response } from 'express';
 import {
-  CreateIssueDto,
+  AddIssueDto,
   SetIssueContentDto,
   SetIssuePollDto,
   SetIssueRegiDto,
+  SetIssueRegiStatusDto,
   PageOptionsDto,
-  SetIssueStatusDto,
 } from './dto';
 import { IssueService } from './issue.service';
 
@@ -26,7 +26,7 @@ export class IssueController {
 
   // 이슈 등록
   @Post()
-  async addIssue(@Body() issueData: CreateIssueDto, @Res() response) {
+  async addIssue(@Body() issueData: AddIssueDto, @Res() response) {
     try {
       const issue = await this.issueService.addIssue(issueData);
       return response.status(HttpStatus.OK).json({
@@ -61,6 +61,40 @@ export class IssueController {
     } catch (err) {}
   }
 
+  // 이슈 등록 투표
+  @Patch(':issueId/regi')
+  async setIssueRegi(
+    @Param('issueId') id: string,
+    @Body() setIssueRegiDto: SetIssueRegiDto,
+  ) {
+    try {
+      const issue = await this.issueService.setIssueRegiDto(
+        id,
+        setIssueRegiDto,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'successfully updated',
+        issue,
+      });
+    } catch (err) {}
+  }
+
+  // 이슈 여론 투표
+  @Patch(':issueId/poll')
+  async setIssuePoll(
+    @Param('issueId') id: string,
+    @Body() setIssuePollDto: SetIssuePollDto,
+    @Res() response,
+  ) {
+    try {
+      const issue = await this.issueService.setIssuePoll(id, setIssuePollDto);
+      return response.status(HttpStatus.OK).json({
+        message: 'successfully updated',
+        issue,
+      });
+    } catch (err) {}
+  }
+  
   // (관리자) 이슈 내용 수정
   @Patch(':issueId/content')
   async setIssueContent(
@@ -81,16 +115,16 @@ export class IssueController {
   }
 
   // (관리자) 이슈 상태 수정
-  @Patch(':issueId/status')
-  async setIssueStatus(
+  @Patch(':issueId/regiStatus')
+  async setIssueRegiStatus(
     @Param('issueId') id: string,
-    @Body() setIssueStatusDto: SetIssueStatusDto,
+    @Body() setIssueRegiStatusDto: SetIssueRegiStatusDto,
     @Res() response,
   ) {
     try {
       const issue = await this.issueService.setIssueStatus(
         id,
-        setIssueStatusDto,
+        setIssueRegiStatusDto,
       );
       return response.status(HttpStatus.OK).json({
         message: 'successfully updated',
@@ -98,40 +132,4 @@ export class IssueController {
       });
     } catch (err) {}
   }
-
-  // 이슈 등록 투표
-  @Patch(':issueId/regi')
-  async setIssueRegi(
-    @Param('issueId') id: string,
-    @Body() setIssueRegiDto: SetIssueRegiDto,
-  ) {
-    try {
-      const issue = await this.issueService.setIssueRegiDto(
-        id,
-        setIssueRegiDto,
-      );
-      return response.status(HttpStatus.OK).json({
-        message: 'successfully updated',
-        issue,
-      });
-    } catch (err) {}
-  }
-  
-  // 이슈 여론 투표
-  @Patch(':issueId/poll')
-  async setIssuePoll(
-    @Param('issueId') id: string,
-    @Body() setIssuePollDto: SetIssuePollDto,
-    @Res() response,
-  ) {
-    try {
-      const issue = await this.issueService.setIssuePoll(id, setIssuePollDto);
-      return response.status(HttpStatus.OK).json({
-        message: 'successfully updated',
-        issue,
-      });
-    } catch (err) {}
-  }
-
-  
 }
