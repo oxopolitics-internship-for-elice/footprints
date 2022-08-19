@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { pointsProps, data, line, lineGraphProps } from '../types/graph';
 
-function LineGraph({ points, data }: lineGraphProps): JSX.Element {
+function Graph({ points, data }: lineGraphProps): JSX.Element {
   const lines = points.reduce(
     (result: line[], point: pointsProps, index: number) => {
       if (index === 0) return [];
@@ -36,7 +36,7 @@ function LineGraph({ points, data }: lineGraphProps): JSX.Element {
   );
 }
 
-export default LineGraph;
+export default Graph;
 
 const GraphLine = styled.line`
   stroke: rgb(34, 34, 34);

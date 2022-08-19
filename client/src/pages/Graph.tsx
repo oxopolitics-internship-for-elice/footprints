@@ -10,7 +10,7 @@ const Graph = () => {
     cycle: number;
   }
 
-  const TITLE: string = 'User Report';
+  const TITLE: string = '윤석열 정치발자국';
   const DOT_DESCRIPTION: string = '활동 주기';
   const LINE_DESCRIPTION: string = '활동 기간, 시작일';
 
@@ -152,12 +152,4 @@ const Line = styled.div`
 const LineGraphWrapper = styled.div`
   margin-top: 60px;
   padding-left: 80px;
-`;
-
-const BarGraphWrapper = styled.div`
-  display: flex;
-  margin-top: 50px;
-  padding-left: 80px;
-  padding-top: 20px;
-  padding-bottom: 20px;
 `;

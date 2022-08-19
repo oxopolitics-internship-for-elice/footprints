@@ -5,7 +5,6 @@ export interface pointsProps {
 export interface data {
   startDate: string;
   endDate: string;
-  period: number;
   cycle: number;
 }
 export interface line {
