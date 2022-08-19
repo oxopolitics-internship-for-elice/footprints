@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { IssuesController } from './issues/issues.controller';
+import { IssuesService } from './issues/issues.service';
 
 @Module({
   imports: [
@@ -12,7 +14,7 @@ import { ConfigModule } from '@nestjs/config';
       useUnifiedTopology: true,
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, IssuesController],
+  providers: [AppService, IssuesService],
 })
 export class AppModule {}
