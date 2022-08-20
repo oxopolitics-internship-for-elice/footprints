@@ -6,7 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 
 import { UserModule } from './user/user.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -14,7 +13,7 @@ import { UserModule } from './user/user.module';
       useNewUrlParser: true,
       useUnifiedTopology: true,
 
-    UserModule,
+      UserModule,
 
       connectionFactory: (connection) => {
         if (connection.readyState === 1) {
@@ -26,7 +25,6 @@ import { UserModule } from './user/user.module';
         return connection;
       },
     }),
-
   ],
   controllers: [AppController],
   providers: [AppService],
