@@ -14,12 +14,10 @@ import { AuthModule } from './auth/auth.module';
     MongooseModule.forRoot(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-
-      UserModule,
-
       connectionFactory: (connection) => {
         if (connection.readyState === 1) {
           Logger.log('DB connected');
+          console.log('################ MongoDB connected #################');
         }
         connection.on('disconnected', () => {
           Logger.log('DB disconnected');
@@ -27,9 +25,11 @@ import { AuthModule } from './auth/auth.module';
         return connection;
       },
     }),
+
+    UserModule,
     AuthModule,
   ],
-  controllers: [AppController, AuthController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

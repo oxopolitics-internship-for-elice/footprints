@@ -26,7 +26,16 @@ export class AuthController {
   @Get('/kakao/callback')
   @HttpCode(200)
   @UseGuards(new KakaoAuthGuard('kakao'))
-  async kakaoCallback(@Req() req: any, @Res() res: any): Promise<any> {
-    res.redirect(``)
+  async kakaoCallback(@Req() req: any, @Res() res: any) {
+    console.log(req.user);
+    if (req.user.type === 'login') {
+      res.cookie('access_token', req.user.access_token);
+      res.cookie('refresh_token', req.user.refresh_token);
+    } else {
+      res.cookie('once_token', req.user.once_token);
+    }
+
+    res.redirect(`http://localhost:3000/`);
+    res.end();
   }
 }
