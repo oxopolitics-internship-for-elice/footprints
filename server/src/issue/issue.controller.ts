@@ -36,7 +36,7 @@ export class IssueController {
     } catch (err) {}
   }
 
-  // 모든 이슈 가져오기(인생 전체 그래프)
+  // 모든 이슈 가져오기(인생 전체 그래프) -> 정치인 api로 옮기면 좋을 듯
   @Get()
   async getAllIssues(@Res() response) {
     try {
@@ -61,6 +61,7 @@ export class IssueController {
     } catch (err) {}
   }
 
+  // (관리자) 이슈 내용 수정
   @Patch(':issueId/content')
   async setIssueContent(
     @Param('issueId') id: string,
@@ -72,30 +73,65 @@ export class IssueController {
         id,
         setIssueContentDto,
       );
+      return response.status(HttpStatus.OK).json({
+        message: 'successfully updated',
+        issue,
+      });
     } catch (err) {}
   }
 
+  // (관리자) 이슈 상태 수정
   @Patch(':issueId/status')
-  setIssueStatus(
+  async setIssueStatus(
     @Param('issueId') id: string,
     @Body() setIssueStatusDto: SetIssueStatusDto,
-  ): object {
-    return this.issueService.setIssueStatus(id, setIssueStatusDto);
+    @Res() response,
+  ) {
+    try {
+      const issue = await this.issueService.setIssueStatus(
+        id,
+        setIssueStatusDto,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'successfully updated',
+        issue,
+      });
+    } catch (err) {}
   }
 
-  @Patch(':issueId/poll')
-  setIssuePoll(
-    @Param('issueId') id: string,
-    @Body() setIssuePollDto: SetIssuePollDto,
-  ): object {
-    return this.issueService.setIssuePoll(id, setIssuePollDto);
-  }
-
+  // 이슈 등록 투표
   @Patch(':issueId/regi')
-  setIssueRegi(
+  async setIssueRegi(
     @Param('issueId') id: string,
     @Body() setIssueRegiDto: SetIssueRegiDto,
-  ): object {
-    return this.issueService.setIssueRegi(id, setIssueRegiDto);
+  ) {
+    try {
+      const issue = await this.issueService.setIssueRegiDto(
+        id,
+        setIssueRegiDto,
+      );
+      return response.status(HttpStatus.OK).json({
+        message: 'successfully updated',
+        issue,
+      });
+    } catch (err) {}
   }
+  
+  // 이슈 여론 투표
+  @Patch(':issueId/poll')
+  async setIssuePoll(
+    @Param('issueId') id: string,
+    @Body() setIssuePollDto: SetIssuePollDto,
+    @Res() response,
+  ) {
+    try {
+      const issue = await this.issueService.setIssuePoll(id, setIssuePollDto);
+      return response.status(HttpStatus.OK).json({
+        message: 'successfully updated',
+        issue,
+      });
+    } catch (err) {}
+  }
+
+  
 }

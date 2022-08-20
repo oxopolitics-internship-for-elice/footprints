@@ -32,13 +32,13 @@ export class Issue {
   @Prop({ required: true })
   issueDate: Date;
 
-  @Prop({ required: true })
+  @Prop()
   pollDate: Date;
 
   @Prop({ required: true })
   content: string;
 
-  @Prop({ required: true, default: true })
+  @Prop({ default: true })
   isPollActive: boolean;
 }
 
