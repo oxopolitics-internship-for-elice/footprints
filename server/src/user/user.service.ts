@@ -45,6 +45,7 @@ export class UserService {
     await this.userModel.findOneAndUpdate(
       { email: email },
       { refreshToken: refreshToken },
+      { new: true },
     );
   }
 }
