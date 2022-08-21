@@ -24,8 +24,12 @@
         "src/*" //baseUrl을 기준으로 src/ 하위 디렉토리를 @로 표현한다.
       ],
       "@components/*": ["src/components/*"] //@components로 시작하면 components/ 하위 디렉토리를 의미한다.
-    }
+    },
+    "typeRoots": ["./src/types", "./node_modules/@types"], // 보통 types 폴더를 만들어 타입 정의
+    "declaration": true, // lib 만들 때 .d.ts 파일을 자동으로
+    "declarationDir": "./src/types" // 이 폴더에 만들어주는 옵션
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+  "typeRoots": ["./src/types", "./node_modules/@types"]
 }

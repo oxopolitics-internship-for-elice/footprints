@@ -23,7 +23,7 @@ export default Politicians;
 
 const Container = styled.div`
   width: 810px;
-  height: 1000px;
+  height: 500px;
   background-color: rgb(234, 238, 241);
   overflow: hidden;
   border-radius: 15px;
