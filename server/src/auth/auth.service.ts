@@ -3,6 +3,7 @@ import { User } from 'src/schemas/user.schema';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as CryptoJS from 'crypto-js';
+import { CreateUserDto } from 'src/user/dto/add.user.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -55,5 +56,13 @@ export class AuthService {
       secret: process.env.JWT_SECRET_KEY,
       expiresIn: '10m',
     });
+  }
+
+  async addUser(userData: CreateUserDto): Promise<object> {
+    const user = await this.userService.create(userData);
+    if (!user) {
+      return { message: 'failed to create user' };
+    }
+    return { message: 'created successfully' };
   }
 }
