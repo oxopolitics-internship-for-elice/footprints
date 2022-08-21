@@ -37,7 +37,7 @@ export class AuthController {
       res.cookie('once_token', req.user.onceToken);
     }
 
-    res.redirect(`http://localhost:5173/`);
+    res.redirect(process.env.CLIENT_HOST);
     res.end();
   }
 }
