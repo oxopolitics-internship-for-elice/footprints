@@ -1,19 +1,22 @@
 import styled from '@emotion/styled';
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
 const Header = () => {
+  const location = useLocation();
   const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
+  const [isMainFirstPage, setIsMainFirstPage] = React.useState(false);
 
   return (
     <>
       <HeaderBlock>
         <InnerHeader>
-          <Title>정치 발자국</Title>
+          <Title fontWhite={isMainFirstPage}>정치 발자국</Title>
           <AuthContainer>
             {isLogined ? (
-              <LogoutButon onClick={() => setIsLogined(false)}>
+              <LoginButton onClick={() => setIsLogined(false)}>
                 로그아웃
-              </LogoutButon>
+              </LoginButton>
             ) : (
               <LoginButton onClick={() => setIsLogined(true)}>
                 로그인
@@ -29,13 +32,12 @@ const Header = () => {
 export default Header;
 
 const HeaderBlock = styled.header`
-  position: sticky;
-  width: 100%;
-  z-index: 50;
-  top: 0;
+  position: fixed;
   left: 0;
   right: 0;
-  background: #fff;
+  top: 0;
+  z-index: 300;
+  background-color:transparent
   border-bottom: 1px solid rgb(230, 230, 230);
   transition: all 0.5s ease 0s;
 `;
@@ -46,7 +48,7 @@ const InnerHeader = styled.section`
   height: 72px;
   padding: 19px 0;
   margin: 0 auto;
-  background: #fff;
+  background-color:transparent
   text-align: center;
   box-sizing: border-box;
   display: flex;
@@ -54,11 +56,16 @@ const InnerHeader = styled.section`
   justify-content: space-between;
 `;
 
-const Title = styled.h1`
+type TitleProps = {
+  fontWhite: boolean;
+};
+
+const Title = styled.h1<TitleProps>`
   display: block;
   font-size: 2em;
   font-weight: bold;
   justify-self: center;
+  color: ${props => (props.fontWhite ? '#fff' : '#000')};
 `;
 
 const AuthContainer = styled.div`
@@ -68,22 +75,6 @@ const AuthContainer = styled.div`
 `;
 
 const LoginButton = styled.button`
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #fff;
-  color: #000;
-  font-size: 0.875em;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.5s ease 0s;
-  &:hover {
-    background: #f5f5f5;
-  }
-`;
-
-const LogoutButon = styled.button`
   display: inline-block;
   padding: 0.5rem 1rem;
   border: 1px solid #ccc;
