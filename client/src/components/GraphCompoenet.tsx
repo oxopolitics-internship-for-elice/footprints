@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { FaBeer } from 'react-icons/fa';
 import { BsFillArchiveFill } from 'react-icons/bs';
 import {
@@ -12,9 +12,11 @@ import {
   Tooltip,
   Legend,
   Filler,
+  InteractionItem,
 } from 'chart.js';
-import { Line } from 'react-chartjs-2';
+import { getElementAtEvent, Line } from 'react-chartjs-2';
 import { faker } from '@faker-js/faker';
+import Modal from './Modal';
 
 ChartJS.register(
   CategoryScale,
@@ -41,7 +43,6 @@ export const options = {
       borderWidth: 3,
       callbacks: {
         label: function (context) {
-          console.log(context);
           let num: number[][] = [
             [10, 30, 50],
             [20, 60, 30],
@@ -97,6 +98,14 @@ export const data = {
 };
 
 function Graph(): JSX.Element {
+  const chartRef = useRef(null);
+  const [open, setOpen] = useState(false);
+
+  function ClickHander(element: InteractionItem[]) {
+    const { datasetIndex, index } = element[0];
+    setOpen(!open);
+    console.log(open);
+  }
   return (
     <div
       style={{
@@ -107,7 +116,37 @@ function Graph(): JSX.Element {
         width: '800px',
       }}
     >
-      <Line options={options} data={data} />
+      <Line
+        ref={chartRef}
+        onClick={event => {
+          ClickHander(getElementAtEvent(chartRef.current, event));
+        }}
+        options={options}
+        data={data}
+      />
+      <button
+        onClick={() => {
+          setOpen(!open);
+        }}
+      ></button>
+      <div>
+        {open && (
+          <Modal setOpen={setOpen}>
+            <div>
+              <form>
+                <div>
+                  <label htmlFor="email">이메일</label>
+                  <input type="email" placeholder="name@email.com" />
+                </div>
+                <div>
+                  <label htmlFor="password">비밀번호</label>
+                  <input type="password" placeholder="••••••••" />
+                </div>
+              </form>
+            </div>
+          </Modal>
+        )}
+      </div>
     </div>
   );
 }
