@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { User } from 'src/schemas/user.schema';
 import { UserService } from 'src/user/user.service';
 import { JwtService } from '@nestjs/jwt';
+import * as CryptoJS from 'crypto-js';
 @Injectable()
 export class AuthService {
   constructor(
@@ -25,6 +26,24 @@ export class AuthService {
     });
   }
 
+  async createRefreshToken(user: User) {
+    const payload = { email: user.email, userToken: 'refreshToken' };
+
+    const token = this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET_KEY,
+      expiresIn: '1m',
+    });
+
+    const refreshToken = CryptoJS.AES.encrypt(
+      JSON.stringify(token),
+      process.env.AES_KEY,
+    ).toString();
+
+    await this.userService.updateRefreshToken(user.email, refreshToken);
+
+    return refreshToken;
+  }
+
   async onceToken(userProfile: any) {
     const payload = {
       email: userProfile.email,
@@ -37,6 +56,4 @@ export class AuthService {
       expiresIn: '10m',
     });
   }
-
-  
 }
