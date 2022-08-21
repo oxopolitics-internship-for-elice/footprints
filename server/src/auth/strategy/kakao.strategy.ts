@@ -3,14 +3,17 @@ import { Strategy, Profile } from 'passport-kakao';
 import { InjectModel } from '@nestjs/mongoose';
 import { UserDocument } from '../../schemas/user.schema';
 import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
-export class KakaoStrategy extends PassportStrategy(Strategy) {
+@Injectable()
+export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
   constructor(
     @InjectModel('users')
     private readonly userModel: Model<UserDocument>,
   ) {
     super({
-      clientId: process.env.KAKAO_ID,
+      clientID: process.env.KAKAO_ID,
       callbackURL: process.env.KAKAO_CB_URL,
     });
   }
@@ -22,9 +25,11 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
     done: any,
   ) {
     try {
-      const user = await this.userModel.findOne(
-        profile._json.kakao_account.email,
-      );
+      console.log(profile);
+      const user = await this.userModel.findOne({
+        email: profile._json.kakao_account.email,
+      });
+      console.log(user);
       if (!user) {
         const kakaoEmail = profile._json && profile._json.kakao_account.email;
         const kakaoNickname = profile._json && profile._json.kakaoNickname;
