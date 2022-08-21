@@ -28,13 +28,13 @@ export class AuthController {
   @UseGuards(new KakaoAuthGuard('kakao'))
   async kakaoCallback(@Req() req: any, @Res() res: any) {
     console.log('req.user: ', req.user);
-    console.log('access_token', req.user.access_token);
-    console.log('refresh_token', req.user.refresh_token);
+    console.log('accessToken', req.user.accessToken);
+    console.log('refresh_token', req.user.refreshToken);
     if (req.user.type === 'login') {
-      res.cookie('access_token', req.user.access_token);
-      res.cookie('refresh_token', req.user.refresh_token);
+      res.cookie('access_token', req.user.accessToken);
+      res.cookie('refresh_token', req.user.refreshToken);
     } else {
-      res.cookie('once_token', req.user.once_token);
+      res.cookie('once_token', req.user.onceToken);
     }
 
     res.redirect(`http://localhost:5173/`);
