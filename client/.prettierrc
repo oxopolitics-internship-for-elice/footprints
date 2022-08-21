@@ -5,5 +5,8 @@
   "tabWidth": 2,
   "useTabs": false,
   "semi": true,
-  "arrowParens": "always"
+  "arrowParens": "avoid",
+  "bracketSpacing": true,
+  "proseWrap": "never",
+  "endOfLine": "auto"
 }
