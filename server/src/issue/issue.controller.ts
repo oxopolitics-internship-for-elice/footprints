@@ -49,14 +49,14 @@ export class IssueController {
   @HttpCode(200)
   async getIssuesRegistered(@Query() issueQuery: issueQueryStringDto) {
     try {
-      const { targetPolitician, regiStatus, ranked, page, take } = issueQuery;
+      const { targetPolitician, regiStatus, ranked, pageNum, perPage } = issueQuery;
 
       // 등록된 이슈
       if (regiStatus) {
         const issues = await this.issueService.getIssuesRegistered(
           targetPolitician,
-          page,
-          take,
+          pageNum,
+          perPage,
         );
         return issues;
       }
@@ -73,8 +73,8 @@ export class IssueController {
       else {
         const issues = await this.issueService.getIssueNotRegistered(
           targetPolitician,
-          page,
-          take,
+          pageNum,
+          perPage,
         );
         return issues;
       }
