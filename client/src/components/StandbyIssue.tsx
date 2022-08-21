@@ -13,29 +13,40 @@ const StandbyIssue = (): JSX.Element => {
         const res = await api.get('/IssueMockData.json');
         setIssueList(res.data);
       } catch (Error) {
-        console.log(Error);
+        alert('에러가 발생했습니다. 다시 시도해주세요: ', Error);
       }
     };
     getIssueList();
   }, []);
 
-  const regiHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
     setIssueList((prev): IssueTypes[] => {
       const prevIssueList: IssueTypes[] = JSON.parse(JSON.stringify(prev));
       prevIssueList.forEach((issue) => {
         if (issue._id === targetElem.dataset.id) {
           if (targetElem.innerText === '반대') {
-            issue.regi.con = 1 + Number(issue.regi.con);
+            issue.regi.con += 1;
           } else {
-            issue.regi.pro = 1 + Number(issue.regi.pro);
+            issue.regi.pro += 1;
           }
         }
       });
       return prevIssueList;
     });
-    //db에도 업데이트 해야 함
   };
+  //issue schema가 변경될 때 마다 db에 업데이트
+  useEffect(() => {
+    const putIssueList = async () => {
+      try {
+        const res = await api.put('/IssueMockData.json', issueList);
+        console.log(res.data);
+      } catch (Error) {
+        console.log(Error);
+      }
+    };
+    putIssueList();
+  }, [issueList]);
 
   if (issueList) {
     return (

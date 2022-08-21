@@ -6,8 +6,8 @@
     "regiUser": "3jkngk34ng34jgn34k343",
     "regiStatus": "inactive",
     "regi": {
-      "pro": "30",
-      "con": "19"
+      "pro": 30,
+      "con": 19
     },
     "issueDate": "2000-00-00",
     "content": "대선 출마"
@@ -19,8 +19,8 @@
     "regiUser": "3jkngk34ng34jgn34k343",
     "regiStatus": "inactive",
     "regi": {
-      "pro": "77",
-      "con": "5"
+      "pro": 77,
+      "con": 5
     },
     "issueDate": "2022-00-00",
     "content": "대통령 당선"
@@ -32,8 +32,8 @@
     "regiUser": "3jkngk34ng34jgn34k343",
     "regiStatus": "inactive",
     "regi": {
-      "pro": "99",
-      "con": "1"
+      "pro": 99,
+      "con": 1
     },
     "issueDate": "2000-00-00",
     "content": "대선 출마"
@@ -45,8 +45,8 @@
     "regiUser": "3jkngk34ng34jgn34k343",
     "regiStatus": "inactive",
     "regi": {
-      "pro": "80",
-      "con": "70"
+      "pro": 80,
+      "con": 70
     },
     "issueDate": "2000-00-00",
     "content": "대선 출마"
