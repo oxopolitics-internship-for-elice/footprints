@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import * as api from '@/api/api';
-import { issueState } from '@/store/IssueState';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import issueState from '@/store/IssueState';
+import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import { IssueTypes } from '@/types/IssueTypes';
+import axios from 'axios';
 
 const StandbyIssue = (): JSX.Element => {
-  const fetchedIssue = useRecoilValue(issueState);
+  const fetchedIssue: IssueTypes[] = useRecoilValue(issueState);
   const [issueList, setIssueList] = useState(fetchedIssue);
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -29,7 +29,7 @@ const StandbyIssue = (): JSX.Element => {
   useEffect(() => {
     const putIssueList = async () => {
       try {
-        const res = await api.put('/IssueMockData.json', issueList);
+        const res = await axios.put('/IssueMockData.json', issueList);
         console.log(res.data);
       } catch (Error) {
         console.log(Error);

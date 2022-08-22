@@ -9,6 +9,7 @@
       "pro": 30,
       "con": 19
     },
+    "poll": { "pro": 27, "neu": 25, "con": 18 },
     "issueDate": "1960-12-18",
     "content": "출생"
   },
@@ -22,6 +23,7 @@
       "pro": 77,
       "con": 5
     },
+    "poll": { "pro": 259, "neu": 25, "con": 18 },
     "issueDate": "1983-02-00",
     "content": "서울대학교 법학과 학사 취득"
   },
@@ -35,6 +37,7 @@
       "pro": 99,
       "con": 1
     },
+    "poll": { "pro": 120, "neu": 25, "con": 246 },
     "issueDate": "1991-10-00",
     "content": "사법시험 합격"
   },
@@ -48,6 +51,7 @@
       "pro": 80,
       "con": 70
     },
+    "poll": { "pro": 93, "neu": 25, "con": 18 },
     "issueDate": "2021-11-05",
     "content": "대선 출마"
   }

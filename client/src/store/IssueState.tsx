@@ -1,22 +1,12 @@
-import { atom, selector } from 'recoil';
-import { IssueTypes } from '@/types/IssueTypes';
-import * as api from '@/api/api';
+import { selector } from 'recoil';
+import axios from 'axios';
 
-export const issueState = selector({
+const issueState = selector({
   key: 'issueSelector',
   get: async () => {
-    const response = await api.get('/IssueMockData.json');
+    const response = await axios.get('/IssueMockData.json');
     return response.data;
   },
 });
 
-export const issueDateState = selector({
-  key: 'issueDateState',
-  get: ({ get }) => {
-    const issues = get(issueState);
-    const issueDate = issues.map(
-      (issue: { issueDate: Date }) => issue.issueDate,
-    );
-    return issueDate;
-  },
-});
+export default issueState;
