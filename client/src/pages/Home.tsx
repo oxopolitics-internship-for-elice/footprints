@@ -1,4 +1,4 @@
-import Politicians from '@/components/Home/Politicians';
+import HomePolitician from '@/components/Home/HomePolitician';
 import ServiceInfo from '@/components/Home/ServiceInfo';
 import styled from '@emotion/styled';
 import { Helmet } from 'react-helmet-async';
@@ -15,10 +15,10 @@ const Home = () => {
           <ServiceInfo />
         </Slide>
         <Slide>
-          <Politicians name="윤석열" />
+          <HomePolitician name="윤석열" />
         </Slide>
         <Slide>
-          <Politicians name="이재명" />
+          <HomePolitician name="이재명" />
         </Slide>
       </FullPage>
     </>

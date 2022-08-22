@@ -5,11 +5,11 @@ import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/leejaemyung.webp';
 import yoonseokyeol from '@/assets/yoonseokyeol.webp';
 
-interface PoliticiansProps {
+interface HomePoliticianProps {
   name: '이재명' | '윤석열';
 }
 
-const Politicians = ({ name }: PoliticiansProps) => {
+const HomePolitician = ({ name }: HomePoliticianProps) => {
   const image = {
     이재명: leejaemyung,
     윤석열: yoonseokyeol,
@@ -32,7 +32,7 @@ const Politicians = ({ name }: PoliticiansProps) => {
   );
 };
 
-export default Politicians;
+export default HomePolitician;
 
 const Container = styled.div`
   ${flexCenter}
