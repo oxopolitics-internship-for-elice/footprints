@@ -13,7 +13,7 @@ function Modal({ setOpen, element }) {
     };
   });
 
-  function handleClickOutside(event) {
+  function handleClickOutside(event: any) {
     if (ref.current && !ref.current.contains(event.target)) {
       setOpen(false);
     }
