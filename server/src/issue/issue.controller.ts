@@ -9,41 +9,33 @@ import {
   HttpStatus,
   Res,
 } from '@nestjs/common';
-import { response } from 'express';
-import {
-  CreateIssueDto,
-  SetIssueContentDto,
-  SetIssuePollDto,
-  SetIssueRegiDto,
-  PageOptionsDto,
-  SetIssueStatusDto,
-} from './dto';
+import { AddIssueDto } from './dto/add.issue.dto';
 import { IssueService } from './issue.service';
 
 @Controller('issues')
 export class IssueController {
   constructor(private issueService: IssueService) {}
 
-  // // 이슈 등록
-  // @Post()
-  // async addIssue(@Body() issueData: CreateIssueDto, @Res() response) {
-  //   try {
-  //     const issue = await this.issueService.addIssue(issueData);
-  //     return response.status(HttpStatus.OK).json({
-  //       message: 'create successfully',
-  //       issue,
-  //     });
-  //   } catch (err) {}
-  // }
-
-  // 모든 이슈 가져오기(인생 전체 그래프) -> 정치인 api로 옮기면 좋을 듯
-  @Get()
-  async getAllIssues() {
+  // 이슈 등록
+  @Post()
+  async addIssue(@Body() issueData: AddIssueDto, @Res() response) {
     try {
-      const issues = this.issueService.getAllIssues();
-      return response.status(HttpStatus.OK).json({ issues });
+      const issue = await this.issueService.addIssue(issueData);
+      return response.status(HttpStatus.OK).json({
+        message: 'create successfully',
+        issue,
+      });
     } catch (err) {}
   }
+
+  // 모든 이슈 가져오기(인생 전체 그래프) -> 정치인 api로 옮기면 좋을 듯
+  // @Get()
+  // async getAllIssues() {
+  //   try {
+  //     const issues = this.issueService.getAllIssues();
+  //     return response.status(HttpStatus.OK).json({ issues });
+  //   } catch (err) {}
+  // }
 
   // // 정치인 별 이슈 가져오기(10개 사건 그래프)
   // @Get(':politicianId')

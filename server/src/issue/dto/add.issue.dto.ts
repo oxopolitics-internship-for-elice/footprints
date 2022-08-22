@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import { IsBoolean, IsDate, IsString } from 'class-validator';
 
 export class AddIssueDto {
@@ -7,9 +8,11 @@ export class AddIssueDto {
   @IsString()
   readonly regiUser: string;
 
+  @Type(() => Date)
   @IsDate()
   readonly issueDate: Date;
 
+  @Type(() => Date)
   @IsDate()
   readonly pollDate: Date;
 

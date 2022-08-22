@@ -2,12 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AddIssueDto } from './dto/add.issue.dto';
-import { Issue } from '../schemas';
+import { Issue, IssueDocument } from '../schemas';
 @Injectable()
 export class IssueService {
-  private issues: Issue[] = [];
+  constructor(
+    @InjectModel('issues')
+    private readonly issueModel: Model<IssueDocument>,
+  ) {}
 
-  getAllIssues(): Issue[] {
-    return this.issues;
+  async addIssue(issueData: AddIssueDto): Promise<Issue> {
+    const issue = new this.issueModel();
+    issue.targetPolitician = issueData.targetPoliticain;
+    issue.regiUser = issueData.regiUser;
+    issue.issuDate = issueData.issueDate;
+    issue.pollDate = issueData.pollDate;
+    issue.content = issueData.content;
+    issue.isPollActive = issueData.isPollActive;
+    const result = await issue.save();
+    return result;
   }
 }
