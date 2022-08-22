@@ -12,6 +12,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import styled from '@emotion/styled';
 import { IssueTypes } from '@/types/IssueTypes';
 
@@ -38,6 +39,9 @@ const WholeGraph = ({ target }: { target: string }): JSX.Element => {
       legend: {
         display: false,
       },
+      tooltip: {
+        enabled: false,
+      },
     },
     scales: {
       x: {
@@ -46,6 +50,7 @@ const WholeGraph = ({ target }: { target: string }): JSX.Element => {
         },
       },
       y: {
+        display: false,
         grid: {
           display: false,
         },
@@ -65,7 +70,7 @@ const WholeGraph = ({ target }: { target: string }): JSX.Element => {
 
   return (
     <Container>
-      <Line data={data} options={options} />
+      <Line data={data} plugins={[ChartDataLabels]} options={options} />
     </Container>
   );
 };
