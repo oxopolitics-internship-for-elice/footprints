@@ -1,27 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import * as api from '@/api/api';
-import { standbyIssueState } from '@/store/StandbyIssueState';
-import { useRecoilState } from 'recoil';
+import { issueState } from '@/store/IssueState';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import { IssueTypes } from '@/types/IssueTypes';
 
 const StandbyIssue = (): JSX.Element => {
-  const [issueList, setIssueList] = useRecoilState(standbyIssueState);
-  useEffect(() => {
-    const getIssueList = async () => {
-      try {
-        const res = await api.get('/IssueMockData.json');
-        setIssueList(res.data);
-      } catch (Error) {
-        alert(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
-      }
-    };
-    getIssueList();
-  }, []);
+  const fetchedIssue = useRecoilValue(issueState);
+  const [issueList, setIssueList] = useState(fetchedIssue);
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
-    setIssueList((prev): IssueTypes[] => {
+    setIssueList((prev: any): IssueTypes[] => {
       const prevIssueList: IssueTypes[] = JSON.parse(JSON.stringify(prev));
       prevIssueList.forEach(issue => {
         if (issue._id === targetElem.dataset.id) {
@@ -48,10 +38,10 @@ const StandbyIssue = (): JSX.Element => {
     putIssueList();
   }, [issueList]);
 
-  if (issueList) {
-    return (
-      <div>
-        {issueList.map(issue => {
+  return (
+    <div>
+      {issueList.map(
+        (issue: { _id: any; createdAt: any; content: any; regi: any }) => {
           const { _id, createdAt, content, regi } = issue;
           const createdDate = new Date(createdAt);
           const year = createdDate.getFullYear();
@@ -73,12 +63,10 @@ const StandbyIssue = (): JSX.Element => {
               </button>
             </Issue>
           );
-        })}
-      </div>
-    );
-  } else {
-    return <div>Loading...</div>;
-  }
+        },
+      )}
+    </div>
+  );
 };
 
 export default StandbyIssue;

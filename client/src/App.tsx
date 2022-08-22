@@ -1,10 +1,14 @@
 import Router from '@/router/Router';
+import { Suspense } from 'react';
+import { RecoilRoot } from 'recoil';
 
 function App() {
   return (
-    <>
-      <Router />
-    </>
+    <RecoilRoot>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Router />
+      </Suspense>
+    </RecoilRoot>
   );
 }
 
