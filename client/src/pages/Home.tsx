@@ -15,7 +15,10 @@ const Home = () => {
           <ServiceInfo />
         </Slide>
         <Slide>
-          <Politicians />
+          <Politicians name="윤석열" />
+        </Slide>
+        <Slide>
+          <Politicians name="이재명" />
         </Slide>
       </FullPage>
     </>

@@ -5,7 +5,23 @@ import { useLocation } from 'react-router-dom';
 const Header = () => {
   const location = useLocation();
   const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
-  const [isMainFirstPage, setIsMainFirstPage] = React.useState(false);
+  const [isMainFirstPage, setIsMainFirstPage] = React.useState(true);
+
+  const handleScroll = () => {
+    const scrollTop = window.scrollY;
+    if (scrollTop > 925 && location.pathname === '/') {
+      setIsMainFirstPage(false);
+    } else {
+      setIsMainFirstPage(true);
+    }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [location.pathname]);
 
   return (
     <>
@@ -62,7 +78,7 @@ type TitleProps = {
 
 const Title = styled.h1<TitleProps>`
   display: block;
-  font-size: 2em;
+  font-size: 1.5em;
   font-weight: bold;
   justify-self: center;
   color: ${props => (props.fontWhite ? '#fff' : '#000')};
