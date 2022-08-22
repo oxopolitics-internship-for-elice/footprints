@@ -7,6 +7,7 @@ import { IssueController } from './issue/issue.controller';
 import { IssueModule } from './issue/issue.module';
 
 import { UserModule } from './user/user.module';
+import { IssueService } from './issue/issue.service';
 
 @Module({
   imports: [
@@ -14,8 +15,6 @@ import { UserModule } from './user/user.module';
     MongooseModule.forRoot(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-
-      UserModule,
 
       connectionFactory: (connection) => {
         if (connection.readyState === 1) {
@@ -27,9 +26,10 @@ import { UserModule } from './user/user.module';
         return connection;
       },
     }),
+    UserModule,
     IssueModule,
   ],
   controllers: [AppController, IssueController],
-  providers: [AppService],
+  providers: [AppService, IssueService],
 })
 export class AppModule {}
