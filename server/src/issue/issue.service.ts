@@ -39,20 +39,20 @@ export class IssueService {
   //   });
   // }
 
-  async getOne(id: string): Promise<Issue> {
-    const issue = this.issueModel.find((issue) => issue.id === String(id));
-    if (!issue) {
-      throw new NotFoundException(`issue id ${id} not found`);
-    }
-    return issue;
-  }
+  // async getOne(id: string): Promise<Issue> {
+  //   const issue = this.issueModel.find((issue) => issue.id === String(id));
+  //   if (!issue) {
+  //     throw new NotFoundException(`issue id ${id} not found`);
+  //   }
+  //   return issue;
+  // }
 
-  async setIssueContent(
-    issueData: SetIssueContentDto,
-    id: string,
-  ): Promise<Issue> {
-    const issue = this.getOne(id);
-    this.deleteOne(id);
-    this.issueModel.push({ ...issue, ...issueData });
-  }
+  // async setIssueContent(
+  //   issueData: SetIssueContentDto,
+  //   id: string,
+  // ): Promise<Issue> {
+  //   const issue = this.getOne(id);
+  //   this.deleteOne(id);
+  //   this.issueModel.push({ ...issue, ...issueData });
+  // }
 }

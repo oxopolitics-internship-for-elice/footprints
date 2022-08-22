@@ -56,23 +56,23 @@ export class IssueController {
   // }
 
   // // (관리자) 이슈 내용 수정
-  @Patch(':issueId/content')
-  async setIssueContent(
-    @Param('issueId') id: string,
-    @Body() setIssueContentDto: SetIssueContentDto,
-    @Res() response,
-  ) {
-    try {
-      const issue = await this.issueService.setIssueContent(
-        id,
-        setIssueContentDto,
-      );
-      return response.status(HttpStatus.OK).json({
-        message: 'successfully updated',
-        issue,
-      });
-    } catch (err) {}
-  }
+  // @Patch(':issueId/content')
+  // async setIssueContent(
+  //   @Param('issueId') id: string,
+  //   @Body() setIssueContentDto: SetIssueContentDto,
+  //   @Res() response,
+  // ) {
+  //   try {
+  //     const issue = await this.issueService.setIssueContent(
+  //       id,
+  //       setIssueContentDto,
+  //     );
+  //     return response.status(HttpStatus.OK).json({
+  //       message: 'successfully updated',
+  //       issue,
+  //     });
+  //   } catch (err) {}
+  // }
 
   // // (관리자) 이슈 상태 수정
   // @Patch(':issueId/status')
