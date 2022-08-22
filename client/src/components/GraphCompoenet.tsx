@@ -43,6 +43,7 @@ export const options = {
       borderWidth: 3,
       callbacks: {
         label: function (context) {
+          console.log(context);
           let num: number[][] = [
             [10, 30, 50],
             [20, 60, 30],
@@ -124,29 +125,8 @@ function Graph(): JSX.Element {
         options={options}
         data={data}
       />
-      <button
-        onClick={() => {
-          setOpen(!open);
-        }}
-      ></button>
-      <div>
-        {open && (
-          <Modal setOpen={setOpen}>
-            <div>
-              <form>
-                <div>
-                  <label htmlFor="email">이메일</label>
-                  <input type="email" placeholder="name@email.com" />
-                </div>
-                <div>
-                  <label htmlFor="password">비밀번호</label>
-                  <input type="password" placeholder="••••••••" />
-                </div>
-              </form>
-            </div>
-          </Modal>
-        )}
-      </div>
+
+      <div>{open && <Modal setOpen={setOpen} />}</div>
     </div>
   );
 }
