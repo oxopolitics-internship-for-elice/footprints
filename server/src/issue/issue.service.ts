@@ -11,7 +11,9 @@ export class IssueService {
   ) {}
 
   async addIssue(issueData: AddIssueDto): Promise<Issue> {
-    const issue = new this.issueModel();
+    const issue = new this.issueModel({
+      ...issueData,
+    });
     issue.targetPolitician = issueData.targetPoliticain;
     issue.regiUser = issueData.regiUser;
     issue.issuDate = issueData.issueDate;

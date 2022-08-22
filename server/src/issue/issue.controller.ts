@@ -25,7 +25,9 @@ export class IssueController {
         message: 'create successfully',
         issue,
       });
-    } catch (err) {}
+    } catch (err) {
+      console.log('에러 메시지!!!!', err);
+    }
   }
 
   // 모든 이슈 가져오기(인생 전체 그래프) -> 정치인 api로 옮기면 좋을 듯

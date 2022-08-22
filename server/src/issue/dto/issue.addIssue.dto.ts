@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsDate, IsDateString, IsString } from 'class-validator';
+import { IsBoolean, IsDate, IsString } from 'class-validator';
 import { Date } from 'mongoose';
 
 export class AddIssueDto {
