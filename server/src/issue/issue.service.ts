@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
+import { PageOptionsDto } from './dto/page.dto';
+import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
 import { Issue, IssueDocument } from '../schemas';
 @Injectable()
 export class IssueService {
@@ -22,5 +24,35 @@ export class IssueService {
     issue.isPollActive = issueData.isPollActive;
     const result = await issue.save();
     return result;
+  }
+
+  // async getAllIssues(): Promise<Issue[]> {
+  //   return this.issueModel.find();
+  // }
+
+  // async getIssuesByPolitician(
+  //   politicianId: string,
+  //   pageData: PageOptionsDto,
+  // ): Promise<Issue> {
+  //   const issues = await this.issueModel.find({
+
+  //   });
+  // }
+
+  async getOne(id: string): Promise<Issue> {
+    const issue = this.issueModel.find((issue) => issue.id === String(id));
+    if (!issue) {
+      throw new NotFoundException(`issue id ${id} not found`);
+    }
+    return issue;
+  }
+
+  async setIssueContent(
+    issueData: SetIssueContentDto,
+    id: string,
+  ): Promise<Issue> {
+    const issue = this.getOne(id);
+    this.deleteOne(id);
+    this.issueModel.push({ ...issue, ...issueData });
   }
 }
