@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { AddIssueDto } from './dto/add.issue.dto';
 import { Issue } from '../schemas';
 @Injectable()
 export class IssueService {
@@ -6,9 +9,5 @@ export class IssueService {
 
   getAllIssues(): Issue[] {
     return this.issues;
-  }
-
-  getOne(id: number): Issue {
-    const issue = this.issues.find((issue) => issue.id === Number(id));
   }
 }
