@@ -1,7 +1,5 @@
 import styled from 'styled-components';
-import React, { useRef, useState } from 'react';
-import { FaBeer } from 'react-icons/fa';
-import { BsFillArchiveFill } from 'react-icons/bs';
+import React, { useRef, useState, useContext } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,7 +15,6 @@ import {
 import { getElementAtEvent, Line } from 'react-chartjs-2';
 import { faker } from '@faker-js/faker';
 import Modal from './Modal';
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,49 +25,6 @@ ChartJS.register(
   Legend,
   Filler,
 );
-export const options = {
-  responsive: true,
-  plugins: {
-    tooltip: {
-      displayColors: false,
-      backgroundColor: '#FFFFFF',
-      titleColor: '#000',
-      bodyColor: '#000',
-      padding: 10,
-      borderColor: '#D3D3D3',
-      boxWidth: 10,
-      boxHeight: 30,
-      borderWidth: 3,
-      callbacks: {
-        label: function (context) {
-          console.log(context);
-          let num: number[][] = [
-            [10, 30, 50],
-            [20, 60, 30],
-            [30, 50, 20],
-            [10, 50, 20],
-            [70, 50, 20],
-            [30, 50, 20],
-            [60, 50, 20],
-          ];
-          return [
-            ':' + ' ' + String(num[context.dataIndex][0]),
-            ':' + ' ' + String(num[context.dataIndex][1]),
-            ':' + ' ' + String(num[context.dataIndex][2]),
-          ];
-        },
-        cornerRadius: 10,
-      },
-    },
-    legend: {
-      position: null,
-    },
-    title: {
-      display: true,
-      text: '윤석열 인생 그래프',
-    },
-  },
-};
 
 const labels = [
   '11:30분',
@@ -101,11 +55,11 @@ export const data = {
 function Graph(): JSX.Element {
   const chartRef = useRef(null);
   const [open, setOpen] = useState(false);
-
+  const [point, setPoint] = useState();
   function ClickHander(element: InteractionItem[]) {
     const { datasetIndex, index } = element[0];
     setOpen(!open);
-    console.log(open);
+    return element[0].element;
   }
   return (
     <div
@@ -120,15 +74,58 @@ function Graph(): JSX.Element {
       <Line
         ref={chartRef}
         onClick={event => {
-          ClickHander(getElementAtEvent(chartRef.current, event));
+          let point = ClickHander(getElementAtEvent(chartRef.current, event));
+          setPoint(point);
         }}
         options={options}
         data={data}
       />
-
-      <div>{open && <Modal setOpen={setOpen} />}</div>
+      <div>{open && <Modal setOpen={setOpen} element={point} />}</div>
     </div>
   );
 }
+
+export const options = {
+  responsive: true,
+  plugins: {
+    tooltip: {
+      displayColors: false,
+      backgroundColor: '#FFFFFF',
+      titleColor: '#000',
+      bodyColor: '#000',
+      padding: 10,
+      borderColor: '#D3D3D3',
+      boxWidth: 10,
+      boxHeight: 30,
+      borderWidth: 3,
+      callbacks: {
+        label: function Label(context) {
+          let num: number[][] = [
+            [10, 30, 50],
+            [20, 60, 30],
+            [30, 50, 20],
+            [10, 50, 20],
+            [70, 50, 20],
+            [30, 50, 20],
+            [60, 50, 20],
+          ];
+          return [
+            ':' + ' ' + String(num[context.dataIndex][0]),
+            ':' + ' ' + String(num[context.dataIndex][1]),
+            ':' + ' ' + String(num[context.dataIndex][2]),
+          ];
+        },
+        cornerRadius: 10,
+      },
+    },
+    legend: {
+      position: null,
+    },
+    title: {
+      display: true,
+      text: '윤석열 인생 그래프',
+    },
+  },
+};
 
 export default Graph;

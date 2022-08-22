@@ -1,10 +1,12 @@
 import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-function Modal({ setOpen }) {
+import { IoCloseCircleOutline } from 'react-icons/io5';
+function Modal({ setOpen, element }) {
   const ref = useRef(null);
   useEffect(() => {
     // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
+
     return () => {
       // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside);
@@ -18,9 +20,17 @@ function Modal({ setOpen }) {
   }
   return (
     <>
-      <Container ref={ref}>
-        <CloseButton>X</CloseButton>
-        <p>모달창입니다.</p>
+      <Container {...element} ref={ref}>
+        <CloseButton
+          onClick={() => {
+            setOpen(false);
+          }}
+        >
+          <IoCloseCircleOutline />
+        </CloseButton>
+        <div>
+          <p>모달창입니다.</p>
+        </div>
       </Container>
     </>
   );
@@ -32,15 +42,17 @@ const Container = styled.div`
   height: 200px;
   z-index: 999;
   position: absolute;
-  top: 400px;
-  left: 405px;
+  top: ${element => element.y + 100}px;
+  left: ${element => element.x}px;
   transform: translate(-50%, -50%);
-  background-color: red;
+  background-color: #f8f8f8;
   border: 1px solid black;
   border-radius: 8px;
+  opacity: 0.8;
 `;
-const CloseButton = styled.button`
-  position: absolute;
-  right: 10px;
-  top: 10px;
+const CloseButton = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 10px;
+  padding-right: 10px;
 `;
