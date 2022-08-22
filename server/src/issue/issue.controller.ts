@@ -9,7 +9,7 @@ import {
   HttpStatus,
   Res,
 } from '@nestjs/common';
-import { AddIssueDto } from './dto/add.issue.dto';
+import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { IssueService } from './issue.service';
 
 @Controller('issues')
