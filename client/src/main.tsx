@@ -8,18 +8,17 @@ import { RecoilRoot } from 'recoil';
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
 
-
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-      <RecoilRoot>
-        <GlobalStyle />
-        <HelmetProvider>
-          <CookiesProvider>
-            <Layout>
-              <App />
-            </Layout>
-          </CookiesProvider>
-        </HelmetProvider>
-      </RecoilRoot>
+    <RecoilRoot>
+      <GlobalStyle />
+      <HelmetProvider>
+        <CookiesProvider>
+          <Layout>
+            <App />
+          </Layout>
+        </CookiesProvider>
+      </HelmetProvider>
+    </RecoilRoot>
   </React.StrictMode>,
 );

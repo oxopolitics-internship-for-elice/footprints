@@ -9,6 +9,7 @@ const errorHandler = (error: unknown) => {
     if (error instanceof Error) message = error.message;
     else message = String(error);
 
+    console.log(`error message: ${message}`);
     return message;
   }
 };

@@ -2,15 +2,18 @@ import Home from '@/pages/Home';
 import Login from '@/pages/Login';
 import Graph from '@/pages/Graph';
 import Politician from '@/pages/Politician';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 const Router = () => {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/politician" element={<Politician />} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/politician" element={<Politician />} />
+        <Route path="/login" element={<Login />} />
+        {/* <Route path="/login/kakao" element={<KaKaoLogin />} /> */}
+      </Routes>
+    </BrowserRouter>
   );
 };
 

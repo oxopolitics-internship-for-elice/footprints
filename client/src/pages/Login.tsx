@@ -2,27 +2,33 @@ import { flexCenter } from '@/styles/flex';
 import styled from '@emotion/styled';
 import React from 'react';
 import kakaoSymbol from '@/assets/kakaoSymbol.png';
-import AuthAPI from '@/api/auth';
-import errorHandler from '@/api/errorHandler';
+import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
-  const handleClickKaKao = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    try {
-      const { data } = await AuthAPI.getKaKao();
-    } catch (error) {
-      const errorMessage = errorHandler(error);
-    }
-  };
+  // const handleClickKaKao = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  //   e.preventDefault();
+  //   try {
+  //     const { data } = await AuthAPI.getKaKao();
+  //     console.log(data);
+  //   } catch (error) {
+  //     errorHandler(error);
+  //   }
+  // };
+  const KaKaoID = 'c48c4dfbe4f110adc31dadde05c57d36';
+  const RedirectURI = 'http://localhost:5000/auth/kakao/callback';
+  const kakaoRequestURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KaKaoID}&redirect_uri=${RedirectURI}`;
 
   return (
     <>
+      <Helmet>
+        <title>로그인</title>
+      </Helmet>
       <Container>
         <LoginWrap>
           <Title>로그인</Title>
           <ButtonWrap>
             <KaKaoLogin>
-              <a id="kakaoSignInDiv" onClick={handleClickKaKao}>
+              <a id="kakaoSignInDiv" href={kakaoRequestURL}>
                 <img width="25px" src={kakaoSymbol} alt="kakaoSymbol" />
                 <div>Kakao로 시작하기</div>
               </a>
