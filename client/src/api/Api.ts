@@ -7,7 +7,7 @@ export const serverUrl = (() => {
     const { protocol, hostname } = window.location;
     return `${protocol}//${hostname}:${localServerPort}/`;
   }
-  return window.location.origin + '/api/';
+  return window.location.origin;
 })();
 
 export const accessToken = getCookie('accessToken');

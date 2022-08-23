@@ -10,4 +10,6 @@ export interface IssueTypes {
   pollDate: Date;
   content: string;
   isPollActive: boolean;
+  updatedAt: Date;
+  score: number;
 }
