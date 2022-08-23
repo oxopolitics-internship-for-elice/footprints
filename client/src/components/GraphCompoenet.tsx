@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-import React, { useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,10 +11,11 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import { getElementAtEvent, getDatasetAtEvent, Line } from 'react-chartjs-2';
+import { getElementAtEvent, Line } from 'react-chartjs-2';
 import { faker } from '@faker-js/faker';
 import Modal from './Modal';
-import { deflateRaw } from 'zlib';
+import * as API from '../api/api';
+import { AnyObject } from 'chart.js/types/basic';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -53,10 +53,10 @@ export const data = {
   ],
 };
 
-function Graph(): JSX.Element {
-  const chartRef = useRef(null);
+const Graph = (): JSX.Element => {
+  const chartRef = useRef<null | HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [point, setPoint] = useState();
+  const [point, setPoint] = useState(null);
   function ClickHander(element: InteractionItem[], event: Event) {
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
@@ -64,6 +64,20 @@ function Graph(): JSX.Element {
       return element[0].element;
     }
   }
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await API.get(
+          'http://localhost:5000/issues?targetPolitician=6303bed2e9d44f884ed1d640&regiStatus=true&perPage=10&pageNum=1',
+        );
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getData();
+  });
   return (
     <div
       style={{
@@ -77,7 +91,10 @@ function Graph(): JSX.Element {
       <Line
         ref={chartRef}
         onClick={event => {
-          let point = ClickHander(getElementAtEvent(chartRef.current, event));
+          let point = ClickHander(
+            getElementAtEvent(chartRef.current, event),
+            event,
+          );
 
           setPoint(point);
         }}
@@ -87,7 +104,7 @@ function Graph(): JSX.Element {
       <div>{open && <Modal setOpen={setOpen} element={point} />}</div>
     </div>
   );
-}
+};
 
 export const options = {
   responsive: true,
@@ -204,9 +221,6 @@ export const options = {
       },
     },
 
-    legend: {
-      position: null,
-    },
     title: {
       display: true,
       text: '윤석열 인생 그래프',
