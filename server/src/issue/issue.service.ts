@@ -21,28 +21,37 @@ export class IssueService {
     }
   }
 
-  async getIssuesRegistered(
-    targetPolitician,
-    pageNum,
-    perPage,
-    skip,
-  ): Promise<Issue[]> {
-    const issues = await this.issueModel.find({ targetPolitician });
+  async getIssuesRegistered(targetPolitician, skip, perPage): Promise<Issue[]> {
+    const issues = await this.issueModel
+      .find({ targetPolitician, regiStatus: 'active' })
+      .sort({ issueDate: 'asc' })
+      .skip(skip)
+      .limit(perPage);
     return issues;
   }
 
-  async getIssueNotRegisteredRanked(targetPolitician): Promise<Issue[]> {
-    const issues = await this.issueModel.find({ targetPolitician });
+  async getIssueNotRegisteredRanked(id): Promise<Issue[]> {
+    const issues = await this.issueModel.aggregate([
+      {
+        $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
+      },
+      { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
+      { $sort: { sum: -1 } },
+      { $limit: 3 },
+    ]);
     return issues;
   }
 
   async getIssueNotRegistered(
     targetPolitician,
-    pageNum,
-    perPage,
     skip,
+    perPage,
   ): Promise<Issue[]> {
-    const issues = await this.issueModel.find({ targetPolitician });
+    const issues = await this.issueModel
+      .find({ targetPolitician })
+      .sort({ issueDate: 'asc' })
+      .skip(skip)
+      .limit(perPage);
     return issues;
   }
 }
