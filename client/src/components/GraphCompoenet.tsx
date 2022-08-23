@@ -237,10 +237,6 @@ export const options = {
         tooltipEl.style.height = '80px';
       },
     },
-
-    legend: {
-      position: null,
-    },
     title: {
       display: true,
       text: '윤석열 인생 그래프',
