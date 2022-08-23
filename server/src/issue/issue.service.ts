@@ -21,6 +21,11 @@ export class IssueService {
     }
   }
 
+  async getAllIssues(): Promise<Issue[]> {
+    const issues = await this.issueModel.find();
+    return issues;
+  }
+
   async getIssuesRegistered(
     targetPolitician,
     pageNum,
