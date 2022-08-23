@@ -11,8 +11,9 @@ import {
 } from '@nestjs/common';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { PageOptionsDto } from './dto/page.dto';
-import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
+import { SetIssueContentDto, SetIssueRegiDto } from './dto';
 import { IssueService } from './issue.service';
+import { PoliticianService } from 'src/politician/politician.service';
 
 @Controller('issues')
 export class IssueController {
@@ -31,13 +32,14 @@ export class IssueController {
   }
 
   // 모든 이슈 가져오기(인생 전체 그래프) -> 정치인 api로 옮기면 좋을 듯
-  // @Get()
-  // async getAllIssues(@Res() response) {
-  //   try {
-  //     const issues = this.issueService.getAllIssues();
-  //     return response.status(HttpStatus.OK).json({ issues });
-  //   } catch (err) {}
-  // }
+  @Get()
+  async getAllIssues(@Res() response) {
+    try {
+      const issues = await this.issueService.getAllIssues();
+      console.log(issues);
+      return response.status(HttpStatus.OK).json({ issues });
+    } catch (err) {}
+  }
 
   // // 정치인 별 이슈 가져오기(10개 사건 그래프)
   // @Get(':politicianId')
@@ -55,7 +57,7 @@ export class IssueController {
   //   } catch (err) {}
   // }
 
-  // // (관리자) 이슈 내용 수정
+  // (관리자) 이슈 내용 수정
   // @Patch(':issueId/content')
   // async setIssueContent(
   //   @Param('issueId') id: string,

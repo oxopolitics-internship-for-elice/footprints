@@ -5,6 +5,7 @@ import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { PageOptionsDto } from './dto/page.dto';
 import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
 import { Issue, IssueDocument } from '../schemas';
+import { throwIfEmpty } from 'rxjs';
 @Injectable()
 export class IssueService {
   constructor(
@@ -23,12 +24,14 @@ export class IssueService {
     issue.content = issueData.content;
     issue.isPollActive = issueData.isPollActive;
     const result = await issue.save();
+    console.log(result);
     return result;
   }
 
-  // async getAllIssues(): Promise<Issue[]> {
-  //   return this.issueModel.find();
-  // }
+  async getAllIssues(): Promise<Issue[]> {
+    const issues = await this.issueModel.find();
+    return issues;
+  }
 
   // async getIssuesByPolitician(
   //   politicianId: string,
