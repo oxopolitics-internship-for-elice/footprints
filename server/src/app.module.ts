@@ -10,6 +10,7 @@ import { IssueModule } from './issue/issue.module';
 import { UserModule } from './user/user.module';
 import { PoliticianController } from './politician/politician.controller';
 import { PoliticianService } from './politician/politician.service';
+import { PoliticianModule } from './politician/politician.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { PoliticianService } from './politician/politician.service';
       },
     }),
     IssueModule,
+    PoliticianModule,
   ],
   controllers: [AppController, IssueController, PoliticianController],
   providers: [AppService, PoliticianService],
