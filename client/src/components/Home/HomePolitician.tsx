@@ -4,6 +4,7 @@ import React from 'react';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/leejaemyung.webp';
 import yoonseokyeol from '@/assets/yoonseokyeol.webp';
+import WholeGraph from './LifeGraph';
 
 interface HomePoliticianProps {
   name: '이재명' | '윤석열';
@@ -24,7 +25,7 @@ const HomePolitician = ({ name }: HomePoliticianProps) => {
               <Image src={image[name]} alt="leejaemyung" />
               <Name>{name}</Name>
             </Row>
-            <Chart>차트</Chart>
+            <WholeGraph target={'6303bed2e9d44f884ed1d640'} />
           </Politician>
         </AnimationOnScroll>
       </Container>

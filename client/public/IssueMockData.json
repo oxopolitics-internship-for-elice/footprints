@@ -4,13 +4,14 @@
     "targetPolitician": "2f4943859883bf9a3fa30b9d",
     "createdAt": "2022-07-22T17:29:33.346+00:00",
     "regiUser": "3jkngk34ng34jgn34k343",
-    "regiStatus": "inactive",
+    "regiStatus": "active",
     "regi": {
       "pro": 30,
       "con": 19
     },
-    "issueDate": "2000-00-00",
-    "content": "대선 출마"
+    "poll": { "pro": 27, "neu": 25, "con": 18 },
+    "issueDate": "1960-12-18",
+    "content": "출생"
   },
   {
     "_id": "38on4hcrm398cr34or2i3j",
@@ -22,8 +23,9 @@
       "pro": 77,
       "con": 5
     },
-    "issueDate": "2022-00-00",
-    "content": "대통령 당선"
+    "poll": { "pro": 259, "neu": 25, "con": 18 },
+    "issueDate": "1983-02-00",
+    "content": "서울대학교 법학과 학사 취득"
   },
   {
     "_id": "23u5bwefb345n3j4k2",
@@ -35,8 +37,9 @@
       "pro": 99,
       "con": 1
     },
-    "issueDate": "2000-00-00",
-    "content": "대선 출마"
+    "poll": { "pro": 120, "neu": 25, "con": 246 },
+    "issueDate": "1991-10-00",
+    "content": "사법시험 합격"
   },
   {
     "_id": "23weffffb345n3j4k2",
@@ -48,7 +51,8 @@
       "pro": 80,
       "con": 70
     },
-    "issueDate": "2000-00-00",
+    "poll": { "pro": 93, "neu": 25, "con": 18 },
+    "issueDate": "2021-11-05",
     "content": "대선 출마"
   }
 ]

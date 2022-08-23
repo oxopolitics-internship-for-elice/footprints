@@ -1,5 +1,5 @@
 import axios from 'axios';
-//import { getCookie } from '@/utils/cookie';
+import { getCookie } from '@/utils/Cookie';
 
 export const serverUrl = (() => {
   if (process.env.NODE_ENV === 'development') {
@@ -7,10 +7,10 @@ export const serverUrl = (() => {
     const { protocol, hostname } = window.location;
     return `${protocol}//${hostname}:${localServerPort}/`;
   }
-  return window.location.origin + '/api/';
+  return window.location.origin;
 })();
 
-export const accessToken = null;
+export const accessToken = getCookie('accessToken');
 
 async function get(endpoint: any) {
   console.log(`%cGET 요청 ${serverUrl + endpoint}`, 'color: #a25cd1;');

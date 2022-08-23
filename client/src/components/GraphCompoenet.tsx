@@ -81,6 +81,20 @@ function Graph(): JSX.Element {
     };
     getData();
   });
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await API.get(
+          'http://localhost:5000/issues?targetPolitician=6303bed2e9d44f884ed1d640&regiStatus=true&perPage=10&pageNum=1',
+        );
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getData();
+  });
   return (
     <div
       style={{
