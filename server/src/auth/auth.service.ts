@@ -65,4 +65,10 @@ export class AuthService {
     }
     return { message: 'created successfully' };
   }
+
+  async validateToken(token: string) {
+    return await this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+  }
 }
