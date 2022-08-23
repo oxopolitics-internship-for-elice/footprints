@@ -23,7 +23,6 @@ export class IssueController {
 
   // 이슈 등록
   @Post()
-  @HttpCode(201)
   async addIssue(@Body() issueData: AddIssueDto, @Res() response) {
     try {
       const issue = await this.issueService.addIssue(issueData);
@@ -44,7 +43,6 @@ export class IssueController {
 
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
   @Get()
-  @HttpCode(200)
   async getIssuesRegistered(
     @Query() issueQuery: QueryIssueDto,
     @Res() response,
@@ -92,7 +90,6 @@ export class IssueController {
 
   // 이슈 등록 투표
   @Patch(':/issueId/regi')
-  @HttpCode(200)
   async setIssueRegi(
     @Param('issueId') id: string,
     @Body() regi: SetIssueRegiDto,
@@ -105,7 +102,6 @@ export class IssueController {
 
   // 이슈 여론 투표
   @Patch(':/issueId/poll')
-  @HttpCode(200)
   async setIssuePoll(
     @Param('issueId') id: string,
     @Body() poll: SetIssuePollDto,

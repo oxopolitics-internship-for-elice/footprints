@@ -50,4 +50,6 @@ export class IssueService {
     const issues = await this.issueModel.find({ targetPolitician });
     return issues;
   }
+
+  // async setIssueRegi()
 }
