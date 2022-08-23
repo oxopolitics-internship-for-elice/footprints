@@ -75,6 +75,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
+    // const cookie = req.cookies;
+    // console.log('cookie: ', cookie);
 
     const { authorization } = req.headers;
     if (!authorization) {

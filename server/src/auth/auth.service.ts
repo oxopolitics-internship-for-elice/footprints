@@ -23,7 +23,7 @@ export class AuthService {
     const payload = { email: user.email, userToken: 'loginToken' };
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET_KEY,
-      expiresIn: '60m',
+      expiresIn: '240h',
     });
   }
 
