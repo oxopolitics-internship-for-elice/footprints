@@ -23,5 +23,5 @@ export default Layout;
 const Container = styled.div`
   ${flexCenter}
   max-width: 100%;
-  margin: 2.5rem 5% 0 5%;
+  margin: 0 5% 0 5%;
 `;
