@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { IssueTypes } from '@src/types/IssueTypes';
+import { IssueTypes } from '@/types/IssueTypes';
 
 export const standbyIssueState = atom<IssueTypes[]>({
   key: 'standbyIssueState',
