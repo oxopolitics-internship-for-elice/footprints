@@ -12,9 +12,6 @@ export class Politician {
 
   @Prop()
   party: string;
-
-  @Prop()
-  issues: number[];
 }
 
 export const politicianSchema = SchemaFactory.createForClass(Politician);

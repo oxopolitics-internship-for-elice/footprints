@@ -15,7 +15,6 @@ export class PoliticianService {
     politician.name = politicianData.name;
     politician.image = politicianData.image;
     politician.party = politicianData.party;
-    politician.issues = politicianData.issues;
     const result = await politician.save();
     return result;
   }
