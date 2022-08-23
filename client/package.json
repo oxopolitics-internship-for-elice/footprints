@@ -16,7 +16,8 @@
     "emotion-reset": "^3.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-helmet-async": "^1.3.0"
+    "react-helmet-async": "^1.3.0",
+    "react-router-dom": "^6.3.0"
   },
   "devDependencies": {
     "@types/node": "^18.7.4",
