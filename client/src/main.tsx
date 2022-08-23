@@ -7,6 +7,7 @@ import GlobalStyle from './styles/Global';
 import { BrowserRouter } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import React from 'react';
+import { CookiesProvider } from 'react-cookie';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -14,9 +15,11 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <RecoilRoot>
         <GlobalStyle />
         <HelmetProvider>
-          <Layout>
-            <App />
-          </Layout>
+          <CookiesProvider>
+            <Layout>
+              <App />
+            </Layout>
+          </CookiesProvider>
         </HelmetProvider>
       </RecoilRoot>
     </BrowserRouter>
