@@ -1,10 +1,12 @@
 import { selector } from 'recoil';
-import axios from 'axios';
+import * as Api from '@/api/Api';
 
 const issueState = selector({
   key: 'issueSelector',
   get: async () => {
-    const response = await axios.get('/IssueMockData.json');
+    const response = await Api.get(
+      `issues?targetPolitician=6303bed2e9d44f884ed1d640&regiStatus=true`,
+    );
     return response.data;
   },
 });

@@ -3,7 +3,7 @@ import issueState from '@/store/IssueState';
 import { useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
 import { IssueTypes } from '@/types/IssueTypes';
-import axios from 'axios';
+import * as Api from '@/api/Api';
 
 const StandbyIssue = (): JSX.Element => {
   const fetchedIssue: IssueTypes[] = useRecoilValue(issueState);
@@ -29,7 +29,7 @@ const StandbyIssue = (): JSX.Element => {
   useEffect(() => {
     const putIssueList = async () => {
       try {
-        const res = await axios.put('/IssueMockData.json', issueList);
+        const res = await Api.put('/IssueMockData.json', issueList);
         console.log(res.data);
       } catch (Error) {
         console.log(Error);
