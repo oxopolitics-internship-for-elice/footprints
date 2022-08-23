@@ -20,17 +20,6 @@ const Header = ({ location }: HeaderProps) => {
     }
   };
 
-  const handleClickTitle = () => {
-    if (isMainFirstPage) {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    } else {
-      navigate('/');
-    }
-  };
-
   React.useEffect(() => {
     if (location.pathname === '/') {
       setIsMainFirstPage(true);
@@ -57,7 +46,7 @@ const Header = ({ location }: HeaderProps) => {
     <>
       <HeaderBlock>
         <InnerHeader>
-          <Title fontWhite={isMainFirstPage} onClick={handleClickTitle}>
+          <Title fontWhite={isMainFirstPage} onClick={() => navigate('/')}>
             정치 발자국
           </Title>
           <AuthContainer>

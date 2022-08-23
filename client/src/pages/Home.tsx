@@ -21,6 +21,7 @@ const Home = () => {
           <HomePolitician name="이재명" />
         </Slide>
       </FullPage>
+
     </>
   );
 };

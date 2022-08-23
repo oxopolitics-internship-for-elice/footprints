@@ -2,16 +2,27 @@ import { flexCenter } from '@/styles/flex';
 import styled from '@emotion/styled';
 import React from 'react';
 import kakaoSymbol from '@/assets/kakaoSymbol.png';
+import AuthAPI from '@/api/auth';
+import errorHandler from '@/api/errorHandler';
 
 const Login = () => {
+  const handleClickKaKao = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    try {
+      const { data } = await AuthAPI.getKaKao();
+    } catch (error) {
+      const errorMessage = errorHandler(error);
+    }
+  };
+
   return (
     <>
       <Container>
         <LoginWrap>
-          <h2>로그인</h2>
+          <Title>로그인</Title>
           <ButtonWrap>
             <KaKaoLogin>
-              <a id="kakaoSignInDiv">
+              <a id="kakaoSignInDiv" onClick={handleClickKaKao}>
                 <img width="25px" src={kakaoSymbol} alt="kakaoSymbol" />
                 <div>Kakao로 시작하기</div>
               </a>
@@ -34,7 +45,9 @@ const Container = styled.div`
 const LoginWrap = styled.div`
   ${flexCenter}
   flex-direction: column;
+  justify-content: flex-start;
   width: 460px;
+  height: 230px;
   margin: 0 auto;
   padding: 20px;
   border-radius: 10px;
@@ -43,10 +56,17 @@ const LoginWrap = styled.div`
   border: 1px solid #ebebeb;
 `;
 
+const Title = styled.h2`
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+`;
+
 const ButtonWrap = styled.div`
   ${flexCenter}
   width: 100%;
   margin-top: 20px;
+  height: 100%;
 `;
 
 const KaKaoLogin = styled.div`
