@@ -17,7 +17,7 @@ export class IssueService {
     const issue = new this.issueModel({
       ...issueData,
     });
-    issue.targetPolitician = issueData.targetPoliticain;
+    issue.targetPolitician = issueData.targetPolitician;
     issue.regiUser = issueData.regiUser;
     issue.issuDate = issueData.issueDate;
     issue.pollDate = issueData.pollDate;

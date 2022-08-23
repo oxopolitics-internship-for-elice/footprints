@@ -11,9 +11,11 @@ import {
 } from '@nestjs/common';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { PageOptionsDto } from './dto/page.dto';
-import { SetIssueContentDto, SetIssueRegiDto } from './dto';
+import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
+import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { IssueService } from './issue.service';
 import { PoliticianService } from 'src/politician/politician.service';
+import { response } from 'express';
 
 @Controller('issues')
 export class IssueController {
@@ -57,6 +59,41 @@ export class IssueController {
   //   } catch (err) {}
   // }
 
+  // // 이슈 등록 투표
+  // @Patch(':issueId/regi')
+  // async setIssueRegi(
+  //   @Param('issueId') id: string,
+  //   @Body() setIssueRegiDto: SetIssueRegiDto,
+  //   @Res() response,
+  // ) {
+  //   try {
+  //     const issue = await this.issueService.setIssueRegiDto(
+  //       id,
+  //       setIssueRegiDto,
+  //     );
+  //     return response.status(HttpStatus.OK).json({
+  //       message: 'successfully updated',
+  //       issue,
+  //     });
+  //   } catch (err) {}
+  // }
+
+  // // 이슈 여론 투표
+  // @Patch(':issueId/poll')
+  // async setIssuePoll(
+  //   @Param('issueId') id: string,
+  //   @Body() setIssuePollDto: SetIssuePollDto,
+  //   @Res() response,
+  // ) {
+  //   try {
+  //     const issue = await this.issueService.setIssuePoll(id, setIssuePollDto);
+  //     return response.status(HttpStatus.OK).json({
+  //       message: 'successfully updated',
+  //       issue,
+  //     });
+  //   } catch (err) {}
+  // }
+
   // (관리자) 이슈 내용 수정
   // @Patch(':issueId/content')
   // async setIssueContent(
@@ -88,40 +125,6 @@ export class IssueController {
   //       id,
   //       setIssueStatusDto,
   //     );
-  //     return response.status(HttpStatus.OK).json({
-  //       message: 'successfully updated',
-  //       issue,
-  //     });
-  //   } catch (err) {}
-  // }
-
-  // // 이슈 등록 투표
-  // @Patch(':issueId/regi')
-  // async setIssueRegi(
-  //   @Param('issueId') id: string,
-  //   @Body() setIssueRegiDto: SetIssueRegiDto,
-  // ) {
-  //   try {
-  //     const issue = await this.issueService.setIssueRegiDto(
-  //       id,
-  //       setIssueRegiDto,
-  //     );
-  //     return response.status(HttpStatus.OK).json({
-  //       message: 'successfully updated',
-  //       issue,
-  //     });
-  //   } catch (err) {}
-  // }
-
-  // // 이슈 여론 투표
-  // @Patch(':issueId/poll')
-  // async setIssuePoll(
-  //   @Param('issueId') id: string,
-  //   @Body() setIssuePollDto: SetIssuePollDto,
-  //   @Res() response,
-  // ) {
-  //   try {
-  //     const issue = await this.issueService.setIssuePoll(id, setIssuePollDto);
   //     return response.status(HttpStatus.OK).json({
   //       message: 'successfully updated',
   //       issue,

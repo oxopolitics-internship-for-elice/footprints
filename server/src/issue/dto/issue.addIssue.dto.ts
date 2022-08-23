@@ -4,7 +4,7 @@ import { Date } from 'mongoose';
 
 export class AddIssueDto {
   @IsString()
-  readonly targetPoliticain: string;
+  readonly targetPolitician: string;
 
   @IsString()
   readonly regiUser: string;
