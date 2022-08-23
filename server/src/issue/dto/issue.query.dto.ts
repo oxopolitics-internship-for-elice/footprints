@@ -1,26 +1,33 @@
-import { Type } from 'class-transformer';
-import { IsBoolean, IsInt, IsOptional, Min } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsInt, IsOptional, IsString, Min } from 'class-validator';
 
 export class QueryIssueDto {
-  @IsInt()
-  @Type(() => Number)
-  @IsOptional()
-  readonly targetPolitician?: number;
+  @IsString()
+  readonly targetPolitician: number;
 
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+  })
   @IsBoolean()
-  readonly regiStatus!: boolean;
+  @IsOptional()
+  readonly regiStatus: boolean;
 
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+  })
   @IsBoolean()
   @IsOptional()
   readonly ranked?: boolean;
 
-  @Type(() => Number)
+  @Transform(({ value }) => Number(value))
   @IsInt()
   @Min(1)
   @IsOptional()
   readonly pageNum?: number = 1;
 
-  @Type(() => Number)
+  @Transform(({ value }) => Number(value))
   @IsInt()
   @IsOptional()
   readonly perPage?: number = 10;

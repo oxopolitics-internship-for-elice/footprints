@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { resourceLimits } from 'worker_threads';
 import { IssueDocument, Issue } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 @Injectable()
@@ -22,8 +21,28 @@ export class IssueService {
     }
   }
 
-  async getAllIssues(): Promise<Issue[]> {
-    const issues = await this.issueModel.find();
+  async getIssuesRegistered(
+    targetPolitician,
+    pageNum,
+    perPage,
+    skip,
+  ): Promise<Issue[]> {
+    const issues = await this.issueModel.find({ targetPolitician });
+    return issues;
+  }
+
+  async getIssueNotRegisteredRanked(targetPolitician): Promise<Issue[]> {
+    const issues = await this.issueModel.find({ targetPolitician });
+    return issues;
+  }
+
+  async getIssueNotRegistered(
+    targetPolitician,
+    pageNum,
+    perPage,
+    skip,
+  ): Promise<Issue[]> {
+    const issues = await this.issueModel.find({ targetPolitician });
     return issues;
   }
 }

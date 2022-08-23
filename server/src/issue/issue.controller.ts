@@ -24,11 +24,11 @@ export class IssueController {
   // 이슈 등록
   @Post()
   @HttpCode(201)
-  async addIssue(@Body() issueData: AddIssueDto, @Res() Res) {
+  async addIssue(@Body() issueData: AddIssueDto, @Res() response) {
     try {
       const issue = await this.issueService.addIssue(issueData);
       if (issue) {
-        return Res.json({ message: 'success' });
+        return response.json({ message: 'success' });
       }
     } catch (err) {}
   }
@@ -36,37 +36,47 @@ export class IssueController {
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
   @Get()
   @HttpCode(200)
-  async getIssuesRegistered(@Query() issueQuery: QueryIssueDto) {
+  async getIssuesRegistered(
+    @Query() issueQuery: QueryIssueDto,
+    @Res() response,
+  ) {
     try {
-      const { targetPolitician, regiStatus, ranked, pageNum, perPage } =
+      const { targetPolitician, regiStatus, ranked, pageNum, perPage, skip } =
         issueQuery;
 
       // 등록된 이슈
-      if (regiStatus) {
-        // const issues = await this.issueService.getIssuesRegistered(
-        //   targetPolitician,
-        //   pageNum,
-        //   perPage,
-        // );
-        return 'regiStatus';
+      if (regiStatus && !ranked) {
+        console.log('registered');
+        const issues = await this.issueService.getIssuesRegistered(
+          targetPolitician,
+          pageNum,
+          perPage,
+          skip,
+        );
+        return response.json({ issues });
       }
 
       // 미등록 이슈 top 3
-      else if (ranked) {
-        // const issues = await this.issueService.getIssueNotRegisteredRanked(
-        //   targetPolitician,
-        // );
-        return 'ranked';
+      else if (!regiStatus && ranked) {
+        console.log('not registered but ranked');
+        const issues = await this.issueService.getIssueNotRegisteredRanked(
+          targetPolitician,
+        );
+        return response.json({ issues });
       }
 
       // 미등록 이슈 나머지
-      else {
-        // const issues = await this.issueService.getIssueNotRegistered(
-        //   targetPolitician,
-        //   pageNum,
-        //   perPage,
-        // );
-        return 'else';
+      else if (!regiStatus && !ranked) {
+        console.log('not registered also not ranked');
+        const issues = await this.issueService.getIssueNotRegistered(
+          targetPolitician,
+          pageNum,
+          perPage,
+          skip,
+        );
+        return response.json({ issues });
+      } else {
+        throw new Error('bad request');
       }
     } catch (err) {}
   }
