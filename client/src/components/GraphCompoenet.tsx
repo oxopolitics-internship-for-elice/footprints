@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-import React, { useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,10 +11,10 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import { getElementAtEvent, getDatasetAtEvent, Line } from 'react-chartjs-2';
+import { getElementAtEvent, Line } from 'react-chartjs-2';
 import { faker } from '@faker-js/faker';
 import Modal from './Modal';
-import { deflateRaw } from 'zlib';
+import * as API from '../api/api';
 import { AnyObject } from 'chart.js/types/basic';
 ChartJS.register(
   CategoryScale,
@@ -68,6 +67,20 @@ function Graph(): JSX.Element {
       return element[0].element;
     }
   }
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const res = await API.get(
+          'http://localhost:5000/issues?targetPolitician=6303bed2e9d44f884ed1d640&regiStatus=true&perPage=10&pageNum=1',
+        );
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getData();
+  });
   return (
     <div
       style={{
