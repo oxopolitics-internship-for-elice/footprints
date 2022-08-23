@@ -8,12 +8,12 @@ import {
   Query,
   HttpCode,
 } from '@nestjs/common';
-import { AddIssueDto } from './dto/add.issue.dto';
-import { QueryIssueDto } from './dto/query.dto';
-import { SetIssueContentDto } from './dto/set.issueContent.dto';
-import { SetIssuePollDto } from './dto/set.issuePoll.dto';
-import { SetIssueRegiDto } from './dto/set.issueRegi.dto';
-import { SetIssueRegiStatusDto } from './dto/set.issueRegiStatus.dto';
+import { AddIssueDto } from './dto/issue.addIssue.dto';
+import { QueryIssueDto } from './dto/issue.query.dto';
+import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
+import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
+import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
+import { SetIssueRegiStatusDto } from './dto/issue.setIssueRegiStatus.dto';
 
 import { IssueService } from './issue.service';
 
@@ -30,16 +30,6 @@ export class IssueController {
       return issue;
     } catch (err) {}
   }
-
-  // 모든 이슈 가져오기(인생 전체 그래프) -> 정치인 api로 옮기면 좋을 듯
-  // @Get()
-  // @HttpCode(200)
-  // async getAllIssues() {
-  //   try {
-  //     const issues = await this.issueService.getAllIssues();
-  //     return issues;
-  //   } catch (err) {}
-  // }
 
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
   @Get()
