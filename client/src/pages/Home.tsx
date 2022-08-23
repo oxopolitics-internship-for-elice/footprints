@@ -1,5 +1,5 @@
-import HomePolitician from '@/components/Home/HomePolitician';
-import ServiceInfo from '@/components/Home/ServiceInfo';
+import HomePolitician from '@/components/home/HomePolitician';
+import ServiceInfo from '@/components/home/ServiceInfo';
 import { Helmet } from 'react-helmet-async';
 import { FullPage, Slide } from 'react-full-page';
 

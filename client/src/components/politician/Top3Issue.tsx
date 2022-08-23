@@ -20,7 +20,6 @@ const Top3Issue = () => {
     };
     getTopIssue();
   }, [target]);
-  console.log(topIssue);
 
   return (
     <TopIssueContainer>

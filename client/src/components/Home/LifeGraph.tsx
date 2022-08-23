@@ -15,6 +15,9 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import styled from '@emotion/styled';
 import { IssueTypes } from '@/types/IssueTypes';
+import { useState, useEffect } from 'react';
+import * as Api from '@/api/Api';
+import dateFormatter from '@/utils/DateFormatter';
 
 ChartJS.register(
   CategoryScale,
@@ -26,13 +29,32 @@ ChartJS.register(
   Legend,
 );
 
-const WholeGraph = ({ target }: { target: string }): JSX.Element => {
-  const issues: IssueTypes[] = useRecoilValue(issueState);
-  const issueDates: Date[] = useRecoilValue(issueDateState);
-  const GraphData = issues.map(
+const LifeGraph = ({ target }: { target: string }): JSX.Element => {
+  // const issues: IssueTypes[] = useRecoilValue(issueState);
+  // const issueDates: Date[] = useRecoilValue(issueDateState);
+
+  const [lifeIssue, setLifeIssue] = useState<IssueTypes[]>([]);
+  useEffect(() => {
+    const getLifeIssue = async () => {
+      try {
+        const res = await Api.get(
+          `issues?targetPolitician=${target}&regiStatus=true`,
+        );
+        setLifeIssue(res.data);
+      } catch (Error) {
+        alert(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
+      }
+    };
+    getLifeIssue();
+  }, [target]);
+  console.log(lifeIssue);
+
+  const graphData = lifeIssue.map(
     (issue: { poll: { pro: number; con: number } }) =>
       issue.poll.pro - issue.poll.con,
   );
+
+  const issueDates = lifeIssue.map(issue => dateFormatter(issue.issueDate));
 
   const options = {
     plugins: {
@@ -62,7 +84,7 @@ const WholeGraph = ({ target }: { target: string }): JSX.Element => {
     labels: issueDates,
     datasets: [
       {
-        data: GraphData,
+        data: graphData,
         tension: 0.5,
       },
     ],
@@ -75,7 +97,7 @@ const WholeGraph = ({ target }: { target: string }): JSX.Element => {
   );
 };
 
-export default WholeGraph;
+export default LifeGraph;
 
 const Container = styled.div`
   width: 90vw;

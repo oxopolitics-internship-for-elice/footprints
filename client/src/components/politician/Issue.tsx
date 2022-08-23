@@ -1,16 +1,11 @@
 import styled from '@emotion/styled';
 import { IssueProps } from '@components/politician/StandbyIssue';
 import { IssueTypes } from '@/types/IssueTypes';
+import dateFormatter from '@/utils/DateFormatter';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, content, regi } = issue;
-  const createdDate = new Date(issueDate);
-  const year = createdDate.getFullYear();
-  const month = createdDate.getMonth() + 1;
-  const date = createdDate.getDate();
-  const regiDate = `${year}년 ${month >= 10 ? month : '0' + month}월 ${
-    date >= 10 ? date : '0' + date
-  }일`;
+  let issuedDate = dateFormatter(issueDate);
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
@@ -32,7 +27,7 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   return (
     <IssueContainer key={_id}>
       <div>{regi.pro - regi.con}/100</div>
-      <div>{regiDate}</div>
+      <div>{issuedDate}</div>
       <div>{content}</div>
       <button data-id={_id} onClick={regiHandler}>
         찬성
