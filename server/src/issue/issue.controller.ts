@@ -6,7 +6,6 @@ import {
   Patch,
   Post,
   Query,
-  HttpCode,
   Res,
 } from '@nestjs/common';
 import { AddIssueDto } from './dto/issue.addIssue.dto';

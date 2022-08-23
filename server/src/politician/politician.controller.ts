@@ -1,14 +1,16 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 import { PoliticianService } from './politician.service';
 
-@Controller('politician')
+@Controller('politicians')
 export class PoliticianController {
   constructor(private politicianService: PoliticianService) {}
 
   // 메인페이지(모든 정치인 인생 전체 그래프)
   @Get()
-  @HttpCode(200)
-  async getPoliticians() {
-    return await this.politicianService.getAllPoliticians();
+  async getPoliticians(@Res() response) {
+    try {
+      const result = await this.politicianService.getAllPoliticians();
+      return response.json(result);
+    } catch (err) {}
   }
 }
