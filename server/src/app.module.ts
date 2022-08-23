@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 
 import { UserModule } from './user/user.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -12,12 +14,10 @@ import { UserModule } from './user/user.module';
     MongooseModule.forRoot(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-
-      UserModule,
-
       connectionFactory: (connection) => {
         if (connection.readyState === 1) {
           Logger.log('DB connected');
+          console.log('################ MongoDB connected #################');
         }
         connection.on('disconnected', () => {
           Logger.log('DB disconnected');
@@ -25,6 +25,9 @@ import { UserModule } from './user/user.module';
         return connection;
       },
     }),
+
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -40,4 +40,11 @@ export class UserService {
     const result = await user.save();
     return result;
   }
+
+  async updateRefreshToken(email: string, refreshToken: string) {
+    await this.userModel.findOneAndUpdate(
+      { email: email },
+      { refreshToken: refreshToken },
+    );
+  }
 }
