@@ -6,18 +6,15 @@ import {
   Patch,
   Post,
   Query,
-  HttpStatus,
-  Res,
   HttpCode,
 } from '@nestjs/common';
-import {
-  AddIssueDto,
-  SetIssueContentDto,
-  SetIssuePollDto,
-  SetIssueRegiDto,
-  SetIssueRegiStatusDto,
-  issueQueryStringDto,
-} from './dto';
+import { AddIssueDto } from './dto/add.issue.dto';
+import { QueryIssueDto } from './dto/query.dto';
+import { SetIssueContentDto } from './dto/set.issueContent.dto';
+import { SetIssuePollDto } from './dto/set.issuePoll.dto';
+import { SetIssueRegiDto } from './dto/set.issueRegi.dto';
+import { SetIssueRegiStatusDto } from './dto/set.issueRegiStatus.dto';
+
 import { IssueService } from './issue.service';
 
 @Controller('issues')
@@ -47,9 +44,10 @@ export class IssueController {
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
   @Get()
   @HttpCode(200)
-  async getIssuesRegistered(@Query() issueQuery: issueQueryStringDto) {
+  async getIssuesRegistered(@Query() issueQuery: QueryIssueDto) {
     try {
-      const { targetPolitician, regiStatus, ranked, pageNum, perPage } = issueQuery;
+      const { targetPolitician, regiStatus, ranked, pageNum, perPage } =
+        issueQuery;
 
       // 등록된 이슈
       if (regiStatus) {

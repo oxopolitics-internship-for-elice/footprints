@@ -1,14 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { Issue } from '../schemas';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Issue, IssueDocument } from '../schemas/issue.schema';
+
 @Injectable()
 export class IssueService {
-  private issues: Issue[] = [];
+  constructor(
+    @InjectModel(Issue.name)
+    private issueModel: Model<IssueDocument>,
+  ) {}
 
-  getAllIssues(): Issue[] {
-    return this.issues;
+  addIssue(issueData: object): Issue[] {
+    return [];
   }
 
-  getOne(id: number): Issue {
-    const issue = this.issues.find((issue) => issue.id === Number(id));
+  getIssuesRegistered(id: number, pageNum: number, perPage: number) {
+    return {};
+  }
+
+  getIssueNotRegisteredRanked(id: number) {
+    return 'hello World';
+  }
+
+  getIssueNotRegistered(id: number, pageNum, perPage) {
+    const issue = this.issueModel.find((issue) => issue);
+    return issue;
+  }
+
+  setIssueRegi(id, obj) {
+    return { id, obj };
+  }
+
+  setIssuePoll(id, obj) {
+    return { id, obj };
+  }
+
+  setIssueContent(id, content) {
+    return { id, content };
+  }
+
+  setIssueStatus(id, status) {
+    return { id, status };
   }
 }

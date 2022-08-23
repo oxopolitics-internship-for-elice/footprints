@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { User, Politician } from './';
 import * as mongoose from 'mongoose';
+import { Politician } from './politician.schema';
+import { User } from './user.schema';
 
 export type IssueDocument = Issue & mongoose.Document;
 
@@ -23,10 +24,10 @@ export class Issue {
   @Prop({ default: 'inactive' })
   regiStatus: string;
 
-  @Prop({ default: { pro: 0, con: 0 } })
+  @Prop({ default: { pro: 0, con: 0 }, type: Object })
   regi: object;
 
-  @Prop({ default: { pro: 0, neu: 0, con: 0 } })
+  @Prop({ default: { pro: 0, neu: 0, con: 0 }, type: Object })
   poll: object;
 
   @Prop({ required: true })
