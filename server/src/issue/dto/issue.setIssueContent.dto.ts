@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { AddIssueDto } from './issue.addIssue.dto';
+import { IsNumber, IsString } from 'class-validator';
 
-export class SetIssueContentDto extends PartialType(AddIssueDto) {}
+export class SetIssueContentDto {
+  @IsNumber()
+  readonly _id: number;
+
+  @IsString()
+  readonly content: string;
+}

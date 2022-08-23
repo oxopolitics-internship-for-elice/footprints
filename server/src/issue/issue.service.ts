@@ -1,61 +1,48 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { IssueDocument, Issue } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
-import { PageOptionsDto } from './dto/page.dto';
-import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
-import { Issue, IssueDocument } from '../schemas';
-import { throwIfEmpty } from 'rxjs';
 @Injectable()
 export class IssueService {
   constructor(
-    @InjectModel('issues')
+    @InjectModel(Issue.name)
     private readonly issueModel: Model<IssueDocument>,
   ) {}
 
-  async addIssue(issueData: AddIssueDto): Promise<Issue> {
-    const issue = new this.issueModel({
-      ...issueData,
-    });
-    issue.targetPolitician = issueData.targetPolitician;
-    issue.regiUser = issueData.regiUser;
-    issue.issuDate = issueData.issueDate;
-    issue.pollDate = issueData.pollDate;
-    issue.content = issueData.content;
-    issue.isPollActive = issueData.isPollActive;
-    const result = await issue.save();
-    console.log(result);
-    return result;
+  async addIssue(issueData: AddIssueDto): Promise<boolean> {
+    const instance = await new this.issueModel(issueData);
+    const save = await instance.save();
+
+    if (!save) {
+      throw new Error('생성 오류');
+    } else {
+      return true;
+    }
   }
 
-  async getAllIssues(): Promise<Issue[]> {
-    const issues = await this.issueModel.find();
+  async getIssuesRegistered(
+    targetPolitician,
+    pageNum,
+    perPage,
+    skip,
+  ): Promise<Issue[]> {
+    const issues = await this.issueModel.find({ targetPolitician });
     return issues;
   }
 
-  // async getIssuesByPolitician(
-  //   politicianId: string,
-  //   pageData: PageOptionsDto,
-  // ): Promise<Issue> {
-  //   const issues = await this.issueModel.find({
+  async getIssueNotRegisteredRanked(targetPolitician): Promise<Issue[]> {
+    const issues = await this.issueModel.find({ targetPolitician });
+    return issues;
+  }
 
-  //   });
-  // }
-
-  // async getOne(id: string): Promise<Issue> {
-  //   const issue = this.issueModel.find((issue) => issue.id === String(id));
-  //   if (!issue) {
-  //     throw new NotFoundException(`issue id ${id} not found`);
-  //   }
-  //   return issue;
-  // }
-
-  // async setIssueContent(
-  //   issueData: SetIssueContentDto,
-  //   id: string,
-  // ): Promise<Issue> {
-  //   const issue = this.getOne(id);
-  //   this.deleteOne(id);
-  //   this.issueModel.push({ ...issue, ...issueData });
-  // }
+  async getIssueNotRegistered(
+    targetPolitician,
+    pageNum,
+    perPage,
+    skip,
+  ): Promise<Issue[]> {
+    const issues = await this.issueModel.find({ targetPolitician });
+    return issues;
+  }
 }

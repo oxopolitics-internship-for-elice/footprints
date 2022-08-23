@@ -1,23 +1,14 @@
-import { Controller, HttpStatus, Res, Body, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode } from '@nestjs/common';
 import { PoliticianService } from './politician.service';
-import { AddPoliticianDto } from './dto/politician.addPolitician.dto';
 
-@Controller('politicians')
+@Controller('politician')
 export class PoliticianController {
   constructor(private politicianService: PoliticianService) {}
-  @Post()
-  async addPolitician(
-    @Body() politicianData: AddPoliticianDto,
-    @Res() response,
-  ) {
-    try {
-      const politician = await this.politicianService.addPolitician(
-        politicianData,
-      );
-      return response.status(HttpStatus.OK).json({
-        message: 'create successfully',
-        politician,
-      });
-    } catch (err) {}
+
+  // 메인페이지(모든 정치인 인생 전체 그래프)
+  @Get()
+  @HttpCode(200)
+  async getPoliticians() {
+    return await this.politicianService.getAllPoliticians();
   }
 }

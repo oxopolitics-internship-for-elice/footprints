@@ -1,21 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { AddPoliticianDto } from './dto/politician.addPolitician.dto';
-import { Politician, PoliticianDocument } from '../schemas/politician.schema';
+import { Model } from 'mongoose';
+import { Issue, IssueDocument } from 'src/schemas/issue.schema';
+import { Politician, PoliticianDocument } from 'src/schemas/politician.schema';
 
 @Injectable()
 export class PoliticianService {
   constructor(
-    @InjectModel('politicians')
+    @InjectModel(Politician.name)
     private readonly politicianModel: Model<PoliticianDocument>,
+    @InjectModel(Issue.name) private readonly issueModel: Model<IssueDocument>,
   ) {}
-  async addPolitician(politicianData: AddPoliticianDto): Promise<Politician> {
-    const politician = new this.politicianModel();
-    politician.name = politicianData.name;
-    politician.image = politicianData.image;
-    politician.party = politicianData.party;
-    const result = await politician.save();
-    return result;
+
+  async getAllPoliticians(): Promise<Politician[]> {
+    const politicians = await this.politicianModel.find().select('_id');
+    const issues = await politicians.map((ele) => {
+      return this.issueModel.find({ targetPolitician: ele });
+    });
+    console.log(issues);
+    return [];
   }
 }
