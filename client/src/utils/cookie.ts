@@ -1,5 +1,8 @@
-import { useCookies } from 'react-cookie';
+import { Cookies } from 'react-cookie';
 
-export const [Cookies, setCookie, removeCookie] = useCookies(['accessToken']);
+const cookies = new Cookies();
 
-export const { accessToken } = Cookies;
+export const getCookie = (name: string) => cookies.get(name);
+export const setCookie = (name: string, value: string) =>
+  cookies.set(name, value);
+export const removeCookie = (name: string) => cookies.remove(name);

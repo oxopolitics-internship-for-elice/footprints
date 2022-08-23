@@ -1,5 +1,6 @@
 import { flexCenter } from '@/styles/flex';
 import styled from '@emotion/styled';
+import { useLocation } from 'react-router-dom';
 import Header from '../Base/Header';
 import FullHeightPage from '../System/FullHeightPage';
 
@@ -8,10 +9,11 @@ export interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
+  const location = useLocation();
   return (
     <>
       <FullHeightPage>
-        <Header />
+        <Header location={location} />
         <Container>{children}</Container>
       </FullHeightPage>
     </>

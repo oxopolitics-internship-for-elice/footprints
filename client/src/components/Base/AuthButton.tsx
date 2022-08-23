@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { accessToken, removeCookie } from '@/utils/cookie';
+import { getCookie, removeCookie } from '@/utils/cookie';
 import { useNavigate } from 'react-router-dom';
 
-const LoginButton = () => {
+const AuthButton = () => {
+  const accessToken = getCookie('accessToken');
   const navigate = useNavigate();
-
+  // 쿠키로 분기 하는 것이 아닌 store의 유저정보로 분기해야함
   return (
     <>
       {accessToken ? (
@@ -16,6 +17,8 @@ const LoginButton = () => {
     </>
   );
 };
+
+export default AuthButton;
 
 const Button = styled.button`
   display: inline-block;
