@@ -8,6 +8,8 @@ import { IssueController } from './issue/issue.controller';
 import { IssueModule } from './issue/issue.module';
 
 import { UserModule } from './user/user.module';
+import { PoliticianController } from './politician/politician.controller';
+import { PoliticianService } from './politician/politician.service';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { UserModule } from './user/user.module';
     }),
     IssueModule,
   ],
-  controllers: [AppController, IssueController],
-  providers: [AppService],
+  controllers: [AppController, IssueController, PoliticianController],
+  providers: [AppService, PoliticianService],
 })
 export class AppModule {}
