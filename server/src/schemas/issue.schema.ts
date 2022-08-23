@@ -24,11 +24,14 @@ export class Issue {
   @Prop({ default: 'inactive' })
   regiStatus: string;
 
-  @Prop({ default: { pro: 0, con: 0 }, type: Object })
-  regi: object;
+  @Prop({ default: { pro: 0, con: 0 }, type: mongoose.Schema.Types.Mixed })
+  regi;
 
-  @Prop({ default: { pro: 0, neu: 0, con: 0 }, type: Object })
-  poll: object;
+  @Prop({
+    default: { pro: 0, neu: 0, con: 0 },
+    type: mongoose.Schema.Types.Mixed,
+  })
+  poll;
 
   @Prop({ required: true })
   issueDate: Date;

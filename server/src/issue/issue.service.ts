@@ -1,45 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Issue, IssueDocument } from '../schemas/issue.schema';
-
+import { resourceLimits } from 'worker_threads';
+import { IssueDocument, Issue } from '../schemas/issue.schema';
+import { AddIssueDto } from './dto/issue.addIssue.dto';
 @Injectable()
 export class IssueService {
   constructor(
     @InjectModel(Issue.name)
-    private issueModel: Model<IssueDocument>,
+    private readonly issueModel: Model<IssueDocument>,
   ) {}
 
-  addIssue(issueData: object): Issue[] {
-    return [];
+  async addIssue(issueData: AddIssueDto): Promise<boolean> {
+    const instance = await new this.issueModel(issueData);
+    const save = await instance.save();
+
+    if (!save) {
+      throw new Error('생성 오류');
+    } else {
+      return true;
+    }
   }
 
-  getIssuesRegistered(id: number, pageNum: number, perPage: number) {
-    return {};
-  }
-
-  getIssueNotRegisteredRanked(id: number) {
-    return 'hello World';
-  }
-
-  getIssueNotRegistered(id: number, pageNum, perPage) {
-    const issue = this.issueModel.find((issue) => issue);
-    return issue;
-  }
-
-  setIssueRegi(id, obj) {
-    return { id, obj };
-  }
-
-  setIssuePoll(id, obj) {
-    return { id, obj };
-  }
-
-  setIssueContent(id, content) {
-    return { id, content };
-  }
-
-  setIssueStatus(id, status) {
-    return { id, status };
+  async getAllIssues(): Promise<Issue[]> {
+    const issues = await this.issueModel.find();
+    return issues;
   }
 }

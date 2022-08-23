@@ -16,10 +16,10 @@ import { PoliticianModule } from './politician/politician.module';
 
       connectionFactory: (connection) => {
         if (connection.readyState === 1) {
-          Logger.log('DB connected');
+          Logger.log('#### DB connected #####');
         }
         connection.on('disconnected', () => {
-          Logger.log('DB disconnected');
+          Logger.log('#### DB disconnected ####');
         });
         return connection;
       },
