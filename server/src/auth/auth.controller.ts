@@ -17,14 +17,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('/kakao')
-  @HttpCode(200)
   @UseGuards(new KakaoAuthGuard('kakao'))
   async kakaoLogin() {
     return HttpStatus.OK;
   }
 
   @Get('/kakao/callback')
-  @HttpCode(200)
   @UseGuards(new KakaoAuthGuard('kakao'))
   async kakaoCallback(@Req() req: any, @Res() res: any) {
     console.log('req.user: ', req.user);
