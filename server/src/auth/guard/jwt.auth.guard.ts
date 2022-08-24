@@ -50,8 +50,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     try {
       console.log('token from validate:', token);
       const tokenVerify = await this.authService.validateToken(token);
-      console.log('token verify : ', tokenVerify);
-      const tokenExpirationTime = new Date(tokenVerify['expires'] * 1000);
+
+      const tokenExpirationTime = new Date(tokenVerify['exp'] * 1000);
+
       const currentTime = new Date();
       const timeToRemain = Math.floor(
         (tokenExpirationTime.getTime() - currentTime.getTime()) / 1000 / 60,
