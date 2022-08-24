@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Mixed, Model } from 'mongoose';
 import { IssueDocument, Issue } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
+import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
+import { SetIssueRegiStatusDto } from './dto/issue.setIssueRegiStatus.dto';
 @Injectable()
 export class IssueService {
   constructor(
@@ -51,5 +53,10 @@ export class IssueService {
     return issues;
   }
 
-  // async setIssueRegi()
+  async setIssueRegi(id, regiData: SetIssueRegiDto): Promise<Issue> {
+    const issueRegi = await this.issueModel.findByIdAndUpdate(id, regiData);
+    console.log(id);
+    console.log(issueRegi);
+    return issueRegi;
+  }
 }

@@ -1,4 +1,5 @@
-import { IsBoolean, IsNumber, ValidateNested } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsBoolean, IsNumber, IsString, ValidateNested } from 'class-validator';
 
 class RegiObject {
   @IsBoolean()
@@ -9,8 +10,10 @@ class RegiObject {
 }
 
 export class SetIssueRegiDto {
+  // @Type(() => Number)
+  @Transform(({ value }) => Number(value))
   @IsNumber()
-  readonly _id: number;
+  readonly _id: string;
 
   @ValidateNested()
   readonly poll: RegiObject;

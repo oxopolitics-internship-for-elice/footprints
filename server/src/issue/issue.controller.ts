@@ -9,6 +9,7 @@ import {
   HttpCode,
   Res,
 } from '@nestjs/common';
+import { response } from 'express';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { QueryIssueDto } from './dto/issue.query.dto';
 import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
@@ -89,31 +90,35 @@ export class IssueController {
   }
 
   // 이슈 등록 투표
-  @Patch(':/issueId/regi')
+  @Patch('/:issueId/regi')
   async setIssueRegi(
     @Param('issueId') id: string,
     @Body() regi: SetIssueRegiDto,
+    @Res() response,
   ) {
     try {
-      // const issue = await this.issueService.setIssueRegi(id, regi);
-      return {};
-    } catch (err) {}
+      const issue = await this.issueService.setIssueRegi(id, regi);
+      console.log(id);
+      return response.json({ issue });
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // 이슈 여론 투표
-  @Patch(':/issueId/poll')
+  @Patch('/:issueId/poll')
   async setIssuePoll(
     @Param('issueId') id: string,
     @Body() poll: SetIssuePollDto,
   ) {
     try {
       // const issue = await this.issueService.setIssuePoll(id, poll);
-      return {};
+      // return response.json({ issue });
     } catch (err) {}
   }
 
   // (관리자) 이슈 내용 수정
-  @Patch(':/issueId/content')
+  @Patch('/:issueId/content')
   async setIssueContent(
     @Param('issueId') id: string,
     @Body() content: SetIssueContentDto,
@@ -125,7 +130,7 @@ export class IssueController {
   }
 
   // (관리자) 이슈 상태 수정
-  @Patch(':/issueId/regiStatus')
+  @Patch('/:issueId/regiStatus')
   async setIssueRegiStatus(
     @Param('issueId') id: string,
     @Body() regiStatus: SetIssueRegiStatusDto,
