@@ -3,7 +3,7 @@ import ServiceInfo from '@/components/home/ServiceInfo';
 import { Helmet } from 'react-helmet-async';
 import { FullPage, Slide } from 'react-full-page';
 import { useLocation } from 'react-router-dom';
-import Header from '@/components/Base/Header';
+import Header from '@/components/base/Header';
 
 const Home = () => {
   const location = useLocation();

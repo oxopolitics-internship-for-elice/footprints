@@ -1,12 +1,12 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import chartVideo from '@/chartVideo.mp4';
+import ChartVideo from '@/assets/ChartVideo.mp4';
 
 const ServiceInfo = () => {
   return (
     <>
       <Overlay />
-      <Video src={chartVideo} autoPlay loop muted></Video>
+      <Video src={ChartVideo} autoPlay loop muted></Video>
       <Content>
         <h2>정치 발자국에 오신 것을 환영합니다.</h2>
       </Content>

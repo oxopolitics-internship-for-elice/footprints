@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
-import { flexCenter } from '@/styles/flex';
+import { flexCenter } from '@/styles/Flex';
 import React from 'react';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/leejaemyung.webp';
 import yoonseokyeol from '@/assets/yoonseokyeol.webp';
-import WholeGraph from './LifeGraph';
+import LifeGraph from './LifeGraph';
 
 interface HomePoliticianProps {
   name: '이재명' | '윤석열';
@@ -25,7 +25,7 @@ const HomePolitician = ({ name }: HomePoliticianProps) => {
               <Image src={image[name]} alt="leejaemyung" />
               <Name>{name}</Name>
             </Row>
-            <WholeGraph target={'6303bed2e9d44f884ed1d640'} />
+            <LifeGraph target={'6303bed2e9d44f884ed1d640'} />
           </Politician>
         </AnimationOnScroll>
       </Container>

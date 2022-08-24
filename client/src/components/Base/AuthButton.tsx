@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { getCookie, removeCookie } from '@/utils/cookie';
+import { getCookie, removeCookie } from '@/utils/Cookie';
 import { useNavigate } from 'react-router-dom';
 
 const AuthButton = () => {
