@@ -7,7 +7,7 @@ export interface LayoutProps {
   children: JSX.Element;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <FullHeightPage>
