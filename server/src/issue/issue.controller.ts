@@ -97,27 +97,34 @@ export class IssueController {
     } catch (err) {}
   }
 
-  // (관리자) 이슈 내용 수정
-  @Patch(':/issueId/content')
-  async setIssueContent(
-    @Param('issueId') id: string,
-    @Body() content: SetIssueContentDto,
-  ) {
-    try {
-      // const issue = await this.issueService.setIssueContent(id, content);
-      return {};
-    } catch (err) {}
-  }
+  // @Patch('/:issueId')
+  // async setIssue(
+  //   @Param('issueId') id: string,
+  //   @Query() toUpdate: string,
+  //   @Body() update: SetIssueDto,
+  // )
 
-  // (관리자) 이슈 상태 수정
-  @Patch(':/issueId/regiStatus')
-  async setIssueRegiStatus(
-    @Param('issueId') id: string,
-    @Body() regiStatus: SetIssueRegiStatusDto,
-  ) {
-    try {
-      // const issue = await this.issueService.setIssueStatus(id, regiStatus);
-      return {};
-    } catch (err) {}
-  }
+  // // (관리자) 이슈 내용 수정
+  // @Patch(':/issueId/content')
+  // async setIssueContent(
+  //   @Param('issueId') id: string,
+  //   @Body() content: SetIssueContentDto,
+  // ) {
+  //   try {
+  //     // const issue = await this.issueService.setIssueContent(id, content);
+  //     return {};
+  //   } catch (err) {}
+  // }
+
+  // // (관리자) 이슈 상태 수정
+  // @Patch(':/issueId/regiStatus')
+  // async setIssueRegiStatus(
+  //   @Param('issueId') id: string,
+  //   @Body() regiStatus: SetIssueRegiStatusDto,
+  // ) {
+  //   try {
+  //     // const issue = await this.issueService.setIssueStatus(id, regiStatus);
+  //     return {};
+  //   } catch (err) {}
+  // }
 }
