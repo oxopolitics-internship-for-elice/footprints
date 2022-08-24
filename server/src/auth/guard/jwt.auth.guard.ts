@@ -21,17 +21,17 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   async canActivate(context: ExecutionContext) {
     const req = context.switchToHttp().getRequest();
     const res = context.switchToHttp().getResponse();
-    const cookie = req.cookies;
-    console.log('cookie: ', cookie);
+    // const cookie = req.cookies;
+    // console.log('cookie: ', cookie);
 
-    // const { authorization } = req.headers;
-    // if (!authorization) {
-    //   throw new HttpException('토큰 전송 에러', HttpStatus.UNAUTHORIZED);
-    // }
+    const { authorization } = req.headers;
+    if (!authorization) {
+      throw new HttpException('토큰 전송 에러', HttpStatus.UNAUTHORIZED);
+    }
 
-    const token = cookie.access_token;
-    console.log('token: ', token);
-    // const token = authorization.replace('Bearer ', '');
+    // const token = cookie.access_token;
+    // console.log('token: ', token);
+    const token = authorization.replace('Bearer ', '');
     const validatedToken = await this.validate(token);
     console.log('validatedToken', validatedToken);
 
