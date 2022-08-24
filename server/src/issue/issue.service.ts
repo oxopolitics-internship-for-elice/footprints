@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Mixed, Model } from 'mongoose';
+import { type } from 'os';
+import { resourceLimits } from 'worker_threads';
 import { IssueDocument, Issue } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
@@ -54,27 +56,41 @@ export class IssueService {
   }
 
   // pro 개수 확인 함수
-  async countPro(id): Promise<Issue> {
+  async countPro(id) {
     const issue = await this.issueModel.findOne({ issueId: id });
-    const value = issue.regi.pro;
+    const value: number = issue.regi.pro;
     return value;
   }
 
   // con 개수 확인 함수
-  async countCon(id): Promise<Issue> {
+  async countCon(id) {
     const issue = await this.issueModel.findOne({ issueId: id });
-    const value = issue.regi.con;
+    const value: number = issue.regi.con;
     return value;
+  }
+
+  // regiStatus,isPollActive update하는 함수
+  async changeRegiStatus(
+    id,
+    regiData: SetIssueRegiStatusDto,
+  ): Promise<boolean> {
+    const result = await this.issueModel.findByIdAndUpdate(id, regiData);
+    const save = result.save();
+    return true;
   }
 
   async setIssueRegi(id, regiData: SetIssueRegiDto): Promise<Issue> {
     const issueRegi = await this.issueModel.findById(id);
     console.log('카운트함수Pro!!!!:', await this.countPro(id));
     console.log('카운트함수Con!!!!:', await this.countCon(id));
-    console.log('서비스의 issueRegi:', issueRegi);
-    issueRegi.regi = await this.issueModel.updateOne(regiData);
-    console.log('레지데이타아아 : ', regiData);
-    console.log('이슈레지의 issueRegi:', issueRegi.regi);
+    if (regiData.pro === true) {
+      const proResult: number = (await this.countPro(id)) + 1;
+      const conResult: number = await this.countCon(id);
+      if (proResult >= 75 && proResult >= conResult * 3) {
+      }
+    }
     return issueRegi;
   }
+
+  async setIssuePoll(id, regiData: SetIssuePollDto): Promise<Issue> {}
 }

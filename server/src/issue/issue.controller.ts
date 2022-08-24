@@ -97,9 +97,9 @@ export class IssueController {
     @Res() response,
   ) {
     try {
-      const issue = await this.issueService.setIssueRegi(id, regi);
-      console.log('controller:', regi);
-      return response.json({ issue });
+      // const issue = await this.issueService.setIssueRegi(id, regi);
+      // console.log('controller:', regi);
+      // return response.json({ issue });
     } catch (err) {
       console.log(err);
     }
@@ -112,8 +112,8 @@ export class IssueController {
     @Body() poll: SetIssuePollDto,
   ) {
     try {
-      // const issue = await this.issueService.setIssuePoll(id, poll);
-      // return response.json({ issue });
+      const issue = await this.issueService.setIssuePoll(id, poll);
+      return response.json({ issue });
     } catch (err) {}
   }
 
