@@ -127,11 +127,11 @@ const Graph = (): JSX.Element => {
     if (isFirst) {
       setTimeout(() => {
         () => start();
-      }, [1]);
+      }, 1);
     } else {
       setTimeout(() => {
         () => start();
-      }, [1]);
+      }, 1);
     }
   }, [isFirst]);
 

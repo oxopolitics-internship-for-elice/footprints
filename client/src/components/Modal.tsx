@@ -3,8 +3,12 @@ import styled from '@emotion/styled';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 
 type Element = {
+  $context: Object;
   x: number;
   y: number;
+};
+type Object = {
+  dataIndex: number;
 };
 interface ModalProps {
   setOpen: (boolean: boolean) => void;
