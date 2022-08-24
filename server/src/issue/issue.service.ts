@@ -54,9 +54,11 @@ export class IssueService {
   }
 
   async setIssueRegi(id, regiData: SetIssueRegiDto): Promise<Issue> {
-    const issueRegi = await this.issueModel.findByIdAndUpdate(id, regiData);
-    console.log(id);
-    console.log(issueRegi);
+    const issueRegi = await this.issueModel.findById(id);
+    console.log('서비스의 issueRegi:', issueRegi);
+    issueRegi.regi = await this.issueModel.updateOne(regiData);
+    console.log('레지데이타아아 : ', regiData);
+    console.log('이슈레지의 issueRegi:', issueRegi.regi);
     return issueRegi;
   }
 }

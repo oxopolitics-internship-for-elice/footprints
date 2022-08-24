@@ -98,7 +98,7 @@ export class IssueController {
   ) {
     try {
       const issue = await this.issueService.setIssueRegi(id, regi);
-      console.log(id);
+      console.log('controller:', regi);
       return response.json({ issue });
     } catch (err) {
       console.log(err);
