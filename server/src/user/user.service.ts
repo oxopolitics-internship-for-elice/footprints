@@ -23,7 +23,8 @@ export class UserService {
     const user = await this.userModel.findOne({ email }).lean();
     console.log(user);
     if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
+      // throw new NotFoundException(`User with email ${email} not found`);
+      return null;
     }
     return user;
   }

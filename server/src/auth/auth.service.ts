@@ -67,8 +67,13 @@ export class AuthService {
   }
 
   async validateToken(token: string) {
-    return await this.jwtService.verify(token, {
+    console.log('token form validateToken() auth.service: ', token);
+    const result = await this.jwtService.verify(token, {
       secret: process.env.JWT_SECRET_KEY,
     });
+    if (!result) {
+      return { message: 'failed to verify token' };
+    }
+    return result;
   }
 }

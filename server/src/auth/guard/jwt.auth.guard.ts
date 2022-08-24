@@ -18,9 +18,39 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     super();
   }
 
+  async canActivate(context: ExecutionContext) {
+    const req = context.switchToHttp().getRequest();
+    const res = context.switchToHttp().getResponse();
+    const cookie = req.cookies;
+    console.log('cookie: ', cookie);
+
+    // const { authorization } = req.headers;
+    // if (!authorization) {
+    //   throw new HttpException('토큰 전송 에러', HttpStatus.UNAUTHORIZED);
+    // }
+
+    const token = cookie.access_token;
+    console.log('token: ', token);
+    // const token = authorization.replace('Bearer ', '');
+    const validatedToken = await this.validate(token);
+    console.log('validatedToken', validatedToken);
+
+    //검증을 거친 토큰이 재발급된 토큰이면 헤더에 accesstoken으로 새로 발급한 토큰을 붙임
+    if (validatedToken.reissueToken) {
+      res.setHeader('accessToken', validatedToken.newToken);
+      res.setHeader('reissuedToken', true);
+    } else {
+      res.setHeader('reissuedToken', false);
+    }
+    req.user = validatedToken.user ? validatedToken.user : validatedToken;
+    return true;
+  }
+
   async validate(token: string) {
     try {
+      console.log('token from validate:', token);
       const tokenVerify = await this.authService.validateToken(token);
+      console.log('token verify : ', tokenVerify);
       const tokenExpirationTime = new Date(tokenVerify['expires'] * 1000);
       const currentTime = new Date();
       const timeToRemain = Math.floor(
@@ -70,30 +100,5 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
           throw new HttpException(`${error}`, 401);
       }
     }
-  }
-
-  async canActivate(context: ExecutionContext) {
-    const req = context.switchToHttp().getRequest();
-    const res = context.switchToHttp().getResponse();
-    // const cookie = req.cookies;
-    // console.log('cookie: ', cookie);
-
-    const { authorization } = req.headers;
-    if (!authorization) {
-      throw new HttpException('토큰 전송 에러', HttpStatus.UNAUTHORIZED);
-    }
-
-    const token = authorization.replace('Bearer ', '');
-    const validatedToken = await this.validate(token);
-
-    //검증을 거친 토큰이 재발급된 토큰이면 헤더에 accesstoken으로 새로 발급한 토큰을 붙임
-    if (validatedToken.reissueToken) {
-      res.setHeader('accessToken', validatedToken.newToken);
-      res.setHeader('reissuedToken', true);
-    } else {
-      res.setHeader('reissuedToken', false);
-    }
-    req.user = validatedToken.user ? validatedToken.user : validatedToken;
-    return true;
   }
 }
