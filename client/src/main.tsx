@@ -8,11 +8,9 @@ import { RecoilRoot } from 'recoil';
 import React from 'react';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <RecoilRoot>
-      <HelmetProvider>
-        <App />
-      </HelmetProvider>
-    </RecoilRoot>
-  </React.StrictMode>,
+  <RecoilRoot>
+    <HelmetProvider>
+      <App />
+    </HelmetProvider>
+  </RecoilRoot>,
 );

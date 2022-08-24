@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import React from 'react';
 import chartVideo from '@/chartVideo.mp4';
 
 const ServiceInfo = () => {

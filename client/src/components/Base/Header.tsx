@@ -3,7 +3,7 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 
 const Header = () => {
-  //const location = useLocation();
+  const location = useLocation();
   const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
   const [isMainFirstPage, setIsMainFirstPage] = React.useState(true);
 
