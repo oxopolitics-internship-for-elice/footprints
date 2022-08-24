@@ -1,11 +1,11 @@
 import DrowGraph from '../components/GraphCompoenet';
 
-function Graph() {
+const Graph = () => {
   return (
     <>
       <DrowGraph />
     </>
   );
-}
+};
 
 export default Graph;

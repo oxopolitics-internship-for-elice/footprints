@@ -1,5 +1,4 @@
-import styled from 'styled-components';
-import React, { useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,10 +11,9 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import { getElementAtEvent, getDatasetAtEvent, Line } from 'react-chartjs-2';
+import { getElementAtEvent, Line } from 'react-chartjs-2';
 import { faker } from '@faker-js/faker';
 import Modal from './Modal';
-import { deflateRaw } from 'zlib';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -53,17 +51,21 @@ export const data = {
   ],
 };
 
-function Graph(): JSX.Element {
-  const chartRef = useRef(null);
+const Graph = (): JSX.Element => {
+  const chartRef = useRef<any>(null);
   const [open, setOpen] = useState(false);
-  const [point, setPoint] = useState();
-  function ClickHander(element: InteractionItem[], event: Event) {
+  const [point, setPoint] = useState<any>();
+  function ClickHander(
+    element: InteractionItem[],
+    event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
+  ) {
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
       setOpen(!open);
       return element[0].element;
     }
   }
+
   return (
     <div
       style={{
@@ -77,7 +79,10 @@ function Graph(): JSX.Element {
       <Line
         ref={chartRef}
         onClick={event => {
-          let point = ClickHander(getElementAtEvent(chartRef.current, event));
+          let point = ClickHander(
+            getElementAtEvent(chartRef.current, event),
+            event,
+          );
 
           setPoint(point);
         }}
@@ -87,7 +92,7 @@ function Graph(): JSX.Element {
       <div>{open && <Modal setOpen={setOpen} element={point} />}</div>
     </div>
   );
-}
+};
 
 export const options = {
   responsive: true,
@@ -203,13 +208,12 @@ export const options = {
         tooltipEl.style.height = '80px';
       },
     },
-
-    legend: {
-      position: null,
-    },
     title: {
       display: true,
       text: '윤석열 인생 그래프',
+    },
+    legend: {
+      display: false,
     },
   },
 };

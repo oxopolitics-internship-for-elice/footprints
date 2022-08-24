@@ -1,8 +1,18 @@
 import { useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-function Modal({ setOpen, element }) {
-  const ref = useRef(null);
+
+type Element = {
+  x: number;
+  y: number;
+};
+interface ModalProps {
+  setOpen: (boolean: boolean) => void;
+  element: Element;
+}
+
+const Modal = ({ setOpen, element }: ModalProps) => {
+  const ref = useRef<null | HTMLDivElement>(null);
   useEffect(() => {
     // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
@@ -19,7 +29,7 @@ function Modal({ setOpen, element }) {
     }
   }
   const Imgsrc = ['img/circle.png', 'img/triangle.png', 'img/x.png'];
-  function ClickHandler(index) {
+  function ClickHandler(index: number) {
     console.log(index);
   }
   return (
@@ -49,10 +59,15 @@ function Modal({ setOpen, element }) {
       </Container>
     </>
   );
-}
+};
 export default Modal;
 
-const Container = styled.div`
+interface ContainerProps {
+  x: number;
+  y: number;
+}
+
+const Container = styled.div<ContainerProps>`
   width: 300px;
   height: 200px;
   z-index: 999;

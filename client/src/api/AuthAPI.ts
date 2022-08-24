@@ -12,7 +12,11 @@ const AuthAPI: IAuthAPI = (() => {
     getKaKao: () => {
       // somethingCommon();
 
+<<<<<<< HEAD
       return Api.get(`auth/kakao`);
+=======
+      return Api.get(`/auth/kakao`);
+>>>>>>> dev
     },
   };
 })();

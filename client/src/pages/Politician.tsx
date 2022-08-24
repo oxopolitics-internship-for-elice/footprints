@@ -1,5 +1,5 @@
-import StandbyIssue from '@components/StandbyIssue';
-import Top3Issue from '@components/Top3Issue';
+import StandbyIssue from '@components/politician/StandbyIssue';
+import Top3Issue from '@components/politician/Top3Issue';
 
 const Politician = (): JSX.Element => {
   return (
