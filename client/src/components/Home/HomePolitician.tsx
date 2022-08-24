@@ -14,6 +14,7 @@ interface HomePoliticianProps {
 }
 
 const HomePolitician = ({ name }: HomePoliticianProps) => {
+  //임시 데이터
   const fetchedIssue: IssueTypes[] = useRecoilValue(issueState);
   const image = {
     이재명: leejaemyung,

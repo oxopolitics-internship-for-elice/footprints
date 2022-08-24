@@ -42,6 +42,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   const issueDates = issues.map(issue => dateFormatter(issue.issueDate));
 
   const options = {
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
@@ -52,15 +53,32 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
     },
     scales: {
       x: {
+        display: false,
         grid: {
           display: false,
         },
       },
       y: {
-        display: false,
+        display: true,
         grid: {
-          display: false,
+          lineWidth: 2,
+          borderDash: [5, 5],
+          color: function (context: { tick: { value: number } }) {
+            if (context.tick.value === 0) {
+              return '#d6d6d6';
+            } else {
+              return 'transparent';
+            }
+          },
         },
+      },
+    },
+    layout: {
+      padding: 20,
+    },
+    elements: {
+      point: {
+        radius: 0,
       },
     },
   };
@@ -76,14 +94,15 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   };
 
   return (
-    <Container>
-      <Line data={data} plugins={[ChartDataLabels]} options={options} />
-    </Container>
+    <GraphContainer>
+      <Line width={'1300px'} height={'400px'} data={data} options={options} />
+    </GraphContainer>
   );
 };
 
 export default LifeGraph;
 
-const Container = styled.div`
+const GraphContainer = styled.div`
   width: 90vw;
+  height: 400px;
 `;
