@@ -1,7 +1,7 @@
 import { flexCenter } from '@/styles/flex';
 import styled from '@emotion/styled';
-import Header from '../base/Header';
-import FullHeightPage from '../system/FullHeightPage';
+import Header from '../Base/Header';
+import FullHeightPage from '../System/FullHeightPage';
 
 export interface LayoutProps {
   children: JSX.Element;

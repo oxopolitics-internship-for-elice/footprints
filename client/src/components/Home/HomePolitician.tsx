@@ -4,7 +4,7 @@ import React from 'react';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/leejaemyung.webp';
 import yoonseokyeol from '@/assets/yoonseokyeol.webp';
-import WholeGraph from './LifeGraph';
+import WholeGraph from '@/components/Home/LifeGraph';
 
 interface HomePoliticianProps {
   name: '이재명' | '윤석열';
