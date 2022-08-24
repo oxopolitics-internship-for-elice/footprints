@@ -8,6 +8,14 @@ import {
   IsObject,
 } from 'class-validator';
 
+// class PollObject {
+//   @IsBoolean()
+//   pro: boolean;
+
+//   @IsBoolean()
+//   con: boolean;
+// }
+
 export class SetIssueRegiDto {
   @IsBoolean()
   pro: boolean;

@@ -53,8 +53,24 @@ export class IssueService {
     return issues;
   }
 
+  // pro 개수 확인 함수
+  async countPro(id): Promise<Issue> {
+    const issue = await this.issueModel.findOne({ issueId: id });
+    const value = issue.regi.pro;
+    return value;
+  }
+
+  // con 개수 확인 함수
+  async countCon(id): Promise<Issue> {
+    const issue = await this.issueModel.findOne({ issueId: id });
+    const value = issue.regi.con;
+    return value;
+  }
+
   async setIssueRegi(id, regiData: SetIssueRegiDto): Promise<Issue> {
     const issueRegi = await this.issueModel.findById(id);
+    console.log('카운트함수Pro!!!!:', await this.countPro(id));
+    console.log('카운트함수Con!!!!:', await this.countCon(id));
     console.log('서비스의 issueRegi:', issueRegi);
     issueRegi.regi = await this.issueModel.updateOne(regiData);
     console.log('레지데이타아아 : ', regiData);
