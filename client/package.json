@@ -17,6 +17,7 @@
     "animate.css": "^4.1.1",
     "axios": "^0.27.2",
     "chart.js": "^3.9.1",
+    "chartjs-plugin-datalabels": "^2.1.0",
     "emotion": "^11.0.0",
     "emotion-reset": "^3.0.1",
     "react": "^18.2.0",
