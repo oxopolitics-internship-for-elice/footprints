@@ -6,12 +6,18 @@ import Layout from '@/components/layout/Layout';
 import GlobalStyle from './styles/Global';
 import { RecoilRoot } from 'recoil';
 import React from 'react';
+import { CookiesProvider } from 'react-cookie';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <RecoilRoot>
+      <GlobalStyle />
       <HelmetProvider>
-        <App />
+        <CookiesProvider>
+          <Layout>
+            <App />
+          </Layout>
+        </CookiesProvider>
       </HelmetProvider>
     </RecoilRoot>
   </React.StrictMode>,
