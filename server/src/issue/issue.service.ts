@@ -56,45 +56,69 @@ export class IssueService {
     return issues;
   }
 
-  // pro 개수 확인 함수
-  async countPro(id) {
+  // regi pro 개수 확인 함수
+  async regicountPro(id) {
     const issue = await this.issueModel.findOne({ id });
     const value: number = issue.regi.pro;
     return value;
   }
 
-  // con 개수 확인 함수
-  async countCon(id) {
+  // regi con 개수 확인 함수
+  async regicountCon(id) {
     const issue = await this.issueModel.findOne({ id });
     const value: number = issue.regi.con;
     return value;
   }
 
+  // poll pro 개수 확인 함수
+  async pollcountPro(id) {
+    const issue = await this.issueModel.findOne({ id });
+    const value: number = issue.poll.pro;
+    return value;
+  }
+
+  // poll con 개수 확인 함수
+  async pollcountCon(id) {
+    const issue = await this.issueModel.findOne({ id });
+    const value: number = issue.poll.con;
+    return value;
+  }
+
+  // poll neu 개수 확인 함수
+  async pollcountNeu(id) {
+    const issue = await this.issueModel.findOne({ id });
+    const value: number = issue.poll.neu;
+    return value;
+  }
+
   async setIssueRegi(id, regiData: SetIssueRegiDto): Promise<Issue> {
     const issueRegi = await this.issueModel.findById(id);
-    console.log('카운트함수Pro!!!!:', await this.countPro(id));
-    console.log('카운트함수Con!!!!:', await this.countCon(id));
-    console.log(id);
-    console.log(issueRegi);
-
-    const proResult: number = (await this.countPro(id)) + 1;
-    const conResult: number = await this.countCon(id);
+    const proResult: number = (await this.regicountPro(id)) + 1;
+    const conResult: number = await this.regicountCon(id);
     if (regiData.pro === true) {
       issueRegi.regi.pro = proResult;
       if (issueRegi.regi.pro >= 75 && issueRegi.regi.pro >= conResult * 3) {
-        issueRegi.regiStatus = 'active';
+        issueRegi.regiStatus = 'inactive';
         issueRegi.isPollActive = false;
       }
     } else {
       issueRegi.regi.con = conResult + 1;
-      console.log(issueRegi.regi.con);
     }
     return issueRegi;
   }
 
   async setIssuePoll(id, regiData: SetIssuePollDto): Promise<Issue> {
     const issuePoll = await this.issueModel.findById(id);
-    console.log(issuePoll);
+    const proResult: number = await this.pollcountPro(id);
+    const neuResult: number = await this.pollcountNeu(id);
+    const conResult: number = await this.pollcountCon(id);
+    if (regiData.pro === true) {
+      issuePoll.poll.pro = proResult + 1;
+    } else if (regiData.neu === true) {
+      issuePoll.poll.neu = neuResult + 1;
+    } else {
+      issuePoll.poll.con = conResult + 1;
+    }
     return issuePoll;
   }
 }

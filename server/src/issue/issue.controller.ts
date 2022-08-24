@@ -98,7 +98,6 @@ export class IssueController {
   ) {
     try {
       const issue = await this.issueService.setIssueRegi(id, regi);
-      console.log('controller:', regi);
       return response.json({ issue });
     } catch (err) {
       console.log(err);
@@ -106,17 +105,17 @@ export class IssueController {
   }
 
   // 이슈 여론 투표
-  // @Patch('/:issueId/poll')
-  // async setIssuePoll(
-  //   @Param('issueId') id: string,
-  //   @Body() poll: SetIssuePollDto,
-  //   @Res() response,
-  // ) {
-  //   try {
-  //     const issue = await this.issueService.setIssuePoll(id, poll);
-  //     return response.json({ issue });
-  //   } catch (err) {}
-  // }
+  @Patch('/:issueId/poll')
+  async setIssuePoll(
+    @Param('issueId') id: string,
+    @Body() poll: SetIssuePollDto,
+    @Res() response,
+  ) {
+    try {
+      const issue = await this.issueService.setIssuePoll(id, poll);
+      return response.json({ issue });
+    } catch (err) {}
+  }
 
   // (관리자) 이슈 내용 수정
   @Patch('/:issueId/content')
