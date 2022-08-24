@@ -1,20 +1,4 @@
-import { Transform, Exclude } from 'class-transformer';
-import {
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-  IsObject,
-} from 'class-validator';
-
-// class PollObject {
-//   @IsBoolean()
-//   pro: boolean;
-
-//   @IsBoolean()
-//   con: boolean;
-// }
+import { IsBoolean } from 'class-validator';
 
 export class SetIssueRegiDto {
   @IsBoolean()
