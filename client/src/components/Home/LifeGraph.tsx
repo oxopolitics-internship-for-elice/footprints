@@ -1,7 +1,4 @@
-import issueState from '@/store/IssueState';
-import issueDateState from '@/store/IssueDateState';
 import { Line } from 'react-chartjs-2';
-import { useRecoilValue } from 'recoil';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,32 +26,20 @@ ChartJS.register(
   Legend,
 );
 
-const LifeGraph = ({ target }: { target: string }): JSX.Element => {
+interface lifeGraphProps {
+  issues: IssueTypes[];
+}
+
+const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   // const issues: IssueTypes[] = useRecoilValue(issueState);
   // const issueDates: Date[] = useRecoilValue(issueDateState);
 
-  const [lifeIssue, setLifeIssue] = useState<IssueTypes[]>([]);
-  useEffect(() => {
-    const getLifeIssue = async () => {
-      try {
-        const res = await Api.get(
-          `issues?targetPolitician=${target}&regiStatus=true`,
-        );
-        setLifeIssue(res.data);
-      } catch (Error) {
-        alert(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
-      }
-    };
-    getLifeIssue();
-  }, [target]);
-  console.log(lifeIssue);
-
-  const graphData = lifeIssue.map(
+  const graphData = issues.map(
     (issue: { poll: { pro: number; con: number } }) =>
       issue.poll.pro - issue.poll.con,
   );
 
-  const issueDates = lifeIssue.map(issue => dateFormatter(issue.issueDate));
+  const issueDates = issues.map(issue => dateFormatter(issue.issueDate));
 
   const options = {
     plugins: {

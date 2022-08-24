@@ -11,7 +11,6 @@ export interface IssueProps {
 }
 
 const StandbyIssue = (): JSX.Element => {
-  // const fetchedIssue: IssueTypes[] = useRecoilValue(issueState);
   const [issueList, setIssueList] = useState<IssueTypes[]>([]);
   const targetPolitician = '6303bed2e9d44f884ed1d640';
   const target = useRef<any>();
