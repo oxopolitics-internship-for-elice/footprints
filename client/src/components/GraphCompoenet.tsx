@@ -26,6 +26,23 @@ ChartJS.register(
 );
 
 import GraphAPI from '@/api/GraphAPI';
+interface ResTypes {
+  targetPolitician: string;
+  _id: string;
+  createdAt: Date;
+  regiUser: string;
+  regiStatus: string;
+  regi: { pro: number; con: number };
+  poll: { pro: number; con: number; neu: number };
+  issueDate: Date;
+  pollDate: Date;
+  content: string;
+  isPollActive: boolean;
+  updatedAt: Date;
+  score: number;
+}
+import dateFormatter from '@/utils/DateFormatter';
+
 const labels = [
   '11:30분',
   '11:45분',
@@ -34,30 +51,20 @@ const labels = [
   '17:30분',
   '19:30분',
   '20:30분',
+  '20:30분',
+  '20:30분',
+  '20:30분',
 ];
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => faker.datatype.number({ min: -100, max: 100 })),
-      tension: 0.5,
-      fill: {
-        target: { value: 0 },
-        below: 'rgba(255, 26, 104, 0.2)',
-        above: 'rgba(75, 192, 192,0.2)',
-      },
-    },
-  ],
-};
-
 const Graph = (): JSX.Element => {
   const chartRef = useRef<any>(null);
   const [open, setOpen] = useState(false);
   const [point, setPoint] = useState<any>();
-  const [issueData, setIssueData] = useState([]);
-  const [poll, setPoll] = useState([]);
-  const [content, setContent] = useState([]);
+  const [issueDate, setIssueDate] = useState<any>([]);
+  const [poll, setPoll] = useState<any>([]);
+  const [content, setContent] = useState<any>([]);
+  const [score, setScore] = useState<any>([]);
+  const [data, setData] = useState<any>();
+  const [isFirst, setIsFirst] = useState(false);
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -68,21 +75,65 @@ const Graph = (): JSX.Element => {
       return element[0].element;
     }
   }
-  useEffect(() => {
+
+  const start = async () => {
     const getData = async () => {
       let target = '6303bed2e9d44f884ed1d640';
       const res = await GraphAPI.getGraph(target);
-      console.log(res.data);
-      res.data.map((res: Object) => {
-        issueData.push(res.pollDate);
-        poll.push(res.poll);
-        content.push(res.content);
+      res.data.map((res: ResTypes) => {
+        setIssueDate((current: Date[] | []) => {
+          const temp = [...current, res.issueDate];
+          return temp;
+        });
+
+        setPoll((current: any) => {
+          const temp = [...current, res.poll];
+          return temp;
+        });
+        setContent((current: any) => {
+          const temp = [...current, res.content];
+          return temp;
+        });
+        setScore((current: any) => {
+          const temp = [...current, res.poll.pro - res.poll.con];
+          return temp;
+        });
       });
     };
+    if (!isFirst) {
+      await getData();
+    }
+    setData({
+      labels: issueDate,
+      datasets: [
+        {
+          data: score,
+          tension: 0.3,
+          fill: {
+            target: { value: 0 },
+            below: 'rgba(255, 26, 104, 0.2)',
+            above: 'rgba(75, 192, 192,0.2)',
+          },
+        },
+      ],
+    });
 
-    getData();
-    console.log(poll[0]);
-  }, []);
+    setIsFirst(true);
+    console.log(content);
+  };
+
+  useEffect(() => {
+    start();
+    if (isFirst) {
+      setTimeout(() => {
+        () => start();
+      }, [1]);
+    } else {
+      setTimeout(() => {
+        () => start();
+      }, [1]);
+    }
+  }, [isFirst]);
 
   const options = {
     responsive: true,
@@ -92,15 +143,6 @@ const Graph = (): JSX.Element => {
 
         external: function (context: any) {
           // Tooltip Element
-          let num: number[][] = [
-            [10, 30, 50],
-            [20, 60, 30],
-            [30, 50, 20],
-            [10, 50, 20],
-            [70, 50, 20],
-            [30, 50, 20],
-            [60, 50, 20],
-          ];
 
           let tooltipEl = document.getElementById('chartjs-tooltip');
           // Create element on first render
@@ -131,18 +173,12 @@ const Graph = (): JSX.Element => {
           }
           // Set Text
           if (tooltipModel.body) {
-            console.log(num, '111');
             const bodyLines = tooltipModel.body.map(getBody);
-            console.log(bodyLines, '2222');
-            console.log(poll, '3333');
-            const result = bodyLines[0].map(body => {
+            const result = bodyLines[0].map((body: any) => {
               return Object.values(body);
-              console.log(body, '531');
             });
-            console.log(result, '5325');
             const tableHead = document.createElement('div');
             function drow(div: Element, body: Element, index: number) {
-              console.log(body);
               const imgSrc = [
                 'img/circle.png',
                 'img/triangle.png',
@@ -190,9 +226,7 @@ const Graph = (): JSX.Element => {
           }
 
           const position = context.chart.canvas.getBoundingClientRect();
-          // const bodyFont = Chart.helpers.toFont(tooltipModel.options.bodyFont);
 
-          // Display, position, and set styles for font
           tooltipEl.style.opacity = '1';
           tooltipEl.style.position = 'absolute';
           tooltipEl.style.left =
@@ -230,20 +264,23 @@ const Graph = (): JSX.Element => {
         width: '800px',
       }}
     >
-      <Line
-        ref={chartRef}
-        onClick={event => {
-          let point = ClickHander(
-            getElementAtEvent(chartRef.current, event),
-            event,
-          );
-
-          setPoint(point);
-        }}
-        options={options}
-        data={data}
-      />
-      <div>{open && <Modal setOpen={setOpen} element={point} />}</div>
+      {data && (
+        <Line
+          ref={chartRef}
+          onClick={event => {
+            let point = ClickHander(
+              getElementAtEvent(chartRef.current, event),
+              event,
+            );
+            setPoint(point);
+          }}
+          options={options}
+          data={data}
+        />
+      )}
+      <div>
+        {open && <Modal setOpen={setOpen} element={point} content={content} />}
+      </div>
     </div>
   );
 };

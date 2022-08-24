@@ -9,10 +9,15 @@ type Element = {
 interface ModalProps {
   setOpen: (boolean: boolean) => void;
   element: Element;
+  content: [];
 }
 
-const Modal = ({ setOpen, element }: ModalProps) => {
+const Modal = ({ setOpen, element, content }: ModalProps) => {
   const ref = useRef<null | HTMLDivElement>(null);
+  useEffect(() => {
+    console.log();
+    console.log(content);
+  });
   useEffect(() => {
     // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
@@ -42,6 +47,7 @@ const Modal = ({ setOpen, element }: ModalProps) => {
         >
           <IoCloseCircleOutline />
         </CloseButton>
+        {content[element.$context.dataIndex]}
         <ChooseBox>
           {Imgsrc.map((src, index) => {
             return (
@@ -92,7 +98,7 @@ const ChooseBox = styled.div`
   justify-content: center;
   border-radius: 30px;
   align-items: center;
-  margin: 130px 0;
+  margin: 100px 0;
 `;
 
 const ChooseItem = styled.button`
