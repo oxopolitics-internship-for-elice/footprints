@@ -1,6 +1,6 @@
-import { IsBoolean, IsNumber, ValidateNested } from 'class-validator';
+import { IsBoolean } from 'class-validator';
 
-class PollObject {
+export class SetIssuePollDto {
   @IsBoolean()
   pro: boolean;
 
@@ -9,12 +9,4 @@ class PollObject {
 
   @IsBoolean()
   con: boolean;
-}
-
-export class SetIssuePollDto {
-  @IsNumber()
-  readonly _id: number;
-
-  @ValidateNested()
-  readonly poll: PollObject;
 }

@@ -1,9 +1,10 @@
-import HomePolitician from '@/components/home/HomePolitician';
-import ServiceInfo from '@/components/home/ServiceInfo';
+import HomePolitician from '@/components/Home/HomePolitician';
+import ServiceInfo from '@/components/Home/ServiceInfo';
 import { Helmet } from 'react-helmet-async';
 import { FullPage, Slide } from 'react-full-page';
 import { useLocation } from 'react-router-dom';
-import Header from '@/components/base/Header';
+import Header from '@/components/Base/Header';
+import HomePoliticianList from '@/components/Home/HomePoliticanList';
 
 const Home = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ const Home = () => {
         <Slide>
           <HomePolitician name="이재명" />
         </Slide>
+        <HomePoliticianList />
       </FullPage>
     </>
   );

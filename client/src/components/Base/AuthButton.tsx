@@ -2,15 +2,27 @@ import styled from '@emotion/styled';
 import React from 'react';
 import { getCookie, removeCookie } from '@/utils/Cookie';
 import { useNavigate } from 'react-router-dom';
+import { Alert } from './Alert';
 
 const AuthButton = () => {
-  const accessToken = getCookie('accessToken');
+  const accessToken = getCookie('access_token');
   const navigate = useNavigate();
-  // 쿠키로 분기 하는 것이 아닌 store의 유저정보로 분기해야함
+
+  const handleLogout = () => {
+    removeCookie('access_token');
+    navigate('/');
+    Alert.fire({
+      icon: 'success',
+      title: '로그아웃 되었습니다.',
+    });
+  };
+  React.useEffect(() => {
+    console.log(accessToken);
+  }, [accessToken]);
   return (
     <>
       {accessToken ? (
-        <Button onClick={() => removeCookie('accessToken')}>로그아웃</Button>
+        <Button onClick={handleLogout}>로그아웃</Button>
       ) : (
         <Button onClick={() => navigate('/login')}>로그인</Button>
       )}
