@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  Res,
+} from '@nestjs/common';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { QueryIssueDto } from './dto/issue.query.dto';
 import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
@@ -38,19 +47,27 @@ export class IssueController {
 
       // 등록된 이슈
       if (regiStatus && !ranked) {
-        const issues = await this.issueService.getIssuesRegistered(targetPolitician, pageOptions);
+        const issues = await this.issueService.getIssuesRegistered(
+          targetPolitician,
+          pageOptions,
+        );
         return response.json(issues);
       }
 
       // 미등록 이슈 top 3
       else if (!regiStatus && ranked) {
-        const issues = await this.issueService.getIssueNotRegisteredRanked(targetPolitician);
+        const issues = await this.issueService.getIssueNotRegisteredRanked(
+          targetPolitician,
+        );
         return response.json(issues);
       }
 
       // 미등록 이슈 나머지
       else if (!regiStatus && !ranked) {
-        const issues = await this.issueService.getIssueNotRegistered(targetPolitician, pageOptions);
+        const issues = await this.issueService.getIssueNotRegistered(
+          targetPolitician,
+          pageOptions,
+        );
         return response.json(issues);
       } else {
         throw new Error('bad request');
@@ -62,7 +79,11 @@ export class IssueController {
 
   // 이슈 등록 투표
   @Patch('/:issueId/regi')
-  async setIssueRegi(@Param('issueId') id: string, @Body() regi: SetIssueRegiDto, @Res() response) {
+  async setIssueRegi(
+    @Param('issueId') id: string,
+    @Body() regi: SetIssueRegiDto,
+    @Res() response,
+  ) {
     try {
       const issue = await this.issueService.setIssueRegi(id, regi);
       if (issue) {
@@ -75,7 +96,11 @@ export class IssueController {
 
   // 이슈 여론 투표
   @Patch('/:issueId/poll')
-  async setIssuePoll(@Param('issueId') id: string, @Body() poll: SetIssuePollDto, @Res() response) {
+  async setIssuePoll(
+    @Param('issueId') id: string,
+    @Body() poll: SetIssuePollDto,
+    @Res() response,
+  ) {
     try {
       const issue = await this.issueService.setIssuePoll(id, poll);
       if (issue) {
@@ -86,7 +111,10 @@ export class IssueController {
 
   // (관리자) 이슈 내용 수정
   @Patch('/:issueId/content')
-  async setIssueContent(@Param('issueId') id: string, @Body() content: SetIssueContentDto) {
+  async setIssueContent(
+    @Param('issueId') id: string,
+    @Body() content: SetIssueContentDto,
+  ) {
     try {
       // const issue = await this.issueService.setIssueContent(id, content);
       return {};
@@ -95,7 +123,10 @@ export class IssueController {
 
   // (관리자) 이슈 상태 수정
   @Patch('/:issueId/regiStatus')
-  async setIssueRegiStatus(@Param('issueId') id: string, @Body() regiStatus: SetIssueRegiStatusDto) {
+  async setIssueRegiStatus(
+    @Param('issueId') id: string,
+    @Body() regiStatus: SetIssueRegiStatusDto,
+  ) {
     try {
       // const issue = await this.issueService.setIssueStatus(id, regiStatus);
       return {};
