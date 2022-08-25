@@ -23,9 +23,9 @@ const StandbyIssue = (): JSX.Element => {
       const res = await Api.get(
         `issues?targetPolitician=${targetPolitician}&pageNum=${pageNum}`,
       );
-      setIssueList([...issueList, ...res.data]);
+      setIssueList([...issueList, ...res.data.data]);
     } catch (Error) {
-      alert(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
+      console.log(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
     } finally {
       setIsLoading(true);
     }
