@@ -1,7 +1,4 @@
-import issueState from '@/store/IssueState';
-import issueDateState from '@/store/IssueDateState';
 import { Line } from 'react-chartjs-2';
-import { useRecoilValue } from 'recoil';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,34 +26,23 @@ ChartJS.register(
   Legend,
 );
 
-const LifeGraph = ({ target }: { target: string }): JSX.Element => {
+interface lifeGraphProps {
+  issues: IssueTypes[];
+}
+
+const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   // const issues: IssueTypes[] = useRecoilValue(issueState);
   // const issueDates: Date[] = useRecoilValue(issueDateState);
 
-  const [lifeIssue, setLifeIssue] = useState<IssueTypes[]>([]);
-  useEffect(() => {
-    const getLifeIssue = async () => {
-      try {
-        const res = await Api.get(
-          `issues?targetPolitician=${target}&regiStatus=true`,
-        );
-        setLifeIssue(res.data);
-      } catch (Error) {
-        alert(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
-      }
-    };
-    getLifeIssue();
-  }, [target]);
-  console.log(lifeIssue);
-
-  const graphData = lifeIssue.map(
+  const graphData = issues.map(
     (issue: { poll: { pro: number; con: number } }) =>
       issue.poll.pro - issue.poll.con,
   );
 
-  const issueDates = lifeIssue.map(issue => dateFormatter(issue.issueDate));
+  const issueDates = issues.map(issue => dateFormatter(issue.issueDate));
 
   const options = {
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         display: false,
@@ -67,15 +53,32 @@ const LifeGraph = ({ target }: { target: string }): JSX.Element => {
     },
     scales: {
       x: {
+        display: false,
         grid: {
           display: false,
         },
       },
       y: {
-        display: false,
+        display: true,
         grid: {
-          display: false,
+          lineWidth: 2,
+          borderDash: [5, 5],
+          color: function (context: { tick: { value: number } }) {
+            if (context.tick.value === 0) {
+              return '#d6d6d6';
+            } else {
+              return 'transparent';
+            }
+          },
         },
+      },
+    },
+    layout: {
+      padding: 20,
+    },
+    elements: {
+      point: {
+        radius: 0,
       },
     },
   };
@@ -91,14 +94,15 @@ const LifeGraph = ({ target }: { target: string }): JSX.Element => {
   };
 
   return (
-    <Container>
-      <Line data={data} plugins={[ChartDataLabels]} options={options} />
-    </Container>
+    <GraphContainer>
+      <Line width={'1300px'} height={'400px'} data={data} options={options} />
+    </GraphContainer>
   );
 };
 
 export default LifeGraph;
 
-const Container = styled.div`
+const GraphContainer = styled.div`
   width: 90vw;
+  height: 400px;
 `;

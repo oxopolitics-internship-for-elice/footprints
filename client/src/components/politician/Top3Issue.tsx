@@ -39,5 +39,4 @@ const TopIssueContainer = styled.div`
   border: grey 2px solid;
   border-radius: 2px;
   padding: 20px;
-  margin-bottom: 30px;
 `;

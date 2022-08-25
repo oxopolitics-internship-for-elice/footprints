@@ -3,13 +3,10 @@ import React from 'react';
 import { Location, useNavigate } from 'react-router-dom';
 import AuthButton from './AuthButton';
 
-interface HeaderProps {
-  location: Location;
-}
-
-const Header = ({ location }: HeaderProps) => {
-  const navigate = useNavigate();
-  const [isMainFirstPage, setIsMainFirstPage] = React.useState(false);
+const Header = () => {
+  //const location = useLocation();
+  const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
+  const [isMainFirstPage, setIsMainFirstPage] = React.useState(true);
 
   const handleScroll = () => {
     const scrollTop = window.scrollY;

@@ -1,4 +1,4 @@
-import { flexCenter } from '@/styles/flex';
+import { flexCenter } from '@/styles/Flex';
 import styled from '@emotion/styled';
 import React from 'react';
 import kakaoSymbol from '@/assets/kakaoSymbol.png';

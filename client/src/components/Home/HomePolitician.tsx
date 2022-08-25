@@ -1,16 +1,21 @@
 import styled from '@emotion/styled';
-import { flexCenter } from '@/styles/flex';
+import { flexCenter } from '@/styles/Flex';
 import React from 'react';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/leejaemyung.webp';
 import yoonseokyeol from '@/assets/yoonseokyeol.webp';
-import WholeGraph from '@/components/Home/LifeGraph';
+import LifeGraph from './LifeGraph';
+import issueState from '@/store/IssueState';
+import { IssueTypes } from '@/types/IssueTypes';
+import { useRecoilValue } from 'recoil';
 
 interface HomePoliticianProps {
   name: '이재명' | '윤석열';
 }
 
 const HomePolitician = ({ name }: HomePoliticianProps) => {
+  //임시 데이터
+  const fetchedIssue: IssueTypes[] = useRecoilValue(issueState);
   const image = {
     이재명: leejaemyung,
     윤석열: yoonseokyeol,
@@ -25,7 +30,7 @@ const HomePolitician = ({ name }: HomePoliticianProps) => {
               <Image src={image[name]} alt="leejaemyung" />
               <Name>{name}</Name>
             </Row>
-            <WholeGraph target={'6303bed2e9d44f884ed1d640'} />
+            <LifeGraph issues={fetchedIssue} />
           </Politician>
         </AnimationOnScroll>
       </Container>
