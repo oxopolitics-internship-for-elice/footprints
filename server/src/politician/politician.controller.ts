@@ -11,6 +11,8 @@ export class PoliticianController {
     try {
       const result = await this.politicianService.getAllPoliticians();
       return response.json(result);
-    } catch (err) {}
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 }

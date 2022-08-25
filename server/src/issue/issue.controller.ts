@@ -28,7 +28,9 @@ export class IssueController {
       if (issue) {
         return response.json({ message: 'success' });
       }
-    } catch (err) {}
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
@@ -70,7 +72,9 @@ export class IssueController {
       } else {
         throw new Error('bad request');
       }
-    } catch (err) {}
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 
   // 이슈 등록 투표
