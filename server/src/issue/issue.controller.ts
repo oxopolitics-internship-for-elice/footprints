@@ -6,7 +6,6 @@ import {
   Patch,
   Post,
   Query,
-  HttpCode,
   Res,
 } from '@nestjs/common';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
@@ -29,7 +28,9 @@ export class IssueController {
       if (issue) {
         return response.json({ message: 'success' });
       }
-    } catch (err) {}
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 
   @Get()
@@ -48,44 +49,41 @@ export class IssueController {
     @Res() response,
   ) {
     try {
-      const { targetPolitician, regiStatus, ranked, pageNum, perPage, skip } =
+      const { targetPolitician, regiStatus, ranked, skip, perPage } =
         issueQuery;
 
       // 등록된 이슈
       if (regiStatus && !ranked) {
-        console.log('registered');
         const issues = await this.issueService.getIssuesRegistered(
           targetPolitician,
-          pageNum,
-          perPage,
           skip,
+          perPage,
         );
-        return response.json({ issues });
+        return response.json(issues);
       }
 
       // 미등록 이슈 top 3
       else if (!regiStatus && ranked) {
-        console.log('not registered but ranked');
         const issues = await this.issueService.getIssueNotRegisteredRanked(
           targetPolitician,
         );
-        return response.json({ issues });
+        return response.json(issues);
       }
 
       // 미등록 이슈 나머지
       else if (!regiStatus && !ranked) {
-        console.log('not registered also not ranked');
         const issues = await this.issueService.getIssueNotRegistered(
           targetPolitician,
-          pageNum,
-          perPage,
           skip,
+          perPage,
         );
-        return response.json({ issues });
+        return response.json(issues);
       } else {
         throw new Error('bad request');
       }
-    } catch (err) {}
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 
   // 이슈 등록 투표
