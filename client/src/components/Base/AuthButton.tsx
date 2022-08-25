@@ -16,6 +16,9 @@ const AuthButton = () => {
       title: '로그아웃 되었습니다.',
     });
   };
+  React.useEffect(() => {
+    console.log(accessToken);
+  }, [accessToken]);
   return (
     <>
       {accessToken ? (
