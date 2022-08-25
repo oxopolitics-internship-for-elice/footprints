@@ -77,7 +77,7 @@ const Graph = (): JSX.Element => {
     const res = await GraphAPI.getGraph(target, index);
     console.log(res);
 
-    res.data.map((res: ResTypes) => {
+    res.data.data.map((res: ResTypes) => {
       setIssueDate((current: Date[] | []) => {
         if (index >= 2) {
           let date = dateFormatter(res.issueDate);
@@ -118,7 +118,7 @@ const Graph = (): JSX.Element => {
         }
       });
     });
-    // isNextPageable(res.data.meta.hasNextPage);
+    isNextPageable(res.data.meta.hasNextPage);
   };
 
   const start = async () => {
@@ -163,7 +163,6 @@ const Graph = (): JSX.Element => {
         () => start();
       }, 1);
     }
-    console.log(index);
   }, [isFirst, index]);
 
   const options = {
