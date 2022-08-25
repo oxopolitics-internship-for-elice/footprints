@@ -40,15 +40,13 @@ export class IssueController {
     @Res() response,
   ) {
     try {
-      const { targetPolitician, regiStatus, ranked, skip, perPage } =
-        issueQuery;
+      const { targetPolitician, regiStatus, ranked, pageOptions } = issueQuery;
 
       // 등록된 이슈
       if (regiStatus && !ranked) {
         const issues = await this.issueService.getIssuesRegistered(
           targetPolitician,
-          skip,
-          perPage,
+          pageOptions,
         );
         return response.json(issues);
       }
@@ -65,8 +63,7 @@ export class IssueController {
       else if (!regiStatus && !ranked) {
         const issues = await this.issueService.getIssueNotRegistered(
           targetPolitician,
-          skip,
-          perPage,
+          pageOptions,
         );
         return response.json(issues);
       } else {
