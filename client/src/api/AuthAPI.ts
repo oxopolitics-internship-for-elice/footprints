@@ -11,6 +11,7 @@ const AuthAPI: IAuthAPI = (() => {
   return {
     getKaKao: () => {
       // somethingCommon();
+
       return Api.get(`auth/kakao`);
     },
   };
