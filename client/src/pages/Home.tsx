@@ -14,7 +14,7 @@ const Home = () => {
       <Helmet>
         <title>정치 발자국</title>
       </Helmet>
-      <Header location={location} />
+      <Header />
       <FullPage>
         <Slide>
           <ServiceInfo />
