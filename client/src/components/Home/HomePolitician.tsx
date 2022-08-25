@@ -8,15 +8,16 @@ import LifeGraph from './LifeGraph';
 import issueState from '@/store/IssueState';
 import { IssueTypes } from '@/types/IssueTypes';
 import { useRecoilValue } from 'recoil';
+import PoliticiansState from '@/store/PoliticiansState';
 
 interface HomePoliticianProps {
-  name: '이재명' | '윤석열';
+  politicanName: string;
 }
 
-const HomePolitician = ({ name }: HomePoliticianProps) => {
-  //임시 데이터
-  const fetchedIssue: IssueTypes[] = useRecoilValue(issueState);
-  const image = {
+type ImgSrc = { [politicanNames: string]: string };
+const HomePolitician = ({ politicanName }: HomePoliticianProps) => {
+  const fetchedPoliticans = useRecoilValue(PoliticiansState);
+  const imgSrc: ImgSrc = {
     이재명: leejaemyung,
     윤석열: yoonseokyeol,
   };
@@ -27,10 +28,10 @@ const HomePolitician = ({ name }: HomePoliticianProps) => {
         <AnimationOnScroll animateIn="animate__fadeIn">
           <Politician>
             <Row>
-              <Image src={image[name]} alt="leejaemyung" />
-              <Name>{name}</Name>
+              <Image src={imgSrc[politicanName]} alt={politicanName} />
+              <Name>{politicanName}</Name>
             </Row>
-            <LifeGraph issues={fetchedIssue} />
+            <LifeGraph issues={fetchedPoliticans[politicanName]} />
           </Politician>
         </AnimationOnScroll>
       </Container>
