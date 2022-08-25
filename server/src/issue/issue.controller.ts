@@ -28,7 +28,9 @@ export class IssueController {
       if (issue) {
         return response.json({ message: 'success' });
       }
-    } catch (err) {}
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
@@ -70,35 +72,45 @@ export class IssueController {
       } else {
         throw new Error('bad request');
       }
-    } catch (err) {}
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 
   // 이슈 등록 투표
-  @Patch(':/issueId/regi')
+  @Patch('/:issueId/regi')
   async setIssueRegi(
     @Param('issueId') id: string,
     @Body() regi: SetIssueRegiDto,
+    @Res() response,
   ) {
     try {
-      // const issue = await this.issueService.setIssueRegi(id, regi);
-      return {};
-    } catch (err) {}
+      const issue = await this.issueService.setIssueRegi(id, regi);
+      if (issue) {
+        return response.json({ message: 'success' });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // 이슈 여론 투표
-  @Patch(':/issueId/poll')
+  @Patch('/:issueId/poll')
   async setIssuePoll(
     @Param('issueId') id: string,
     @Body() poll: SetIssuePollDto,
+    @Res() response,
   ) {
     try {
-      // const issue = await this.issueService.setIssuePoll(id, poll);
-      return {};
+      const issue = await this.issueService.setIssuePoll(id, poll);
+      if (issue) {
+        return response.json({ message: 'success' });
+      }
     } catch (err) {}
   }
 
   // (관리자) 이슈 내용 수정
-  @Patch(':/issueId/content')
+  @Patch('/:issueId/content')
   async setIssueContent(
     @Param('issueId') id: string,
     @Body() content: SetIssueContentDto,
@@ -110,7 +122,7 @@ export class IssueController {
   }
 
   // (관리자) 이슈 상태 수정
-  @Patch(':/issueId/regiStatus')
+  @Patch('/:issueId/regiStatus')
   async setIssueRegiStatus(
     @Param('issueId') id: string,
     @Body() regiStatus: SetIssueRegiStatusDto,
