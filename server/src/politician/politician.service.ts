@@ -30,7 +30,7 @@ export class PoliticianService {
             poll: 1,
           },
         },
-        { $sort: { score: -1 } },
+        { $sort: { totalPolls: -1 } },
         { $limit: 20 },
         { $sort: { issueDate: 1 } },
       ]);
