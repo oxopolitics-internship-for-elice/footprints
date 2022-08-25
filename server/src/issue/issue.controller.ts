@@ -9,7 +9,6 @@ import {
   HttpCode,
   Res,
 } from '@nestjs/common';
-import { response } from 'express';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { QueryIssueDto } from './dto/issue.query.dto';
 import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
@@ -98,7 +97,9 @@ export class IssueController {
   ) {
     try {
       const issue = await this.issueService.setIssueRegi(id, regi);
-      return response.json({ issue });
+      if (issue) {
+        return response.json({ message: 'success' });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -113,7 +114,9 @@ export class IssueController {
   ) {
     try {
       const issue = await this.issueService.setIssuePoll(id, poll);
-      return response.json({ issue });
+      if (issue) {
+        return response.json({ message: 'success' });
+      }
     } catch (err) {}
   }
 
