@@ -9,7 +9,6 @@ const Router = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/politician" element={<Politician />} />
-        <Route path="/graph" element={<Graph />} />
       </Routes>
     </BrowserRouter>
   );

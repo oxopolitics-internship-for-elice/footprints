@@ -41,7 +41,7 @@ interface ResTypes {
   updatedAt: Date;
   score: number;
 }
-import { dateTrans } from '@/utils/DateFormatter';
+import dateFormatter from '@/utils/DateFormatter';
 const labels = [
   '11:30분',
   '11:45분',
@@ -81,7 +81,7 @@ const Graph = (): JSX.Element => {
       const res = await GraphAPI.getGraph(target);
       res.data.map((res: ResTypes) => {
         setIssueDate((current: Date[] | []) => {
-          let date = dateTrans(res.issueDate);
+          let date = dateFormatter(res.issueDate);
           console.log(date);
           const temp = [...current, date];
           return temp;
