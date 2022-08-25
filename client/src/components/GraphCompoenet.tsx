@@ -261,8 +261,8 @@ const Graph = (): JSX.Element => {
         display: 'flex',
         justifyContent: 'center',
         position: 'relative',
-        height: '200px',
-        width: '800px',
+        height: '50%',
+        width: '60%',
       }}
     >
       {data && (
