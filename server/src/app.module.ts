@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { IssueModule } from './issue/issue.module';
 import { UserModule } from './user/user.module';
 import { PoliticianModule } from './politician/politician.module';
+import { AuthController } from './auth/auth.controller';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,6 +26,9 @@ import { PoliticianModule } from './politician/politician.module';
         return connection;
       },
     }),
+
+    UserModule,
+    AuthModule,
     UserModule,
     IssueModule,
     PoliticianModule,

@@ -11,7 +11,6 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <>
       <FullHeightPage>
-        <Header />
         <Container>{children}</Container>
       </FullHeightPage>
     </>
