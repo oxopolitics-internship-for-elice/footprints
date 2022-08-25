@@ -80,9 +80,9 @@ interface ContainerProps {
 const Container = styled.div<ContainerProps>`
   width: 300px;
   height: 200px;
-  z-index: 999;
   position: absolute;
-  top: ${element => element.y + 100}px;
+
+  top: ${element => element.y}px;
   left: ${element => element.x}px;
   transform: translate(-50%, -50%);
   background-color: #c8c8c8;

@@ -46,18 +46,7 @@ interface ResTypes {
 }
 import dateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
-const labels = [
-  '11:30분',
-  '11:45분',
-  '12:10분',
-  '15:50분',
-  '17:30분',
-  '19:30분',
-  '20:30분',
-  '20:30분',
-  '20:30분',
-  '20:30분',
-];
+
 const Graph = (): JSX.Element => {
   const chartRef = useRef<any>(null);
   const [open, setOpen] = useState(false);
@@ -68,7 +57,6 @@ const Graph = (): JSX.Element => {
   const [score, setScore] = useState<any>([]);
   const [data, setData] = useState<any>();
   const [isFirst, setIsFirst] = useState(false);
-  const [canvasPoint, setCanvasPoint] = useState<any>([]);
   const [index, setIndex] = useState<number>(1);
   const [NextPageable, isNextPageable] = useState(true);
   function ClickHander(
@@ -85,15 +73,6 @@ const Graph = (): JSX.Element => {
       return element[0].element;
     }
   }
-  const handleResize = () => {
-    setCanvasPoint([window.innerWidth, window.innerHeight]);
-  };
-  useEffect(() => {
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  });
 
   const getData = async (index: number | Number) => {
     let target = '6303bed2e9d44f884ed1d640';
@@ -146,7 +125,7 @@ const Graph = (): JSX.Element => {
 
   const start = async () => {
     if (!isFirst) {
-      await getData();
+      await getData(index);
     }
 
     setData({
@@ -171,7 +150,7 @@ const Graph = (): JSX.Element => {
       await getData(index + 1);
       setIndex(index + 1);
     } else {
-      alert('마지막페이지입니다.');
+      alert('더이상 불러올 데이터가 없습니다.');
     }
   };
 
@@ -194,7 +173,7 @@ const Graph = (): JSX.Element => {
     plugins: {
       tooltip: {
         enabled: false,
-        maintainAspectRatio: false,
+        maintainAspectRatio: true,
         external: function (context: any) {
           // Tooltip Element
 
@@ -306,20 +285,6 @@ const Graph = (): JSX.Element => {
       legend: {
         display: false,
       },
-      zoom: {
-        zoom: {
-          wheel: {
-            enabled: true,
-          },
-          pinch: {
-            enabled: true,
-          },
-          mode: 'x',
-          drag: {
-            enabled: true,
-          },
-        },
-      },
     },
   };
 
@@ -328,25 +293,26 @@ const Graph = (): JSX.Element => {
       style={{
         display: 'flex',
         justifyContent: 'center',
+        position: 'relative',
+        height: '70%',
+        width: '70%',
       }}
     >
-      <GraphButton onClick={e => getMoreData(e)}>+</GraphButton>
+      <GraphButton onClick={getMoreData}>+</GraphButton>
       {data && (
-        <div style={{ width: '1200px', height: '700px' }}>
-          <Line
-            ref={chartRef}
-            onClick={event => {
-              let point = ClickHander(
-                getElementAtEvent(chartRef.current, event),
-                event,
-              );
-              console.log(point);
-              setPoint(point);
-            }}
-            options={options}
-            data={data}
-          />
-        </div>
+        <Line
+          ref={chartRef}
+          onClick={event => {
+            let point = ClickHander(
+              getElementAtEvent(chartRef.current, event),
+              event,
+            );
+            console.log(point);
+            setPoint(point);
+          }}
+          options={options}
+          data={data}
+        />
       )}
       <div>
         {open && <Modal setOpen={setOpen} element={point} content={content} />}

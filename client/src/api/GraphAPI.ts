@@ -11,7 +11,6 @@ interface GraphAPI {
 const GraphAPI: GraphAPI = (() => {
   return {
     getGraph: (targetPolitician, index) => {
-      if (index === undefined) index = 1;
       return Api.get(
         `issues?targetPolitician=${targetPolitician}&regiStatus=true&perPage=10&pageNum=${index}`,
       );
