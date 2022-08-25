@@ -33,11 +33,7 @@ export class QueryIssueDto {
   @IsOptional()
   readonly perPage?: number = 10;
 
-  get skip(): number {
-    return (this.pageNum - 1) * this.perPage;
-  }
-
   get pageOptions(): PageOptionsDto {
-    return { pageNum: this.pageNum, perPage: this.perPage, skip: this.skip };
+    return new PageOptionsDto(this.pageNum, this.perPage);
   }
 }
