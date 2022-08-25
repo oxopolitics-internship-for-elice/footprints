@@ -41,8 +41,7 @@ interface ResTypes {
   updatedAt: Date;
   score: number;
 }
-import dateFormatter from '@/utils/DateFormatter';
-
+import { dateTrans } from '@/utils/DateFormatter';
 const labels = [
   '11:30분',
   '11:45분',
@@ -82,7 +81,9 @@ const Graph = (): JSX.Element => {
       const res = await GraphAPI.getGraph(target);
       res.data.map((res: ResTypes) => {
         setIssueDate((current: Date[] | []) => {
-          const temp = [...current, res.issueDate];
+          let date = dateTrans(res.issueDate);
+          console.log(date);
+          const temp = [...current, date];
           return temp;
         });
 
@@ -238,9 +239,9 @@ const Graph = (): JSX.Element => {
             tooltipModel.padding + 'px ' + tooltipModel.padding + 'px';
           tooltipEl.style.pointerEvents = 'none';
           tooltipEl.style.background = '#f5f5dc';
-          tooltipEl.style.padding = '1px';
+          tooltipEl.style.padding = '15px';
           tooltipEl.style.borderRadius = '5px';
-          tooltipEl.style.width = '90px';
+          tooltipEl.style.width = '100px';
           tooltipEl.style.height = '80px';
         },
       },
