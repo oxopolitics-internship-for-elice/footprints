@@ -37,7 +37,6 @@ export class IssueController {
   async getAllIssues(@Res() response) {
     try {
       const issues = await this.issueService.getAllIssues();
-      console.log(issues);
       return response.json({ issues });
     } catch (err) {}
   }
