@@ -11,6 +11,8 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
+
 import { getDatasetAtEvent, getElementAtEvent, Line } from 'react-chartjs-2';
 import { faker } from '@faker-js/faker';
 import Modal from './Modal';
@@ -23,6 +25,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler,
+  zoomPlugin,
 );
 
 import GraphAPI from '@/api/GraphAPI';
@@ -42,6 +45,7 @@ interface ResTypes {
   score: number;
 }
 import dateFormatter from '@/utils/DateFormatter';
+import styled from '@emotion/styled';
 const labels = [
   '11:30분',
   '11:45분',
@@ -64,17 +68,31 @@ const Graph = (): JSX.Element => {
   const [score, setScore] = useState<any>([]);
   const [data, setData] = useState<any>();
   const [isFirst, setIsFirst] = useState(false);
+  const [canvasPoint, setCanvasPoint] = useState<any>([]);
+  const btStr = '<-';
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
   ) {
+    console.log(element, 'egd');
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
+      let toop = document.getElementsByClassName('css-11oqkmf');
+      console.log(toop, 'gs');
       setOpen(!open);
+
       return element[0].element;
     }
   }
-
+  const handleResize = () => {
+    setCanvasPoint([window.innerWidth, window.innerHeight]);
+  };
+  useEffect(() => {
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  });
   const start = async () => {
     const getData = async () => {
       let target = '6303bed2e9d44f884ed1d640';
@@ -141,7 +159,7 @@ const Graph = (): JSX.Element => {
     plugins: {
       tooltip: {
         enabled: false,
-
+        maintainAspectRatio: false,
         external: function (context: any) {
           // Tooltip Element
 
@@ -245,12 +263,27 @@ const Graph = (): JSX.Element => {
           tooltipEl.style.height = '80px';
         },
       },
+
       title: {
         display: true,
         text: '윤석열 인생 그래프',
       },
       legend: {
         display: false,
+      },
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true,
+          },
+          pinch: {
+            enabled: true,
+          },
+          mode: 'x',
+          drag: {
+            enabled: true,
+          },
+        },
       },
     },
   };
@@ -260,24 +293,25 @@ const Graph = (): JSX.Element => {
       style={{
         display: 'flex',
         justifyContent: 'center',
-        position: 'relative',
-        height: '50%',
-        width: '60%',
       }}
     >
+      <GraphButton onClick={() => alert('클릭')}>+</GraphButton>
       {data && (
-        <Line
-          ref={chartRef}
-          onClick={event => {
-            let point = ClickHander(
-              getElementAtEvent(chartRef.current, event),
-              event,
-            );
-            setPoint(point);
-          }}
-          options={options}
-          data={data}
-        />
+        <div style={{ width: '1200px', height: '700px' }}>
+          <Line
+            ref={chartRef}
+            onClick={event => {
+              let point = ClickHander(
+                getElementAtEvent(chartRef.current, event),
+                event,
+              );
+              console.log(point);
+              setPoint(point);
+            }}
+            options={options}
+            data={data}
+          />
+        </div>
       )}
       <div>
         {open && <Modal setOpen={setOpen} element={point} content={content} />}
@@ -287,3 +321,15 @@ const Graph = (): JSX.Element => {
 };
 
 export default Graph;
+
+const GraphButton = styled.button`
+  height: 3rem;
+  width: 3rem;
+  font-size: 30px;
+  font-weight: bolder;
+  position: relative;
+  top: 300px;
+  border-radius: 30px;
+  border-width: 0.5px;
+  opacity: 0.9;
+`;
