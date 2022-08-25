@@ -33,14 +33,6 @@ export class IssueController {
     }
   }
 
-  @Get()
-  async getAllIssues(@Res() response) {
-    try {
-      const issues = await this.issueService.getAllIssues();
-      return response.json({ issues });
-    } catch (err) {}
-  }
-
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
   @Get()
   async getIssuesRegistered(
