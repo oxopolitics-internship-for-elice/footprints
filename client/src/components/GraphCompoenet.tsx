@@ -12,9 +12,10 @@ import {
   InteractionItem,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-
+import dateFormatter from '@/utils/DateFormatter';
+import styled from '@emotion/styled';
 import { getDatasetAtEvent, getElementAtEvent, Line } from 'react-chartjs-2';
-import { faker } from '@faker-js/faker';
+import GraphAPI from '@/api/GraphAPI';
 import Modal from './Modal';
 ChartJS.register(
   CategoryScale,
@@ -28,7 +29,6 @@ ChartJS.register(
   zoomPlugin,
 );
 
-import GraphAPI from '@/api/GraphAPI';
 interface ResTypes {
   targetPolitician: string;
   _id: string;
@@ -44,8 +44,6 @@ interface ResTypes {
   updatedAt: Date;
   score: number;
 }
-import dateFormatter from '@/utils/DateFormatter';
-import styled from '@emotion/styled';
 
 const Graph = (): JSX.Element => {
   const chartRef = useRef<any>(null);
@@ -354,7 +352,13 @@ const GraphButton = styled.button`
   opacity: 0.9;
   justifycontent: center;
   position: relative;
+  transition-duration: 0.4s;
+  background-color: #008cba;
   @media screen and (max-width: 1500px) {
     display: none;
+  }
+  &:hover {
+    color: white;
+    background-color: skyblue;
   }
 `;

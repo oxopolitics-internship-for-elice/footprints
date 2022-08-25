@@ -1,7 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { ButtonO, ButtonX } from './Button';
+import GraphAPI from '@/api/GraphAPI';
+import * as API from '@/api/Api';
+import axios from 'axios';
+
 type Element = {
   $context: Object;
   x: number;
@@ -18,10 +21,8 @@ interface ModalProps {
 
 const Modal = ({ setOpen, element, content }: ModalProps) => {
   const ref = useRef<null | HTMLDivElement>(null);
-  useEffect(() => {
-    console.log();
-    console.log(content);
-  });
+  const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
+
   useEffect(() => {
     // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
@@ -38,8 +39,29 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
     }
   }
   const Imgsrc = ['img/circle.png', 'img/triangle.png', 'img/x.png'];
-  function ClickHandler(index: number) {
-    console.log(index);
+  async function ClickHandler(index: number) {
+    let target = '6303c94fffebd001ceec6dff';
+
+    setPoll((current: Object) => {
+      let newPoll: { pro: boolean; neu: boolean; con: boolean } = {
+        pro: false,
+        neu: false,
+        con: false,
+      };
+      if (index === 0) {
+        newPoll['pro'] = true;
+      } else if (index === 1) {
+        newPoll['neu'] = true;
+      } else {
+        newPoll['con'] = true;
+      }
+      return newPoll;
+    });
+    const res = await API.patch(
+      `http://localhost:5000/issues/${target}/poll`,
+      poll,
+    );
+    console.log(res);
   }
   return (
     <>
