@@ -1,17 +1,9 @@
-import { IsBoolean, IsNumber, ValidateNested } from 'class-validator';
+import { IsBoolean } from 'class-validator';
 
-class RegiObject {
+export class SetIssueRegiDto {
   @IsBoolean()
   pro: boolean;
 
   @IsBoolean()
   con: boolean;
-}
-
-export class SetIssueRegiDto {
-  @IsNumber()
-  readonly _id: number;
-
-  @ValidateNested()
-  readonly poll: RegiObject;
 }

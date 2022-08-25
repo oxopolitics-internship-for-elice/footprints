@@ -1,9 +1,10 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { PageOptionsDto } from 'src/common/pagination/pageOptions.dto';
 
 export class QueryIssueDto {
   @IsString()
-  readonly targetPolitician: number;
+  readonly targetPolitician: string;
 
   @Transform(({ value }) => {
     if (value === 'true') return true;
@@ -32,7 +33,7 @@ export class QueryIssueDto {
   @IsOptional()
   readonly perPage?: number = 10;
 
-  get skip(): number {
-    return (this.pageNum - 1) * this.perPage;
+  get pageOptions(): PageOptionsDto {
+    return new PageOptionsDto(this.pageNum, this.perPage);
   }
 }
