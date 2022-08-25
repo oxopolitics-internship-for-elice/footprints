@@ -4,6 +4,7 @@ import { PageOptionsDto } from 'src/common/pagination/pageOptions.dto';
 
 export class QueryIssueDto {
   @IsString()
+  @IsOptional()
   readonly targetPolitician: string;
 
   @Transform(({ value }) => {

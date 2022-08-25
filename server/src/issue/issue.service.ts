@@ -27,6 +27,10 @@ export class IssueService {
     }
   }
 
+  async getAllIssues() {
+    return 'success';
+  }
+
   async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
     const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
