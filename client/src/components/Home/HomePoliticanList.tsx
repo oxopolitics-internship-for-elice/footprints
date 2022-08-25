@@ -3,7 +3,6 @@ import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 
 import { Slide } from 'react-full-page';
 import PoliticianAPI from '@/api/PoliticianAPI';
-import UserAPI from '@/api/UserAPI';
 
 const HomePoliticianList = () => {
   const [politicians, setPoliticians] = React.useState<PoliticiansTypes | null>(
@@ -11,11 +10,12 @@ const HomePoliticianList = () => {
   );
   React.useEffect(() => {
     const fetchPoliticians = async () => {
-      const { data } = await UserAPI.getUserByEmail('fibonacci2246@daum.net');
+      const { data } = await PoliticianAPI.getList();
       console.log(data);
     };
     fetchPoliticians();
   }, []);
+
   return (
     <>
       {/* {politicians
