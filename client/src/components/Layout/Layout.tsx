@@ -1,4 +1,4 @@
-import { flexCenter } from '@/styles/flex';
+import { flexCenter } from '@/styles/Flex';
 import styled from '@emotion/styled';
 import Header from '../base/Header';
 import FullHeightPage from '../system/FullHeightPage';
