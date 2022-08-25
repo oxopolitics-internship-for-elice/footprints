@@ -16,14 +16,20 @@ const StandbyIssue = (): JSX.Element => {
   const target = useRef<any>();
   const [isLoading, setIsLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
-  const loadMore = () => setPageNum(prev => prev + 1);
+  let maxPage: number;
 
+  const loadMore = () => {
+    setPageNum(prev => prev + 1);
+  };
+
+  //데이터 fetch
   const getIssue = async () => {
     try {
       const res = await Api.get(
-        `issues?targetPolitician=${targetPolitician}&pageNum=${pageNum}`,
+        `issues?targetPolitician=${targetPolitician}&perPage=10&pageNum=${pageNum}`,
       );
       setIssueList([...issueList, ...res.data.data]);
+      maxPage = res.data.meta.pageCount;
     } catch (Error) {
       console.log(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
     } finally {
@@ -34,29 +40,21 @@ const StandbyIssue = (): JSX.Element => {
     getIssue();
   }, [pageNum]);
 
+  //infinite scroll
   useEffect(() => {
     if (isLoading) {
       const observer = new IntersectionObserver(entries => {
         if (entries[0].isIntersecting) {
           loadMore();
+          if (pageNum > maxPage) {
+            observer.unobserve(target.current);
+            alert('페이지의 마지막입니다.');
+          }
         }
       });
       observer.observe(target.current);
     }
   }, []);
-
-  //issue schema가 변경될 때 마다 db에 업데이트
-  // useEffect(() => {
-  //   const putIssueList = async () => {
-  //     try {
-  //       // const res = await Api.put('/IssueMockData.json', issueList);
-  //       // console.log(res.data);
-  //     } catch (Error) {
-  //       console.log(Error);
-  //     }
-  //   };
-  //   putIssueList();
-  // }, [issueList]);
 
   return (
     <div>
