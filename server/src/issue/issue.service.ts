@@ -27,13 +27,8 @@ export class IssueService {
     }
   }
 
-  async getIssuesRegistered(
-    targetPolitician: string,
-    pageOptions: PageOptionsDto,
-  ): Promise<PageDto<Issue>> {
-    const itemCount = await this.issueModel
-      .find({ targetPolitician, regiStatus: 'active' })
-      .count();
+  async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
+    const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'active' })
@@ -55,10 +50,7 @@ export class IssueService {
     return issues;
   }
 
-  async getIssueNotRegistered(
-    targetPolitician: string,
-    pageOptions: PageOptionsDto,
-  ): Promise<PageDto<Issue>> {
+  async getIssueNotRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
     const itemCount = await this.issueModel.find({ targetPolitician }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
