@@ -13,7 +13,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/add.user.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get()
@@ -29,7 +29,7 @@ export class UserController {
     }
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('/:email')
   async getOne(@Res() response, @Param('email') email: string) {
     try {

@@ -23,7 +23,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const res = context.switchToHttp().getResponse();
     // const cookie = req.cookies;
     // console.log('cookie: ', cookie);
-
+    console.log('req.headers: ', req.headers);
     const { authorization } = req.headers;
     if (!authorization) {
       throw new HttpException('토큰 전송 에러', HttpStatus.UNAUTHORIZED);
