@@ -69,7 +69,8 @@ const Graph = (): JSX.Element => {
   const [data, setData] = useState<any>();
   const [isFirst, setIsFirst] = useState(false);
   const [canvasPoint, setCanvasPoint] = useState<any>([]);
-  const btStr = '<-';
+  const [index, setIndex] = useState<number>(1);
+  const [NextPageable, isNextPageable] = useState(true);
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -93,35 +94,61 @@ const Graph = (): JSX.Element => {
       window.removeEventListener('resize', handleResize);
     };
   });
-  const start = async () => {
-    const getData = async () => {
-      let target = '6303bed2e9d44f884ed1d640';
-      const res = await GraphAPI.getGraph(target);
-      res.data.map((res: ResTypes) => {
-        setIssueDate((current: Date[] | []) => {
+
+  const getData = async (index: number | Number) => {
+    let target = '6303bed2e9d44f884ed1d640';
+    const res = await GraphAPI.getGraph(target, index);
+    console.log(res);
+
+    res.data.data.map((res: ResTypes) => {
+      setIssueDate((current: Date[] | []) => {
+        if (index >= 2) {
           let date = dateFormatter(res.issueDate);
-          console.log(date);
+          const temp = [date, ...current];
+          return temp;
+        } else {
+          let date = dateFormatter(res.issueDate);
           const temp = [...current, date];
           return temp;
-        });
+        }
+      });
 
-        setPoll((current: any) => {
+      setPoll((current: any) => {
+        if (index >= 2) {
+          const temp = [res.poll, ...current];
+          return temp;
+        } else {
           const temp = [...current, res.poll];
           return temp;
-        });
-        setContent((current: any) => {
+        }
+      });
+      setContent((current: any) => {
+        if (index >= 2) {
+          const temp = [res.content, ...current];
+          return temp;
+        } else {
           const temp = [...current, res.content];
           return temp;
-        });
-        setScore((current: any) => {
+        }
+      });
+      setScore((current: any) => {
+        if (index >= 2) {
+          const temp = [res.poll.pro - res.poll.con, ...current];
+          return temp;
+        } else {
           const temp = [...current, res.poll.pro - res.poll.con];
           return temp;
-        });
+        }
       });
-    };
+    });
+    isNextPageable(res.data.meta.hasNextPage);
+  };
+
+  const start = async () => {
     if (!isFirst) {
       await getData();
     }
+
     setData({
       labels: issueDate,
       datasets: [
@@ -136,9 +163,16 @@ const Graph = (): JSX.Element => {
         },
       ],
     });
-
     setIsFirst(true);
-    console.log(content);
+  };
+
+  const getMoreData = async () => {
+    if (NextPageable === true) {
+      await getData(index + 1);
+      setIndex(index + 1);
+    } else {
+      alert('마지막페이지입니다.');
+    }
   };
 
   useEffect(() => {
@@ -152,7 +186,8 @@ const Graph = (): JSX.Element => {
         () => start();
       }, 1);
     }
-  }, [isFirst]);
+    console.log(index);
+  }, [isFirst, index]);
 
   const options = {
     responsive: true,
@@ -295,7 +330,7 @@ const Graph = (): JSX.Element => {
         justifyContent: 'center',
       }}
     >
-      <GraphButton onClick={() => alert('클릭')}>+</GraphButton>
+      <GraphButton onClick={e => getMoreData(e)}>+</GraphButton>
       {data && (
         <div style={{ width: '1200px', height: '700px' }}>
           <Line

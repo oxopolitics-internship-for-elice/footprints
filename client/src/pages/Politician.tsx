@@ -17,8 +17,8 @@ const Politician = (): JSX.Element => {
       >
         <DrowGraph />
       </div>
-      <Top3Issue />
-      <StandbyIssue />
+      {/* <Top3Issue />
+      <StandbyIssue /> */}
     </>
   );
 };
