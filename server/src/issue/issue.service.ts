@@ -1,18 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Mixed, Model } from 'mongoose';
-import { type } from 'os';
-import { resourceLimits } from 'worker_threads';
-import { IssueDocument, Issue } from '../schemas/issue.schema';
+import { Model } from 'mongoose';
+import { Issue, IssueDocument } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
-import { SetIssueRegiStatusDto } from './dto/issue.setIssueRegiStatus.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
+import { PageOptionsDto } from 'src/common/pagination/pageOptions.dto';
+import { PageMetaDto } from 'src/common/pagination/pageMeta.dto';
+import { PageDto } from 'src/common/pagination/page.dto';
+import { Politician, PoliticianDocument } from '../schemas/politician.schema';
+
 @Injectable()
 export class IssueService {
   constructor(
     @InjectModel(Issue.name)
     private readonly issueModel: Model<IssueDocument>,
+    @InjectModel(Politician.name)
+    private readonly politicianModel: Model<PoliticianDocument>,
   ) {}
 
   async addIssue(issueData: AddIssueDto): Promise<boolean> {
@@ -26,16 +30,33 @@ export class IssueService {
     }
   }
 
-  async getIssuesRegistered(targetPolitician, skip, perPage): Promise<Issue[]> {
+  async getAllIssues() {
+    const allIssues = await this.politicianModel.find().select('_id name');
+    const result = [];
+    for (let i = 0; i < allIssues.length; i++) {
+      result[allIssues[i].name];
+    }
+    console.log(allIssues);
+    return allIssues;
+  }
+
+  async getIssuesRegistered(
+    targetPolitician: string,
+    pageOptions: PageOptionsDto,
+  ): Promise<PageDto<Issue>> {
+    const itemCount = await this.issueModel
+      .find({ targetPolitician, regiStatus: 'active' })
+      .count();
+    const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'active' })
       .sort({ issueDate: 'asc' })
-      .skip(skip)
-      .limit(perPage);
-    return issues;
+      .skip(pageOptions.skip)
+      .limit(pageOptions.perPage);
+    return { data: issues, meta: pageMeta };
   }
 
-  async getIssueNotRegisteredRanked(id): Promise<Issue[]> {
+  async getIssueNotRegisteredRanked(id: string): Promise<Issue[]> {
     const issues = await this.issueModel.aggregate([
       {
         $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
@@ -48,16 +69,17 @@ export class IssueService {
   }
 
   async getIssueNotRegistered(
-    targetPolitician,
-    skip,
-    perPage,
-  ): Promise<Issue[]> {
+    targetPolitician: string,
+    pageOptions: PageOptionsDto,
+  ): Promise<PageDto<Issue>> {
+    const itemCount = await this.issueModel.find({ targetPolitician }).count();
+    const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician })
       .sort({ issueDate: 'asc' })
-      .skip(skip)
-      .limit(perPage);
-    return issues;
+      .skip(pageOptions.skip)
+      .limit(pageOptions.perPage);
+    return { data: issues, meta: pageMeta };
   }
 
   // regi pro 개수 확인 함수

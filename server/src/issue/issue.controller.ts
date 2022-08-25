@@ -29,26 +29,27 @@ export class IssueController {
         return response.json({ message: 'success' });
       }
     } catch (err) {
-      return response.status(err.status).json(err.response);
+      console.log(err);
     }
   }
 
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
   @Get()
-  async getIssuesRegistered(
-    @Query() issueQuery: QueryIssueDto,
-    @Res() response,
-  ) {
+  async getIssues(@Query() issueQuery: QueryIssueDto, @Res() response) {
     try {
-      const { targetPolitician, regiStatus, ranked, skip, perPage } =
-        issueQuery;
+      const { targetPolitician, regiStatus, ranked, pageOptions } = issueQuery;
+
+      // 메인페이지 모든 정치인, 인생 전체 그래프
+      if (!targetPolitician) {
+        const issues = await this.issueService.getAllIssues();
+        return response.json(issues);
+      }
 
       // 등록된 이슈
       if (regiStatus && !ranked) {
         const issues = await this.issueService.getIssuesRegistered(
           targetPolitician,
-          skip,
-          perPage,
+          pageOptions,
         );
         return response.json(issues);
       }
@@ -65,8 +66,7 @@ export class IssueController {
       else if (!regiStatus && !ranked) {
         const issues = await this.issueService.getIssueNotRegistered(
           targetPolitician,
-          skip,
-          perPage,
+          pageOptions,
         );
         return response.json(issues);
       } else {
