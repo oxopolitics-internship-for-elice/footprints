@@ -26,7 +26,9 @@ const Top3Issue = () => {
       <div>마감이 임박했어요!</div>
       <div>
         {topIssue.map(issue => {
-          return <Issue issue={issue} setIssueList={setTopIssue} />;
+          return (
+            <Issue issue={issue} setIssueList={setTopIssue} key={issue._id} />
+          );
         })}
       </div>
     </TopIssueContainer>

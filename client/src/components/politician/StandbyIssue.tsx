@@ -63,7 +63,13 @@ const StandbyIssue = (): JSX.Element => {
       {isLoading ? (
         <div>
           {issueList.map(issue => {
-            return <Issue issue={issue} setIssueList={setIssueList} />;
+            return (
+              <Issue
+                issue={issue}
+                setIssueList={setIssueList}
+                key={issue._id}
+              />
+            );
           })}
         </div>
       ) : (

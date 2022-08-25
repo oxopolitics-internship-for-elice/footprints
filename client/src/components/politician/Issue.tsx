@@ -25,7 +25,7 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   };
 
   return (
-    <IssueContainer key={_id}>
+    <IssueContainer>
       <div>{regi.pro - regi.con}/100</div>
       <div>{issuedDate}</div>
       <div>{content}</div>
