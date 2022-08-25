@@ -285,39 +285,59 @@ const Graph = (): JSX.Element => {
       legend: {
         display: false,
       },
+      zoom: {
+        pan: {
+          enabled: true,
+          mode: 'x',
+        },
+        zoom: {
+          pinch: {
+            enabled: true, // Enable pinch zooming
+          },
+          wheel: {
+            enabled: true, // Enable wheel zooming
+          },
+          mode: 'x',
+        },
+      },
     },
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        position: 'relative',
-        height: '70%',
-        width: '70%',
-      }}
-    >
+    <>
       <GraphButton onClick={getMoreData}>+</GraphButton>
-      {data && (
-        <Line
-          ref={chartRef}
-          onClick={event => {
-            let point = ClickHander(
-              getElementAtEvent(chartRef.current, event),
-              event,
-            );
-            console.log(point);
-            setPoint(point);
-          }}
-          options={options}
-          data={data}
-        />
-      )}
-      <div>
-        {open && <Modal setOpen={setOpen} element={point} content={content} />}
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          position: 'relative',
+          height: '70%',
+          width: '60%',
+        }}
+      >
+        {data && (
+          <Line
+            ref={chartRef}
+            onClick={event => {
+              let point = ClickHander(
+                getElementAtEvent(chartRef.current, event),
+                event,
+              );
+              console.log(point);
+              setPoint(point);
+            }}
+            options={options}
+            data={data}
+          />
+        )}
+        <div>
+          {open && (
+            <Modal setOpen={setOpen} element={point} content={content} />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
@@ -328,9 +348,13 @@ const GraphButton = styled.button`
   width: 3rem;
   font-size: 30px;
   font-weight: bolder;
-  position: relative;
-  top: 300px;
+  top: 250px;
   border-radius: 30px;
   border-width: 0.5px;
   opacity: 0.9;
+  justifycontent: center;
+  position: relative;
+  @media screen and (max-width: 1500px) {
+    display: none;
+  }
 `;

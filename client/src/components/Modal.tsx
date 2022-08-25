@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-
+import { ButtonO, ButtonX } from './Button';
 type Element = {
   $context: Object;
   x: number;
@@ -49,9 +49,10 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
             setOpen(false);
           }}
         >
-          <IoCloseCircleOutline />
+          <IoCloseCircleOutline size="50" />
         </CloseButton>
-        {content[element.$context.dataIndex]}
+
+        <ContentDiv>{content[element.$context.dataIndex]}</ContentDiv>
         <ChooseBox>
           {Imgsrc.map((src, index) => {
             return (
@@ -61,7 +62,7 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
                   ClickHandler(index);
                 }}
               >
-                <img src={src} width="20px" />
+                <img src={src} width="30px" />
               </ChooseItem>
             );
           })}
@@ -78,16 +79,15 @@ interface ContainerProps {
 }
 
 const Container = styled.div<ContainerProps>`
-  width: 300px;
-  height: 200px;
+  width: 500px;
+  height: 300px;
   position: absolute;
 
-  top: ${element => element.y}px;
+  top: ${element => element.y + 150}px;
   left: ${element => element.x}px;
   transform: translate(-50%, -50%);
   background-color: #c8c8c8;
   border: 1px solid black;
-  border-radius: 8px;
   opacity: 0.8;
 `;
 const CloseButton = styled.div`
@@ -97,12 +97,18 @@ const CloseButton = styled.div`
   padding-right: 10px;
 `;
 
+const ContentDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  font-size: 30px;
+`;
 const ChooseBox = styled.div`
   display: flex;
   justify-content: center;
-  border-radius: 30px;
   align-items: center;
-  margin: 100px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 `;
 
 const ChooseItem = styled.button`
