@@ -5,9 +5,7 @@ import { Issue, IssueDocument } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
-import { PageOptionsDto } from 'src/common/pagination/pageOptions.dto';
-import { PageMetaDto } from 'src/common/pagination/pageMeta.dto';
-import { PageDto } from 'src/common/pagination/page.dto';
+import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
 import { Politician, PoliticianDocument } from '../schemas/politician.schema';
 
 @Injectable()
@@ -40,13 +38,8 @@ export class IssueService {
     return allIssues;
   }
 
-  async getIssuesRegistered(
-    targetPolitician: string,
-    pageOptions: PageOptionsDto,
-  ): Promise<PageDto<Issue>> {
-    const itemCount = await this.issueModel
-      .find({ targetPolitician, regiStatus: 'active' })
-      .count();
+  async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
+    const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'active' })
@@ -68,10 +61,7 @@ export class IssueService {
     return issues;
   }
 
-  async getIssueNotRegistered(
-    targetPolitician: string,
-    pageOptions: PageOptionsDto,
-  ): Promise<PageDto<Issue>> {
+  async getIssueNotRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
     const itemCount = await this.issueModel.find({ targetPolitician }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
