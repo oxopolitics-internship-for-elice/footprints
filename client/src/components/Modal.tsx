@@ -40,6 +40,7 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
   }
   const Imgsrc = ['img/circle.png', 'img/triangle.png', 'img/x.png'];
   async function ClickHandler(index: number) {
+    console.log(element, 'gds');
     let target = '6303c94fffebd001ceec6dff';
 
     setPoll(async () => {
