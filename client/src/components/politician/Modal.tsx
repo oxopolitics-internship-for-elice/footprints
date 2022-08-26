@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import axios from 'axios';
-import { IoCloseCircleOutline } from 'react-icons/io5';
 
-import './model.css';
 type Element = {
   $context: Object;
   x: number;
@@ -35,6 +33,7 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
   function handleClickOutside(event: any) {
     if (ref.current && !ref.current.contains(event.target)) {
       setOpen(false);
+      document.body.style.overflow = 'unset';
     }
   }
   async function ClickHandler(index: number) {

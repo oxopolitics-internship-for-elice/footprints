@@ -57,17 +57,15 @@ const PoliticianGraph = (): JSX.Element => {
   const [data, setData] = useState<any>();
   const [isFirst, setIsFirst] = useState(false);
   const [index, setIndex] = useState<number>(1);
-  const [NextPageable, isNextPageable] = useState(true);
+  const [NextPageable, isNextPageable] = useState<boolean>(true);
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
   ) {
-    console.log(element, 'egd');
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
-      let toop = document.getElementsByClassName('css-11oqkmf');
-      console.log(toop, 'gs');
       setOpen(!open);
+      document.body.style.overflow = 'hidden';
 
       return element[0].element;
     }
@@ -75,43 +73,43 @@ const PoliticianGraph = (): JSX.Element => {
 
   const getData = async (index: number | Number) => {
     let target = '6303bed2e9d44f884ed1d640';
+    console.log(index, '1');
     const res = await GraphAPI.getGraph(target, index);
     console.log(res);
 
-    res.data.data.map((res: ResTypes) => {
+    res.data.data.map((res: ResTypes, index: number) => {
       setIssueDate((current: Date[] | []) => {
-        if (index >= 2) {
-          let date = dateFormatter(res.issueDate);
-          const temp = [date, ...current];
+        let data = dateFormatter(res.issueDate);
+        if (index === 0) {
+          const temp = [data];
           return temp;
         } else {
-          let date = dateFormatter(res.issueDate);
-          const temp = [...current, date];
+          const temp = [...current, data];
           return temp;
         }
       });
 
-      setPoll((current: any) => {
-        if (index >= 2) {
-          const temp = [res.poll, ...current];
+      setPoll((current: any, index: number) => {
+        if (index === 0) {
+          const temp = [res.poll];
           return temp;
         } else {
           const temp = [...current, res.poll];
           return temp;
         }
       });
-      setContent((current: any) => {
-        if (index >= 2) {
-          const temp = [res.content, ...current];
+      setContent((current: any, index: number) => {
+        if (index === 0) {
+          const temp = [res.content];
           return temp;
         } else {
           const temp = [...current, res.content];
           return temp;
         }
       });
-      setScore((current: any) => {
-        if (index >= 2) {
-          const temp = [res.poll.pro - res.poll.con, ...current];
+      setScore((current: any, index: number) => {
+        if (index === 0) {
+          const temp = [res.poll.pro - res.poll.con];
           return temp;
         } else {
           const temp = [...current, res.poll.pro - res.poll.con];
@@ -127,7 +125,7 @@ const PoliticianGraph = (): JSX.Element => {
       await getData(index);
     }
 
-    setData({
+    await setData({
       labels: issueDate,
       datasets: [
         {
@@ -144,15 +142,20 @@ const PoliticianGraph = (): JSX.Element => {
     setIsFirst(true);
   };
 
-  const getMoreData = async () => {
-    if (NextPageable === true) {
-      await getData(index + 1);
-      setIndex(index + 1);
-    } else {
-      alert('더이상 불러올 데이터가 없습니다.');
-    }
-  };
+  const getNextData = async () => {
+    console.log(index, '1');
 
+    setIndex(index);
+    console.log(index, '2');
+
+    await getData(index);
+
+    console.log(index, '3');
+  };
+  const getPreData = async () => {
+    await getData(index - 1);
+    await setIndex(index - 1);
+  };
   useEffect(() => {
     start();
     if (isFirst) {
@@ -288,53 +291,67 @@ const PoliticianGraph = (): JSX.Element => {
   const string2 = '>';
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        height: '700px',
-        margin: '100px 0 100px 30px',
-      }}
-    >
-      <GraphButton onClick={getMoreData}>{string1}</GraphButton>
-
-      <div
-        style={{
-          height: '100%',
-          width: '80%',
-        }}
-      >
-        {data && (
-          <Line
-            ref={chartRef}
-            onClick={event => {
-              let point = ClickHander(
-                getElementAtEvent(chartRef.current, event),
-                event,
-              );
-              console.log(point);
-              setPoint(point);
-            }}
-            options={options}
-            data={data}
-          />
-        )}
-        <GraphButton2 onClick={getMoreData}>{string2}</GraphButton2>
-
-        <div>
-          {open && (
-            // <Modal setOpen={setOpen} element={point} content={content} />
-            <Temp setOpen={setOpen} element={point} content={content} />
+    <>
+      {data && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            height: '700px',
+            margin: '100px 0 100px 30px',
+          }}
+        >
+          {NextPageable === false ? null : (
+            <GraphButton left="" top="" onClick={getNextData}>
+              {string1}
+            </GraphButton>
           )}
+
+          <div
+            style={{
+              height: '100%',
+              width: '80%',
+            }}
+          >
+            {data && (
+              <Line
+                ref={chartRef}
+                onClick={event => {
+                  let point = ClickHander(
+                    getElementAtEvent(chartRef.current, event),
+                    event,
+                  );
+                  setPoint(point);
+                }}
+                options={options}
+                data={data}
+              />
+            )}
+            {index === 1 ? null : (
+              <GraphButton left="1650px" top="-450px" onClick={getPreData}>
+                {string2}
+              </GraphButton>
+            )}
+
+            <div>
+              {open && (
+                // <Modal setOpen={setOpen} element={point} content={content} />
+                <Temp setOpen={setOpen} element={point} content={content} />
+              )}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
 export default PoliticianGraph;
-
-const GraphButton = styled.button`
+interface Props {
+  left: string;
+  top: string;
+}
+const GraphButton = styled.button<Props>`
   height: 3rem;
   width: 3rem;
   font-size: 30px;
@@ -342,30 +359,10 @@ const GraphButton = styled.button`
   border-radius: 30px;
   border-width: 0.5px;
   position: relative;
-  top: 250px;
-  opacity: 0.9;
-  transition-duration: 0.4s;
-  background-color: #008cba;
-  @media screen and (max-width: 1500px) {
-    display: none;
-  }
-  &:hover {
-    color: white;
-    background-color: skyblue;
-  }
-`;
+  left: ${props => props.left};
+  top: ${props => props.top || '250px'};
 
-const GraphButton2 = styled.button`
-  height: 3rem;
-  width: 3rem;
-  font-size: 30px;
-  font-weight: bolder;
-  border-radius: 30px;
-  border-width: 0.5px;
   opacity: 0.9;
-  position: relative;
-  left: 1700px;
-  bottom: 450px;
   transition-duration: 0.4s;
   background-color: #008cba;
   @media screen and (max-width: 1500px) {
