@@ -24,11 +24,10 @@ const PoliticianModal = ({ setOpen, element, content }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
 
   useEffect(() => {
-    // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
+    console.log(ref);
 
     return () => {
-      // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside);
     };
   });
@@ -105,12 +104,20 @@ const Container = styled.div<ContainerProps>`
   width: 500px;
   height: 300px;
   position: absolute;
-
   top: ${element => element.y + 150}px;
+  right: 0;
+  bottom: 0;
   left: ${element => element.x}px;
+  z-index: 99;
+  background-color: rgba(0, 0, 0, 0.6);
+  animation-duration: 0.25s;
+  animation-timing-function: ease-out;
+  animation-name: fadeIn;
+  animation-fill-mode: forwards;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transform: translate(-50%, -50%);
-  background-color: #c8c8c8;
-  border: 1px solid black;
   opacity: 0.8;
 `;
 const CloseButton = styled.div`

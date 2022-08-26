@@ -17,6 +17,7 @@ import styled from '@emotion/styled';
 import { getDatasetAtEvent, getElementAtEvent, Line } from 'react-chartjs-2';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
+import Temp from './Modal';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -283,27 +284,24 @@ const PoliticianGraph = (): JSX.Element => {
       },
     },
   };
+  const string1 = '<';
+  const string2 = '>';
 
   return (
     <div
       style={{
         display: 'flex',
         justifyContent: 'center',
-        paddingTop: '100px',
         height: '700px',
-        width: '1600px',
-        margin: '0 0 100px 30px',
+        margin: '100px 0 100px 30px',
       }}
     >
-      <GraphButton onClick={getMoreData}>+</GraphButton>
+      <GraphButton onClick={getMoreData}>{string1}</GraphButton>
 
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'center',
-          position: 'relative',
           height: '100%',
-          width: '100%',
+          width: '80%',
         }}
       >
         {data && (
@@ -321,9 +319,12 @@ const PoliticianGraph = (): JSX.Element => {
             data={data}
           />
         )}
+        <GraphButton2 onClick={getMoreData}>{string2}</GraphButton2>
+
         <div>
           {open && (
-            <Modal setOpen={setOpen} element={point} content={content} />
+            // <Modal setOpen={setOpen} element={point} content={content} />
+            <Temp setOpen={setOpen} element={point} content={content} />
           )}
         </div>
       </div>
@@ -343,6 +344,28 @@ const GraphButton = styled.button`
   position: relative;
   top: 250px;
   opacity: 0.9;
+  transition-duration: 0.4s;
+  background-color: #008cba;
+  @media screen and (max-width: 1500px) {
+    display: none;
+  }
+  &:hover {
+    color: white;
+    background-color: skyblue;
+  }
+`;
+
+const GraphButton2 = styled.button`
+  height: 3rem;
+  width: 3rem;
+  font-size: 30px;
+  font-weight: bolder;
+  border-radius: 30px;
+  border-width: 0.5px;
+  opacity: 0.9;
+  position: relative;
+  left: 1700px;
+  bottom: 450px;
   transition-duration: 0.4s;
   background-color: #008cba;
   @media screen and (max-width: 1500px) {
