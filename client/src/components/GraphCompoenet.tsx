@@ -163,11 +163,10 @@ const Graph = (): JSX.Element => {
         () => start();
       }, 1);
     }
-    console.log(index);
   }, [isFirst, index]);
 
   const options = {
-    responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       tooltip: {
         enabled: false,
@@ -235,7 +234,6 @@ const Graph = (): JSX.Element => {
               div.appendChild(numSpan);
               div.appendChild(br);
             }
-            console.log(bodyLines, '532253');
             result[tooltipModel.dataPoints[0].dataIndex].forEach(
               (body: any, index: number) => {
                 const div = document.createElement('div');
@@ -302,7 +300,15 @@ const Graph = (): JSX.Element => {
   };
 
   return (
-    <>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        paddingTop: '100px',
+        height: '500px',
+        width: '1200px',
+      }}
+    >
       <GraphButton onClick={getMoreData}>+</GraphButton>
 
       <div
@@ -310,8 +316,8 @@ const Graph = (): JSX.Element => {
           display: 'flex',
           justifyContent: 'center',
           position: 'relative',
-          height: '70%',
-          width: '60%',
+          height: '100%',
+          width: '100%',
         }}
       >
         {data && (
@@ -335,7 +341,7 @@ const Graph = (): JSX.Element => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
