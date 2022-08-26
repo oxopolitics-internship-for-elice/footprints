@@ -1,5 +1,5 @@
 export class PageOptionsDto {
-  constructor(pageNum, perPage) {
+  constructor(pageNum: number, perPage: number) {
     this.pageNum = pageNum;
     this.perPage = perPage;
   }

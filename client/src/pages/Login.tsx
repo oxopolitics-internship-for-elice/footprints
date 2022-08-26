@@ -14,8 +14,8 @@ const Login = () => {
   //     errorHandler(error);
   //   }
   // };
-  const KaKaoID = 'c48c4dfbe4f110adc31dadde05c57d36';
-  const RedirectURI = 'http://localhost:5000/auth/kakao/callback';
+  const KaKaoID = process.env.KAKAO_ID;
+  const RedirectURI = process.env.RedirectURI;
   const kakaoRequestURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KaKaoID}&redirect_uri=${RedirectURI}`;
 
   return (

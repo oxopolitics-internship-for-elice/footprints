@@ -40,9 +40,10 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
   }
   const Imgsrc = ['img/circle.png', 'img/triangle.png', 'img/x.png'];
   async function ClickHandler(index: number) {
+    console.log(element, 'gds');
     let target = '6303c94fffebd001ceec6dff';
 
-    setPoll((current: Object) => {
+    setPoll(async () => {
       let newPoll: { pro: boolean; neu: boolean; con: boolean } = {
         pro: false,
         neu: false,
@@ -55,13 +56,13 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
       } else {
         newPoll['con'] = true;
       }
+      const res = await axios.patch(
+        `http://localhost:5000/issues/${target}/poll`,
+        newPoll,
+      );
+      console.log(res);
       return newPoll;
     });
-    const res = await API.patch(
-      `http://localhost:5000/issues/${target}/poll`,
-      poll,
-    );
-    console.log(res);
   }
   return (
     <>

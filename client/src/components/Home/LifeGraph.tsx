@@ -13,7 +13,6 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import styled from '@emotion/styled';
 import { IssueTypes } from '@/types/IssueTypes';
 import { useState, useEffect } from 'react';
-import * as Api from '@/api/Api';
 import dateFormatter from '@/utils/DateFormatter';
 
 ChartJS.register(

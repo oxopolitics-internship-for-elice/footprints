@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IssueDocument, Issue } from '../schemas/issue.schema';
+import { Issue, IssueDocument } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { PageOptionsDto } from 'src/common/pagination/pageOptions.dto';
 import { PageMetaDto } from 'src/common/pagination/pageMeta.dto';
 import { PageDto } from 'src/common/pagination/page.dto';
+import { Politician, PoliticianDocument } from '../schemas/politician.schema';
 
 @Injectable()
 export class IssueService {
   constructor(
     @InjectModel(Issue.name)
     private readonly issueModel: Model<IssueDocument>,
+    @InjectModel(Politician.name)
+    private readonly politicianModel: Model<PoliticianDocument>,
   ) {}
 
   async addIssue(issueData: AddIssueDto): Promise<boolean> {
@@ -25,6 +28,16 @@ export class IssueService {
     } else {
       return true;
     }
+  }
+
+  async getAllIssues() {
+    const allIssues = await this.politicianModel.find().select('_id name');
+    const result = [];
+    for (let i = 0; i < allIssues.length; i++) {
+      result[allIssues[i].name];
+    }
+    console.log(allIssues);
+    return allIssues;
   }
 
   async getIssuesRegistered(

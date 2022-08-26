@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { Location, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AuthButton from './AuthButton';
 
 const Header = () => {
-  //const location = useLocation();
+  const navigate = useNavigate();
   const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
   const [isMainFirstPage, setIsMainFirstPage] = React.useState(true);
 

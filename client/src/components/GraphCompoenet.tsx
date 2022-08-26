@@ -269,8 +269,8 @@ const Graph = (): JSX.Element => {
           tooltipEl.style.background = '#f5f5dc';
           tooltipEl.style.padding = '15px';
           tooltipEl.style.borderRadius = '5px';
-          tooltipEl.style.width = '100px';
-          tooltipEl.style.height = '80px';
+          tooltipEl.style.width = '150px';
+          tooltipEl.style.height = '100px';
         },
       },
 
