@@ -19,7 +19,7 @@ interface ModalProps {
   content: [];
 }
 
-const Modal = ({ setOpen, element, content }: ModalProps) => {
+const PoliticianModal = ({ setOpen, element, content }: ModalProps) => {
   const ref = useRef<null | HTMLDivElement>(null);
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
 
@@ -94,7 +94,7 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
     </>
   );
 };
-export default Modal;
+export default PoliticianModal;
 
 interface ContainerProps {
   x: number;

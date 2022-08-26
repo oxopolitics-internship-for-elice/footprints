@@ -16,7 +16,7 @@ import dateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
 import { getDatasetAtEvent, getElementAtEvent, Line } from 'react-chartjs-2';
 import GraphAPI from '@/api/GraphAPI';
-import Modal from './Modal';
+import Modal from './PoliticianModal';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -45,7 +45,7 @@ interface ResTypes {
   score: number;
 }
 
-const Graph = (): JSX.Element => {
+const PoliticianGraph = (): JSX.Element => {
   const chartRef = useRef<any>(null);
   const [open, setOpen] = useState(false);
   const [point, setPoint] = useState<any>();
@@ -281,21 +281,6 @@ const Graph = (): JSX.Element => {
       legend: {
         display: false,
       },
-      zoom: {
-        pan: {
-          enabled: true,
-          mode: 'x',
-        },
-        zoom: {
-          pinch: {
-            enabled: true, // Enable pinch zooming
-          },
-          wheel: {
-            enabled: true, // Enable wheel zooming
-          },
-          mode: 'x',
-        },
-      },
     },
   };
 
@@ -346,7 +331,7 @@ const Graph = (): JSX.Element => {
   );
 };
 
-export default Graph;
+export default PoliticianGraph;
 
 const GraphButton = styled.button`
   height: 3rem;
