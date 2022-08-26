@@ -305,8 +305,9 @@ const Graph = (): JSX.Element => {
         display: 'flex',
         justifyContent: 'center',
         paddingTop: '100px',
-        height: '500px',
-        width: '1200px',
+        height: '700px',
+        width: '1600px',
+        margin: '0 0 100px 30px',
       }}
     >
       <GraphButton onClick={getMoreData}>+</GraphButton>
@@ -352,12 +353,11 @@ const GraphButton = styled.button`
   width: 3rem;
   font-size: 30px;
   font-weight: bolder;
-  top: 250px;
   border-radius: 30px;
   border-width: 0.5px;
-  opacity: 0.9;
-  justifycontent: center;
   position: relative;
+  top: 250px;
+  opacity: 0.9;
   transition-duration: 0.4s;
   background-color: #008cba;
   @media screen and (max-width: 1500px) {
