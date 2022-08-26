@@ -10,7 +10,7 @@ export const serverUrl = (() => {
   return window.location.origin;
 })();
 
-const accessToken = getCookie('access_token');
+export const accessToken = getCookie('accessToken');
 
 async function get(endpoint: any) {
   console.log(`%cGET 요청 ${serverUrl + endpoint}`, 'color: #a25cd1;');
@@ -18,7 +18,7 @@ async function get(endpoint: any) {
   return axios.get(serverUrl + endpoint, {
     // JWT 엑세스토큰을 헤더에 담아 백엔드 서버에 보냄.
     headers: {
-      Authorization: `Bearer ${getCookie('access_token')}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 }
@@ -33,7 +33,7 @@ async function post(endpoint: any, data: any) {
   return axios.post(serverUrl + endpoint, bodyData, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getCookie('access_token')}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 }
@@ -48,7 +48,7 @@ async function put(endpoint: any, data: any) {
   return axios.put(serverUrl + endpoint, bodyData, {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getCookie('access_token')}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 }
@@ -59,7 +59,7 @@ async function del(endpoint: any, params = '') {
   console.log(`DELETE 요청 ${serverUrl + endpoint + '/' + params}`);
   return axios.delete(serverUrl + endpoint + '/' + params, {
     headers: {
-      Authorization: `Bearer ${getCookie('access_token')}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
 }
