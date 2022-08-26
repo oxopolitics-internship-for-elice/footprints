@@ -3,7 +3,6 @@ import React, { CSSProperties } from 'react';
 import HashLoader from 'react-spinners/HashLoader';
 
 const override: CSSProperties = {
-  background: 'linear-gradient(135deg, #12c2e9, #c471ed, #f64f59)',
   borderRadius: `50%`,
   padding: `50px`,
 };

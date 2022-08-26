@@ -23,7 +23,7 @@ export class AuthService {
     const payload = { email: user.email, userToken: 'loginToken' };
     return this.jwtService.sign(payload, {
       secret: process.env.JWT_SECRET_KEY,
-      expiresIn: '60m',
+      expiresIn: '240h',
     });
   }
 
@@ -64,5 +64,16 @@ export class AuthService {
       return { message: 'failed to create user' };
     }
     return { message: 'created successfully' };
+  }
+
+  async validateToken(token: string) {
+    console.log('token form validateToken() auth.service: ', token);
+    const result = await this.jwtService.verify(token, {
+      secret: process.env.JWT_SECRET_KEY,
+    });
+    if (!result) {
+      return { message: 'failed to verify token' };
+    }
+    return result;
   }
 }

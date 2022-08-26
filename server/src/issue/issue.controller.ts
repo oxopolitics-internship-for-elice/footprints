@@ -28,25 +28,28 @@ export class IssueController {
       if (issue) {
         return response.json({ message: 'success' });
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
   @Get()
-  async getIssuesRegistered(
-    @Query() issueQuery: QueryIssueDto,
-    @Res() response,
-  ) {
+  async getIssues(@Query() issueQuery: QueryIssueDto, @Res() response) {
     try {
-      const { targetPolitician, regiStatus, ranked, skip, perPage } =
-        issueQuery;
+      const { targetPolitician, regiStatus, ranked, pageOptions } = issueQuery;
+
+      // 메인페이지 모든 정치인, 인생 전체 그래프
+      if (!targetPolitician) {
+        const issues = await this.issueService.getAllIssues();
+        return response.json(issues);
+      }
 
       // 등록된 이슈
       if (regiStatus && !ranked) {
         const issues = await this.issueService.getIssuesRegistered(
           targetPolitician,
-          skip,
-          perPage,
+          pageOptions,
         );
         return response.json(issues);
       }
@@ -63,68 +66,70 @@ export class IssueController {
       else if (!regiStatus && !ranked) {
         const issues = await this.issueService.getIssueNotRegistered(
           targetPolitician,
-          skip,
-          perPage,
+          pageOptions,
         );
         return response.json(issues);
       } else {
         throw new Error('bad request');
       }
-    } catch (err) {}
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
   }
 
   // 이슈 등록 투표
-  @Patch(':/issueId/regi')
+  @Patch('/:issueId/regi')
   async setIssueRegi(
     @Param('issueId') id: string,
     @Body() regi: SetIssueRegiDto,
+    @Res() response,
   ) {
     try {
-      // const issue = await this.issueService.setIssueRegi(id, regi);
-      return {};
-    } catch (err) {}
+      const issue = await this.issueService.setIssueRegi(id, regi);
+      if (issue) {
+        return response.json({ message: 'success' });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // 이슈 여론 투표
-  @Patch(':/issueId/poll')
+  @Patch('/:issueId/poll')
   async setIssuePoll(
     @Param('issueId') id: string,
     @Body() poll: SetIssuePollDto,
+    @Res() response,
   ) {
     try {
-      // const issue = await this.issueService.setIssuePoll(id, poll);
+      const issue = await this.issueService.setIssuePoll(id, poll);
+      if (issue) {
+        return response.json({ message: 'success' });
+      }
+    } catch (err) {}
+  }
+
+  // (관리자) 이슈 내용 수정
+  @Patch('/:issueId/content')
+  async setIssueContent(
+    @Param('issueId') id: string,
+    @Body() content: SetIssueContentDto,
+  ) {
+    try {
+      // const issue = await this.issueService.setIssueContent(id, content);
       return {};
     } catch (err) {}
   }
 
-  // @Patch('/:issueId')
-  // async setIssue(
-  //   @Param('issueId') id: string,
-  //   @Query() toUpdate: string,
-  //   @Body() update: SetIssueDto,
-  // )
-
-  // // (관리자) 이슈 내용 수정
-  // @Patch(':/issueId/content')
-  // async setIssueContent(
-  //   @Param('issueId') id: string,
-  //   @Body() content: SetIssueContentDto,
-  // ) {
-  //   try {
-  //     // const issue = await this.issueService.setIssueContent(id, content);
-  //     return {};
-  //   } catch (err) {}
-  // }
-
-  // // (관리자) 이슈 상태 수정
-  // @Patch(':/issueId/regiStatus')
-  // async setIssueRegiStatus(
-  //   @Param('issueId') id: string,
-  //   @Body() regiStatus: SetIssueRegiStatusDto,
-  // ) {
-  //   try {
-  //     // const issue = await this.issueService.setIssueStatus(id, regiStatus);
-  //     return {};
-  //   } catch (err) {}
-  // }
+  // (관리자) 이슈 상태 수정
+  @Patch('/:issueId/regiStatus')
+  async setIssueRegiStatus(
+    @Param('issueId') id: string,
+    @Body() regiStatus: SetIssueRegiStatusDto,
+  ) {
+    try {
+      // const issue = await this.issueService.setIssueStatus(id, regiStatus);
+      return {};
+    } catch (err) {}
+  }
 }

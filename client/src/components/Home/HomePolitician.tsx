@@ -1,17 +1,23 @@
 import styled from '@emotion/styled';
-import { flexCenter } from '@/styles/flex';
+import { flexCenter } from '@/styles/Flex';
 import React from 'react';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/leejaemyung.webp';
 import yoonseokyeol from '@/assets/yoonseokyeol.webp';
-import WholeGraph from './LifeGraph';
+import LifeGraph from './LifeGraph';
+import issueState from '@/store/IssueState';
+import { IssueTypes } from '@/types/IssueTypes';
+import { useRecoilValue } from 'recoil';
+import PoliticiansState from '@/store/PoliticiansState';
 
 interface HomePoliticianProps {
-  name: '이재명' | '윤석열';
+  politicanName: string;
 }
 
-const HomePolitician = ({ name }: HomePoliticianProps) => {
-  const image = {
+type ImgSrc = { [politicanNames: string]: string };
+const HomePolitician = ({ politicanName }: HomePoliticianProps) => {
+  const fetchedPoliticans = useRecoilValue(PoliticiansState);
+  const imgSrc: ImgSrc = {
     이재명: leejaemyung,
     윤석열: yoonseokyeol,
   };
@@ -22,10 +28,10 @@ const HomePolitician = ({ name }: HomePoliticianProps) => {
         <AnimationOnScroll animateIn="animate__fadeIn">
           <Politician>
             <Row>
-              <Image src={image[name]} alt="leejaemyung" />
-              <Name>{name}</Name>
+              <Image src={imgSrc[politicanName]} alt={politicanName} />
+              <Name>{politicanName}</Name>
             </Row>
-            <WholeGraph target={'6303bed2e9d44f884ed1d640'} />
+            <LifeGraph issues={fetchedPoliticans[politicanName]} />
           </Politician>
         </AnimationOnScroll>
       </Container>
