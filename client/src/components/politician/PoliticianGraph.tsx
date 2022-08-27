@@ -55,9 +55,10 @@ const PoliticianGraph = (): JSX.Element => {
   const [content, setContent] = useState<any>([]);
   const [score, setScore] = useState<any>([]);
   const [data, setData] = useState<any>();
-  const [isFirst, setIsFirst] = useState(false);
+  const [isFirst, setIsFirst] = useState(true);
   const [index, setIndex] = useState<number>(1);
   const [NextPageable, isNextPageable] = useState<boolean>(true);
+  const [receiveData, setReceiveData] = useState<boolean>(false);
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -73,23 +74,24 @@ const PoliticianGraph = (): JSX.Element => {
 
   const getData = async (index: number | Number) => {
     let target = '6303bed2e9d44f884ed1d640';
-    console.log(index, '1');
     const res = await GraphAPI.getGraph(target, index);
     console.log(res);
 
-    res.data.data.map((res: ResTypes, index: number) => {
+    res.data.data.map(async (res: ResTypes, index: number) => {
       setIssueDate((current: Date[] | []) => {
         let data = dateFormatter(res.issueDate);
         if (index === 0) {
           const temp = [data];
+
           return temp;
         } else {
           const temp = [...current, data];
+
           return temp;
         }
       });
 
-      setPoll((current: any, index: number) => {
+      setPoll((current: any) => {
         if (index === 0) {
           const temp = [res.poll];
           return temp;
@@ -98,7 +100,8 @@ const PoliticianGraph = (): JSX.Element => {
           return temp;
         }
       });
-      setContent((current: any, index: number) => {
+
+      setContent((current: any) => {
         if (index === 0) {
           const temp = [res.content];
           return temp;
@@ -107,7 +110,8 @@ const PoliticianGraph = (): JSX.Element => {
           return temp;
         }
       });
-      setScore((current: any, index: number) => {
+
+      setScore((current: any) => {
         if (index === 0) {
           const temp = [res.poll.pro - res.poll.con];
           return temp;
@@ -117,15 +121,17 @@ const PoliticianGraph = (): JSX.Element => {
         }
       });
     });
+
     isNextPageable(res.data.meta.hasNextPage);
+    setReceiveData(false);
   };
 
   const start = async () => {
-    if (!isFirst) {
+    if (isFirst === true) {
       await getData(index);
     }
 
-    await setData({
+    setData({
       labels: issueDate,
       datasets: [
         {
@@ -139,26 +145,30 @@ const PoliticianGraph = (): JSX.Element => {
         },
       ],
     });
-    setIsFirst(true);
+
+    setIsFirst(false);
   };
 
   const getNextData = async () => {
-    console.log(index, '1');
-
-    setIndex(index);
-    console.log(index, '2');
-
-    await getData(index);
-
-    console.log(index, '3');
+    await getData(index + 1);
+    setIndex(index + 1);
   };
   const getPreData = async () => {
     await getData(index - 1);
-    await setIndex(index - 1);
+    setIndex(index - 1);
+  };
+  const ClickButton = async () => {
+    await start();
   };
   useEffect(() => {
+    if (isFirst === false) {
+      ClickButton();
+    }
+  }, [index]);
+
+  useEffect(() => {
     start();
-    if (isFirst) {
+    if (!isFirst) {
       setTimeout(() => {
         () => start();
       }, 1);
@@ -167,7 +177,8 @@ const PoliticianGraph = (): JSX.Element => {
         () => start();
       }, 1);
     }
-  }, [isFirst, index]);
+    console.log(isFirst);
+  }, [isFirst]);
 
   const options = {
     maintainAspectRatio: false,
@@ -176,8 +187,6 @@ const PoliticianGraph = (): JSX.Element => {
         enabled: false,
         maintainAspectRatio: true,
         external: function (context: any) {
-          // Tooltip Element
-
           let tooltipEl = document.getElementById('chartjs-tooltip');
           // Create element on first render
           if (!tooltipEl) {
@@ -292,56 +301,54 @@ const PoliticianGraph = (): JSX.Element => {
 
   return (
     <>
-      {data && (
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          height: '700px',
+          margin: '100px 0 100px 30px',
+        }}
+      >
+        {NextPageable === false ? null : (
+          <GraphButton left="" top="" onClick={getNextData}>
+            {string1}
+          </GraphButton>
+        )}
+
         <div
           style={{
-            display: 'flex',
-            justifyContent: 'center',
-            height: '700px',
-            margin: '100px 0 100px 30px',
+            height: '100%',
+            width: '80%',
           }}
         >
-          {NextPageable === false ? null : (
-            <GraphButton left="" top="" onClick={getNextData}>
-              {string1}
+          {data && (
+            <Line
+              ref={chartRef}
+              onClick={event => {
+                let point = ClickHander(
+                  getElementAtEvent(chartRef.current, event),
+                  event,
+                );
+                setPoint(point);
+              }}
+              options={options}
+              data={data}
+            />
+          )}
+          {index === 1 ? null : (
+            <GraphButton left="1650px" top="-450px" onClick={getPreData}>
+              {string2}
             </GraphButton>
           )}
 
-          <div
-            style={{
-              height: '100%',
-              width: '80%',
-            }}
-          >
-            {data && (
-              <Line
-                ref={chartRef}
-                onClick={event => {
-                  let point = ClickHander(
-                    getElementAtEvent(chartRef.current, event),
-                    event,
-                  );
-                  setPoint(point);
-                }}
-                options={options}
-                data={data}
-              />
+          <div>
+            {open && (
+              // <Modal setOpen={setOpen} element={point} content={content} />
+              <Temp setOpen={setOpen} element={point} content={content} />
             )}
-            {index === 1 ? null : (
-              <GraphButton left="1650px" top="-450px" onClick={getPreData}>
-                {string2}
-              </GraphButton>
-            )}
-
-            <div>
-              {open && (
-                // <Modal setOpen={setOpen} element={point} content={content} />
-                <Temp setOpen={setOpen} element={point} content={content} />
-              )}
-            </div>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };
