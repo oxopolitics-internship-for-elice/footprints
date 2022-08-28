@@ -104,4 +104,5 @@ export default LifeGraph;
 const GraphContainer = styled.div`
   width: 90vw;
   height: 400px;
+  padding-top: 40px;
 `;
