@@ -21,6 +21,12 @@ const styles = css`
   input:focus {
     outline: none;
   }
+  textarea:focus {
+    outline: none;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
   button {
     border: none;
     background: none;
