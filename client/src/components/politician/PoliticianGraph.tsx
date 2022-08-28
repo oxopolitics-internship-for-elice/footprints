@@ -16,6 +16,7 @@ import styled from '@emotion/styled';
 import { getElementAtEvent, Line } from 'react-chartjs-2';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
+import { BsArrowRepeat } from 'react-icons/bs';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -326,11 +327,14 @@ const PoliticianGraph = (): JSX.Element => {
           display: 'flex',
           justifyContent: 'center',
           height: '700px',
-          margin: '100px 0 100px 30px',
+          margin: '100px 0 100px 0px',
         }}
       >
         {NextPageable === false ? null : (
-          <GraphButton style={{ marginTop: '350px' }} onClick={getNextData}>
+          <GraphButton
+            style={{ float: 'left', marginTop: '350px' }}
+            onClick={getNextData}
+          >
             {string1}
           </GraphButton>
         )}
@@ -341,9 +345,6 @@ const PoliticianGraph = (): JSX.Element => {
             width: '80%',
           }}
         >
-          <button style={{ float: 'right', paddingRight: '30px' }}>
-            새로고침
-          </button>
           {data && (
             <Line
               ref={chartRef}
@@ -358,15 +359,26 @@ const PoliticianGraph = (): JSX.Element => {
               data={data}
             />
           )}
+          <button
+            onClick={() => location.reload()}
+            style={{
+              position: 'relative',
+              float: 'right',
+              marginTop: '-700px',
+              marginRight: '100px',
+              zIndex: 2,
+            }}
+          >
+            <BsArrowRepeat size="40" />
+          </button>
           {index === 1 ? null : (
             <GraphButton
-              style={{ marginTop: '-350px', marginLeft: '300px' }}
+              style={{ marginTop: '-350px', marginRight: '-10px' }}
               onClick={getPreData}
             >
               {string2}
             </GraphButton>
           )}
-
           <div>
             {open && (
               // <Modal setOpen={setOpen} element={point} content={content} />
