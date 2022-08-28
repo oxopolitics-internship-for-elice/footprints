@@ -14,27 +14,35 @@ export class PoliticianService {
   ) {}
 
   async getAllPoliticians() {
-    const politicians = await this.politicianModel.find().select('_id name ');
-    const result = new Object();
+    const politicians = await this.politicianModel.find().select('_id name');
+    const resultArray = [];
+    // const result = new Object();
     for (let i = 0; i < politicians.length; i++) {
-      result[politicians[i].name] = await this.issueModel.aggregate([
-        {
-          $match: { $expr: { $eq: ['$targetPolitician', politicians[i]._id] } },
-        },
-        {
-          $project: {
-            _id: 1,
-            issueDate: 1,
-            totalPolls: { $add: ['$poll.pro', '$poll.neu', '$poll.con'] },
-            score: { $subtract: ['$poll.pro', '$poll.con'] },
-            poll: 1,
+      resultArray.push(
+        await this.issueModel.aggregate([
+          {
+            $match: { $expr: { $eq: ['$targetPolitician', politicians[i]._id] } },
           },
-        },
-        { $sort: { totalPolls: -1 } },
-        { $limit: 20 },
-        { $sort: { issueDate: 1 } },
-      ]);
+          {
+            $project: {
+              _id: 1,
+              targetPolitician: 1,
+              issueDate: 1,
+              totalPolls: { $add: ['$poll.pro', '$poll.neu', '$poll.con'] },
+              score: { $subtract: ['$poll.pro', '$poll.con'] },
+              poll: 1,
+            },
+          },
+          { $sort: { totalPolls: -1 } },
+          { $limit: 20 },
+          { $sort: { issueDate: 1 } },
+          {
+            $group: { _id: '$targetPolitician', issues: { $push: '$$ROOT' } },
+          },
+          { $set: { name: politicians[i].name } },
+        ]),
+      );
     }
-    return result;
+    return resultArray;
   }
 }
