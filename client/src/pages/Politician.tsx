@@ -5,6 +5,7 @@ import StandbyIssue from '@components/politician/StandbyIssue';
 import Top3Issue from '@components/politician/Top3Issue';
 import IssueAddButton from '@/components/politician/IssueAddButton';
 import IssueAddModal from '@/components/politician/IssueAddModal';
+import Header from '@/components/Base/Header';
 
 const Politician = (): JSX.Element => {
   const [modalShow, setModalShow] = React.useState(false);
@@ -18,6 +19,7 @@ const Politician = (): JSX.Element => {
       <Helmet>
         <title>정치인 상세페이지</title>
       </Helmet>
+      <Header />
       {/* <DrowGraph /> */}
       <IssueAddModal
         modalShow={modalShow}

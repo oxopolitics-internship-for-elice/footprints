@@ -25,13 +25,18 @@ const HomePolitician = ({ politicanName }: HomePoliticianProps) => {
   return (
     <>
       <Container>
-        <AnimationOnScroll animateIn="animate__fadeIn">
+        <AnimationOnScroll
+          animateIn="animate__fadeIn"
+          animateOut="animate__fadeOut"
+        >
           <Politician>
             <Row>
               <Image src={imgSrc[politicanName]} alt={politicanName} />
               <Name>{politicanName}</Name>
             </Row>
-            <LifeGraph issues={fetchedPoliticans[politicanName]} />
+            <AnimationOnScroll animateIn="animate__fadeIn" delay={500}>
+              <LifeGraph issues={fetchedPoliticans[politicanName]} />
+            </AnimationOnScroll>
           </Politician>
         </AnimationOnScroll>
       </Container>
@@ -44,7 +49,6 @@ export default HomePolitician;
 const Container = styled.div`
   ${flexCenter}
   max-width: 100%;
-  width: 1400px;
   height: 100%;
 `;
 
@@ -61,8 +65,8 @@ const Politician = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  width: 1400px;
-  height: 500px;
+  width: 100%;
+  height: 100%;
   border-radius: 15px;
   background-color: #fff;
   border: 1px solid #000;
