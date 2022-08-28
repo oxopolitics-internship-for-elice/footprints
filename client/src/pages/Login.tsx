@@ -9,9 +9,6 @@ const Login = () => {
   const RedirectURI = import.meta.env.VITE_RedirectURI;
   const kakaoRequestURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KakaoID}&redirect_uri=${RedirectURI}`;
 
-  React.useEffect(() => {
-    console.log(import.meta.env);
-  }, []);
   return (
     <>
       <Helmet>

@@ -10,7 +10,7 @@ const Header = () => {
 
   const handleScroll = () => {
     const scrollTop = window.scrollY;
-    if (scrollTop > 925 && location.pathname === '/') {
+    if (scrollTop > 900 && location.pathname === '/') {
       setIsMainFirstPage(false);
     } else {
       setIsMainFirstPage(true);

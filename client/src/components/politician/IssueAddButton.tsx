@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import { HiPlus } from 'react-icons/hi';
-import Modal from '../Base/Modal';
 
 interface IssueAddButtonProps {
   onClickToggleModal: () => void;
