@@ -27,7 +27,7 @@ const Politician = (): JSX.Element => {
       />
       <Top3Issue />
       <StandbyIssue />
-      <IssueAddButton onClickToggleModal={handleModalToggle} />
+      {!modalShow && <IssueAddButton onClickToggleModal={handleModalToggle} />}
     </>
   );
 };

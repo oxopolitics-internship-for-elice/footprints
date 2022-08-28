@@ -9,17 +9,26 @@ import issueState from '@/store/IssueState';
 import { IssueTypes } from '@/types/IssueTypes';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
+import { useNavigate } from 'react-router-dom';
 
 interface HomePoliticianProps {
   politicanName: string;
 }
 
 type ImgSrc = { [politicanNames: string]: string };
+
 const HomePolitician = ({ politicanName }: HomePoliticianProps) => {
+  const navigate = useNavigate();
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
   const imgSrc: ImgSrc = {
     이재명: leejaemyung,
     윤석열: yoonseokyeol,
+  };
+
+  const handleClickPolitician = (event: React.MouseEvent) => {
+    event.preventDefault();
+
+    navigate(`/politician/${politicanName}`);
   };
 
   return (
@@ -31,8 +40,15 @@ const HomePolitician = ({ politicanName }: HomePoliticianProps) => {
         >
           <Politician>
             <Row>
-              <Image src={imgSrc[politicanName]} alt={politicanName} />
-              <Name>{politicanName}</Name>
+              <Image
+                src={imgSrc[politicanName]}
+                alt={politicanName}
+                onClick={handleClickPolitician}
+              />
+              <Name onClick={handleClickPolitician}>{politicanName}</Name>
+              <NavigateButton onClick={handleClickPolitician}>
+                더 보기 {'>'}
+              </NavigateButton>
             </Row>
             <AnimationOnScroll animateIn="animate__fadeIn" delay={500}>
               <LifeGraph issues={fetchedPoliticans[politicanName]} />
@@ -58,7 +74,7 @@ const Row = styled.div`
   flex-direction: row;
   margin-left: auto;
   align-items: center;
-  justify-conten
+  justify-content: space-between;
 `;
 
 const Politician = styled.div`
@@ -69,7 +85,7 @@ const Politician = styled.div`
   height: 100%;
   border-radius: 15px;
   background-color: #fff;
-  border: 1px solid #000;
+  border: 1px solid rgb(230, 230, 230)
   padding: 20px;
   align-items: center;
   justify-content: ;
@@ -87,16 +103,23 @@ const Name = styled.div`
   font-size: 1.5em;
   font-weight: bold;
   margin-left: 20px;
+  width: 100%;
+  font-align: center;
 `;
 
-const Chart = styled.div`
-  width: 1200px;
-  height: 400px;
-  border-radius: 15px;
-  border: 1px solid #000;
-  margin: 5px;
-  text-align: center;
+const NavigateButton = styled.button`
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  align-self: flex-end;
+  width: 128px;
+  height: 50px;
+  border-radius: 5px;
+  background-color: 
+  border: 1px solid #000;
+  color: #000;
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-top: 20px;
+  cursor: pointer;
 `;
