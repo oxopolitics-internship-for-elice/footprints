@@ -4,6 +4,7 @@ import { FullPage, Slide } from 'react-full-page';
 import HomePolitician from './HomePolitician';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
+import Loading from '../Base/Loading';
 
 const SlideFullPage = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
@@ -13,13 +14,15 @@ const SlideFullPage = () => {
       <Slide>
         <ServiceInfo />
       </Slide>
-      {politicanNames.length > 0
-        ? politicanNames.map(politicanName => (
-            <Slide key={politicanName}>
-              <HomePolitician politicanName={politicanName} />
-            </Slide>
-          ))
-        : null}
+      {politicanNames.length > 0 ? (
+        politicanNames.map(politicanName => (
+          <Slide key={politicanName}>
+            <HomePolitician politicanName={politicanName} />
+          </Slide>
+        ))
+      ) : (
+        <Loading />
+      )}
     </FullPage>
   );
 };
