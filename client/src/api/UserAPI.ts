@@ -12,7 +12,7 @@ const UserAPI: IUserAPI = (() => {
     getUserByEmail: (email: string) => {
       // somethingCommon();
 
-      return Api.get(`user/${email}`);
+      return Api.get(`users/${email}`);
     },
   };
 })();
