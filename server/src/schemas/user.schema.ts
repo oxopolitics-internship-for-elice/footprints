@@ -19,6 +19,9 @@ export class User {
 
   @Prop({ default: 'normal' })
   userStatus?: string;
+
+  @Prop({ default: '' })
+  refreshToken?: string;
 }
 
 export const userSchema = SchemaFactory.createForClass(User);

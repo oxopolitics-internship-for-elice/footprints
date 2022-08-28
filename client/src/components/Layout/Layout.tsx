@@ -1,4 +1,4 @@
-import { flexCenter } from '@/styles/flex';
+import { flexCenter } from '@/styles/Flex';
 import styled from '@emotion/styled';
 import Header from '../Base/Header';
 import FullHeightPage from '../System/FullHeightPage';
@@ -7,11 +7,10 @@ export interface LayoutProps {
   children: JSX.Element;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <FullHeightPage>
-        <Header />
         <Container>{children}</Container>
       </FullHeightPage>
     </>

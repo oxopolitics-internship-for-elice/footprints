@@ -7,9 +7,11 @@ import {
   Param,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/User.dto';
+import { CreateUserDto } from './dto/add.user.dto';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -27,6 +29,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:email')
   async getOne(@Res() response, @Param('email') email: string) {
     try {

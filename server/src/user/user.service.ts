@@ -23,7 +23,8 @@ export class UserService {
     const user = await this.userModel.findOne({ email }).lean();
     console.log(user);
     if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
+      // throw new NotFoundException(`User with email ${email} not found`);
+      return null;
     }
     return user;
   }
@@ -39,5 +40,13 @@ export class UserService {
     user.password = userData.password;
     const result = await user.save();
     return result;
+  }
+
+  async updateRefreshToken(email: string, refreshToken: string) {
+    await this.userModel.findOneAndUpdate(
+      { email: email },
+      { refreshToken: refreshToken },
+      { new: true },
+    );
   }
 }

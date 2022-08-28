@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import AuthButton from './AuthButton';
 
 const Header = () => {
-  const location = useLocation();
+  const navigate = useNavigate();
   const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
   const [isMainFirstPage, setIsMainFirstPage] = React.useState(true);
 
@@ -17,27 +18,36 @@ const Header = () => {
   };
 
   React.useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    if (location.pathname === '/') {
+      setIsMainFirstPage(true);
+      window.addEventListener('scroll', handleScroll);
+      return () => {
+        window.removeEventListener('scroll', handleScroll);
+      };
+    }
+
+    if (location.pathname !== '/') {
+      setIsMainFirstPage(false);
+    }
   }, [location.pathname]);
+
+  React.useEffect(() => {
+    if (location.pathname === '/') {
+      setIsMainFirstPage(true);
+    } else {
+      setIsMainFirstPage(false);
+    }
+  }, []);
 
   return (
     <>
       <HeaderBlock>
         <InnerHeader>
-          <Title fontWhite={isMainFirstPage}>정치 발자국</Title>
+          <Title fontWhite={isMainFirstPage} onClick={() => navigate('/')}>
+            정치 발자국
+          </Title>
           <AuthContainer>
-            {isLogined ? (
-              <LoginButton onClick={() => setIsLogined(false)}>
-                로그아웃
-              </LoginButton>
-            ) : (
-              <LoginButton onClick={() => setIsLogined(true)}>
-                로그인
-              </LoginButton>
-            )}
+            <AuthButton />
           </AuthContainer>
         </InnerHeader>
       </HeaderBlock>
@@ -82,26 +92,11 @@ const Title = styled.h1<TitleProps>`
   font-weight: bold;
   justify-self: center;
   color: ${props => (props.fontWhite ? '#fff' : '#000')};
+  cursor: pointer;
 `;
 
 const AuthContainer = styled.div`
   display: flex;
   align-items: center;
   margin-right: 1rem;
-`;
-
-const LoginButton = styled.button`
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #fff;
-  color: #000;
-  font-size: 0.875em;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.5s ease 0s;
-  &:hover {
-    background: #f5f5f5;
-  }
 `;
