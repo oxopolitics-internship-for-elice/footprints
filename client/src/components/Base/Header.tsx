@@ -72,7 +72,7 @@ const Header = () => {
 export default Header;
 
 const HeaderBlock = styled.header`
-  position: sticky;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;

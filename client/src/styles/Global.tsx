@@ -23,9 +23,9 @@ const styles = css`
     outline: none;
   }
   button {
-    border: 1px transparent solid;
-    background: ${theme.colors.mainColor};
-    padding: 10px;
+    border: none;
+    background: none;
+    padding: 0;
     cursor: pointer;
   }
   body {

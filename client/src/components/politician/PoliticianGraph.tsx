@@ -291,8 +291,8 @@ const PoliticianGraph = (): JSX.Element => {
         justifyContent: 'center',
         paddingTop: '100px',
         height: '700px',
-        width: '1600px',
-        margin: '0 0 100px 30px',
+        width: '90vw',
+        marginBottom: '50px',
       }}
     >
       <GraphButton onClick={getMoreData}>+</GraphButton>

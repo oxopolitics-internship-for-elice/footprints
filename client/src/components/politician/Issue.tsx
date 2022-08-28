@@ -90,7 +90,7 @@ const Content = styled.div`
   font-size: 16px;
   font-weight: 600;
   line-height: 27.2px;
-  padding: 20px;
+  padding: 20px 0 20px 0;
 `;
 type ButtonProps = {
   toggle: boolean;
@@ -101,6 +101,7 @@ const RegiProButton = styled.button<ButtonProps>`
   color: ${props => (props.toggle ? 'white' : 'black')};
   border-radius: 10px 0 0 10px;
   cursor: pointer;
+  padding: 10px 30px 10px 30px;
 `;
 const RegiConButton = styled.button<ButtonProps>`
   background-color: ${props =>
@@ -108,4 +109,5 @@ const RegiConButton = styled.button<ButtonProps>`
   color: ${props => (props.toggle ? 'white' : 'black')};
   border-radius: 0 10px 10px 0;
   cursor: pointer;
+  padding: 10px 30px 10px 30px;
 `;

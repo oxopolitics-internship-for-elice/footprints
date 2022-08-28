@@ -82,5 +82,5 @@ const StandbyIssue = (): JSX.Element => {
 export default StandbyIssue;
 
 const StandbyIssueContainer = styled.div`
-  padding-top: 40px;
+  padding: 40px 20px 20px 20px;
 `;

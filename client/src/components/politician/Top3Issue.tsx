@@ -53,6 +53,7 @@ const TopIssueContainer = styled.div`
   padding: 20px;
 `;
 const Title = styled.div`
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bolder;
+  padding-bottom: 15px;
 `;
