@@ -59,6 +59,8 @@ const PoliticianGraph = (): JSX.Element => {
   const [index, setIndex] = useState<number>(1);
   const [NextPageable, isNextPageable] = useState<boolean>(true);
   const [receiveData, setReceiveData] = useState<boolean>(false);
+  const [contentId, setContentId] = useState<any>([]);
+
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -120,6 +122,15 @@ const PoliticianGraph = (): JSX.Element => {
           return temp;
         }
       });
+      setContentId((current: any) => {
+        if (index === 0) {
+          const temp = [res._id];
+          return temp;
+        } else {
+          const temp = [...current, res._id];
+          return temp;
+        }
+      });
     });
 
     isNextPageable(res.data.meta.hasNextPage);
@@ -147,7 +158,9 @@ const PoliticianGraph = (): JSX.Element => {
       ],
     });
   };
-
+  useEffect(() => {
+    console.log(document.body.offsetWidth);
+  }, [document.body.offsetWidth]);
   const getNextData = async () => {
     await getData(index + 1);
     setIndex(index + 1);
@@ -163,6 +176,7 @@ const PoliticianGraph = (): JSX.Element => {
     if (isFirst === false) {
       ClickButton();
     }
+    console.log(document.body.offsetWidth);
   }, [index]);
 
   useEffect(() => {
@@ -288,6 +302,7 @@ const PoliticianGraph = (): JSX.Element => {
 
       title: {
         display: true,
+        fontSize: 5,
         text: '윤석열 인생 그래프',
       },
       legend: {
@@ -309,7 +324,7 @@ const PoliticianGraph = (): JSX.Element => {
         }}
       >
         {NextPageable === false ? null : (
-          <GraphButton left="" top="" onClick={getNextData}>
+          <GraphButton left={0} top="" onClick={getNextData}>
             {string1}
           </GraphButton>
         )}
@@ -335,7 +350,7 @@ const PoliticianGraph = (): JSX.Element => {
             />
           )}
           {index === 1 ? null : (
-            <GraphButton left="1650px" top="-450px" onClick={getPreData}>
+            <GraphButton left={440} top="-450px" onClick={getPreData}>
               {string2}
             </GraphButton>
           )}
@@ -343,7 +358,12 @@ const PoliticianGraph = (): JSX.Element => {
           <div>
             {open && (
               // <Modal setOpen={setOpen} element={point} content={content} />
-              <Temp setOpen={setOpen} element={point} content={content} />
+              <Temp
+                setOpen={setOpen}
+                element={point}
+                content={content}
+                contentId={contentId}
+              />
             )}
           </div>
         </div>
@@ -354,7 +374,7 @@ const PoliticianGraph = (): JSX.Element => {
 
 export default PoliticianGraph;
 interface Props {
-  left: string;
+  left: number;
   top: string;
 }
 const GraphButton = styled.button<Props>`
@@ -365,13 +385,17 @@ const GraphButton = styled.button<Props>`
   border-radius: 30px;
   border-width: 0.5px;
   position: relative;
-  left: ${props => props.left};
+  left: ${props =>
+    props.left === 0 ? '0px' : document.body.offsetWidth - props.left + 'px'};
   top: ${props => props.top || '250px'};
 
   opacity: 0.9;
   transition-duration: 0.4s;
   background-color: #008cba;
   @media screen and (max-width: 1500px) {
+    display: none;
+  }
+  @media screen and (min-width: 2000px) {
     display: none;
   }
   &:hover {

@@ -14,8 +14,9 @@ interface ModalProps {
   setOpen: (boolean: boolean) => void;
   element: Element;
   content: [];
+  contentId: [];
 }
-const Modal = ({ setOpen, element, content }: ModalProps) => {
+const Modal = ({ setOpen, element, content, contentId }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
 
   const ref = useRef<null | HTMLDivElement>(null);
@@ -23,9 +24,7 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
-    console.log(ref);
     return () => {
-      // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [ref]);
@@ -38,7 +37,9 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
   }
   async function ClickHandler(index: number) {
     console.log(element, 'gds');
-    let target = '6303c94fffebd001ceec6dff';
+    console.log(content);
+
+    let target = contentId[element.$context.dataIndex];
 
     setPoll(async () => {
       let newPoll: { pro: boolean; neu: boolean; con: boolean } = {
