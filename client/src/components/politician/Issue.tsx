@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { IssueProps } from '@components/politician/StandbyIssue';
 import { IssueTypes } from '@/types/IssueTypes';
 import dateFormatter from '@/utils/DateFormatter';
-import * as Api from '@/api/Api';
+import * as Api from '@/api/api';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, content, regi } = issue;

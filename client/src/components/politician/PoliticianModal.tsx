@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import GraphAPI from '@/api/GraphAPI';
-import * as API from '@/api/Api';
+import * as API from '@/api/api';
 import axios from 'axios';
 
 type Element = {
