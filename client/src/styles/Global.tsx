@@ -1,6 +1,7 @@
 import React from 'react';
 import { Global, css } from '@emotion/react';
 import reset from 'emotion-reset';
+import theme from './theme';
 
 const styles = css`
   ${reset}
@@ -22,9 +23,9 @@ const styles = css`
     outline: none;
   }
   button {
-    border: none;
-    background: none;
-    padding: 0;
+    border: 1px transparent solid;
+    background: ${theme.colors.mainColor};
+    padding: 10px;
     cursor: pointer;
   }
   body {
@@ -36,7 +37,7 @@ const styles = css`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding: 0;
-    margin: 0;
+    margin: 20px;
   }
 `;
 
