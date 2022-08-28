@@ -129,6 +129,7 @@ const PoliticianGraph = (): JSX.Element => {
   const start = async () => {
     if (isFirst === true) {
       await getData(index);
+      setIsFirst(false);
     }
 
     setData({
@@ -145,8 +146,6 @@ const PoliticianGraph = (): JSX.Element => {
         },
       ],
     });
-
-    setIsFirst(false);
   };
 
   const getNextData = async () => {

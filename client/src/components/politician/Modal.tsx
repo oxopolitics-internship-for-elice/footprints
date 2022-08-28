@@ -63,7 +63,7 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
   }
   return (
     <>
-      <Modal3>
+      <Background>
         <Container {...element} ref={ref}>
           <Header ref={ref}>
             <HeaderText>gadfadtgsgs</HeaderText>
@@ -76,7 +76,7 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
               <IoCloseCircleOutline size="50" />
             </CloseButton> */}
           </Header>
-          <Section>{content[element.$context.dataIndex]}</Section>
+          <Content>{content[element.$context.dataIndex]}</Content>
           <ChooseBox>
             {Imgsrc.map((src, index) => {
               return (
@@ -92,7 +92,7 @@ const Modal = ({ setOpen, element, content }: ModalProps) => {
             })}
           </ChooseBox>
         </Container>
-      </Modal3>
+      </Background>
     </>
   );
 };
@@ -103,13 +103,13 @@ interface ContainerProps {
   x: number;
   y: number;
 }
-const Modal3 = styled.div`
+const Background = styled.div`
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(103, 97, 104, 0.5);
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-name: fadeIn;
@@ -130,32 +130,30 @@ const Container = styled.div<ContainerProps>`
   animation-fill-mode: forwards;
   transform: translate(-50%, -50%);
 `;
-const Section = styled.section`
-  border-radius: 0.3rem;
+const Content = styled.div`
+  text-align: center;
+  line-height: 300px;
   background-color: #fff;
+  font-size: 40px;
   overflow: hidden;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-name: slideUp;
   animation-fill-mode: forwards;
 `;
-const CloseButton = styled.div`
-  float: right;
-`;
-const HeaderText = styled.text`
-  font-size: 35px;
+
+const HeaderText = styled.div`
+  font-size: 45px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  padding-top: 10px;
   display: block;
-  width: 900px;
-  padding-left: 60px;
   height: 80px;
 `;
 const Header = styled.div`
   text-align: center;
   position: relative;
-  padding: 16px 30px 16px 0;
   background-color: #f1f1f1;
   font-weight: 700;
   height: 80px;
@@ -166,8 +164,10 @@ const ChooseBox = styled.div`
   justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 5px;
+  bottom: 0px;
   width: 100%;
+  background-color: #dedcdc;
+  border-radius: 5px;
 `;
 
 const ChooseItem = styled.button`
