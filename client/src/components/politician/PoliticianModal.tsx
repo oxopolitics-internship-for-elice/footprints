@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import { IoCloseCircleOutline } from 'react-icons/io5';
-import GraphAPI from '@/api/GraphAPI';
-import * as API from '@/api/Api';
 import axios from 'axios';
-
+import GraphAPI from '@/api/GraphAPI';
+import { IoCloseCircleOutline } from 'react-icons/io5';
 type Element = {
   $context: Object;
   x: number;
@@ -17,30 +15,39 @@ interface ModalProps {
   setOpen: (boolean: boolean) => void;
   element: Element;
   content: [];
+  contentId: [];
+  issueDate: [];
 }
-
-const PoliticianModal = ({ setOpen, element, content }: ModalProps) => {
-  const ref = useRef<null | HTMLDivElement>(null);
+const Modal = ({
+  setOpen,
+  element,
+  content,
+  contentId,
+  issueDate,
+}: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
+
+  const ref = useRef<null | HTMLDivElement>(null);
+  const Imgsrc = ['img/circle.png', 'img/triangle.png', 'img/x.png'];
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
-    console.log(ref);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  });
+  }, [ref]);
 
   function handleClickOutside(event: any) {
     if (ref.current && !ref.current.contains(event.target)) {
       setOpen(false);
+      document.body.style.overflow = 'unset';
     }
   }
-  const Imgsrc = ['img/circle.png', 'img/triangle.png', 'img/x.png'];
   async function ClickHandler(index: number) {
     console.log(element, 'gds');
-    let target = '6303c94fffebd001ceec6dff';
+    console.log(content);
+
+    let target = contentId[element.$context.dataIndex];
 
     setPoll(async () => {
       let newPoll: { pro: boolean; neu: boolean; con: boolean } = {
@@ -55,90 +62,123 @@ const PoliticianModal = ({ setOpen, element, content }: ModalProps) => {
       } else {
         newPoll['con'] = true;
       }
-      const res = await axios.patch(
-        `http://localhost:5000/issues/${target}/poll`,
-        newPoll,
-      );
-      console.log(res);
+      const res = await GraphAPI.updatePoll(target, newPoll);
+
       return newPoll;
     });
   }
   return (
     <>
-      <Container {...element} ref={ref}>
-        <CloseButton
-          onClick={() => {
-            setOpen(false);
-          }}
-        >
-          <IoCloseCircleOutline size="50" />
-        </CloseButton>
-
-        <ContentDiv>{content[element.$context.dataIndex]}</ContentDiv>
-        <ChooseBox>
-          {Imgsrc.map((src, index) => {
-            return (
-              <ChooseItem
-                key={index}
+      <Background>
+        <Container {...element} ref={ref}>
+          <Header ref={ref}>
+            <HeaderText>
+              {issueDate[element.$context.dataIndex]}
+              <CloseButton
+                style={{}}
                 onClick={() => {
-                  ClickHandler(index);
+                  setOpen(false);
                 }}
               >
-                <img src={src} width="30px" />
-              </ChooseItem>
-            );
-          })}
-        </ChooseBox>
-      </Container>
+                <IoCloseCircleOutline size="50" />
+              </CloseButton>
+            </HeaderText>
+          </Header>
+          <Content>{content[element.$context.dataIndex]}</Content>
+          <ChooseBox>
+            {Imgsrc.map((src, index) => {
+              return (
+                <ChooseItem
+                  key={index}
+                  onClick={() => {
+                    ClickHandler(index);
+                  }}
+                >
+                  <img src={src} width="30px" />
+                </ChooseItem>
+              );
+            })}
+          </ChooseBox>
+        </Container>
+      </Background>
     </>
   );
 };
-export default PoliticianModal;
+
+export default Modal;
 
 interface ContainerProps {
   x: number;
   y: number;
 }
-
-const Container = styled.div<ContainerProps>`
-  width: 500px;
-  height: 300px;
-  position: absolute;
-  top: ${element => element.y + 150}px;
+const Background = styled.div`
+  position: fixed;
+  top: 0;
   right: 0;
   bottom: 0;
-  left: ${element => element.x}px;
-  z-index: 99;
-  background-color: rgba(0, 0, 0, 0.6);
+  left: 0;
+  background-color: rgba(103, 97, 104, 0.5);
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-name: fadeIn;
   animation-fill-mode: forwards;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: translate(-50%, -50%);
-  opacity: 0.8;
 `;
-const CloseButton = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 10px;
-  padding-right: 10px;
+const Container = styled.div<ContainerProps>`
+  width: 1000px;
+  height: 700px;
+  position: relative;
+  top: 550px;
+  right: 0px;
+  bottom: 0px;
+  left: 1100px;
+  background-color: #fff;
+  animation-duration: 0.25s;
+  animation-timing-function: ease-out;
+  animation-name: fadeIn;
+  animation-fill-mode: forwards;
+  transform: translate(-50%, -50%);
+`;
+const Content = styled.div`
+  text-align: center;
+  line-height: 300px;
+  background-color: #fff;
+  font-size: 40px;
+  overflow: hidden;
+  animation-duration: 0.25s;
+  animation-timing-function: ease-out;
+  animation-name: slideUp;
+  animation-fill-mode: forwards;
 `;
 
-const ContentDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  font-size: 30px;
+const HeaderText = styled.div`
+  font-size: 45px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-top: 10px;
+  display: block;
+  height: 80px;
+`;
+const CloseButton = styled.div`
+  float: right;
+`;
+const Header = styled.div`
+  text-align: center;
+  position: relative;
+  background-color: #f1f1f1;
+  font-weight: 700;
+  height: 80px;
+  over-flow: hidden;
 `;
 const ChooseBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 0;
+  bottom: 0px;
   width: 100%;
+  background-color: #dedcdc;
+  border-radius: 5px;
 `;
 
 const ChooseItem = styled.button`

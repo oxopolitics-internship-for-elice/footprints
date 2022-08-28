@@ -11,13 +11,11 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import zoomPlugin from 'chartjs-plugin-zoom';
 import dateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
-import { getDatasetAtEvent, getElementAtEvent, Line } from 'react-chartjs-2';
+import { getElementAtEvent, Line } from 'react-chartjs-2';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import Temp from './Modal';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -27,7 +25,6 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler,
-  zoomPlugin,
 );
 
 interface ResTypes {
@@ -58,9 +55,8 @@ const PoliticianGraph = (): JSX.Element => {
   const [isFirst, setIsFirst] = useState(true);
   const [index, setIndex] = useState<number>(1);
   const [NextPageable, isNextPageable] = useState<boolean>(true);
-  const [receiveData, setReceiveData] = useState<boolean>(false);
   const [contentId, setContentId] = useState<any>([]);
-
+  const [resData, setResData] = useState<any>([]);
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -133,8 +129,17 @@ const PoliticianGraph = (): JSX.Element => {
       });
     });
 
+    setResData((current: any) => {
+      if (index === 0) {
+        const temp = [res];
+        return temp;
+      } else {
+        const temp = [...current, res];
+        return temp;
+      }
+    });
+
     isNextPageable(res.data.meta.hasNextPage);
-    setReceiveData(false);
   };
 
   const start = async () => {
@@ -176,7 +181,6 @@ const PoliticianGraph = (): JSX.Element => {
     if (isFirst === false) {
       ClickButton();
     }
-    console.log(document.body.offsetWidth);
   }, [index]);
 
   useEffect(() => {
@@ -302,7 +306,9 @@ const PoliticianGraph = (): JSX.Element => {
 
       title: {
         display: true,
-        fontSize: 5,
+        font: {
+          size: 30,
+        },
         text: '윤석열 인생 그래프',
       },
       legend: {
@@ -324,7 +330,7 @@ const PoliticianGraph = (): JSX.Element => {
         }}
       >
         {NextPageable === false ? null : (
-          <GraphButton left={0} top="" onClick={getNextData}>
+          <GraphButton style={{ marginTop: '350px' }} onClick={getNextData}>
             {string1}
           </GraphButton>
         )}
@@ -335,6 +341,9 @@ const PoliticianGraph = (): JSX.Element => {
             width: '80%',
           }}
         >
+          <button style={{ float: 'right', paddingRight: '30px' }}>
+            새로고침
+          </button>
           {data && (
             <Line
               ref={chartRef}
@@ -350,7 +359,10 @@ const PoliticianGraph = (): JSX.Element => {
             />
           )}
           {index === 1 ? null : (
-            <GraphButton left={440} top="-450px" onClick={getPreData}>
+            <GraphButton
+              style={{ marginTop: '-350px', marginLeft: '300px' }}
+              onClick={getPreData}
+            >
               {string2}
             </GraphButton>
           )}
@@ -358,11 +370,12 @@ const PoliticianGraph = (): JSX.Element => {
           <div>
             {open && (
               // <Modal setOpen={setOpen} element={point} content={content} />
-              <Temp
+              <Modal
                 setOpen={setOpen}
                 element={point}
                 content={content}
                 contentId={contentId}
+                issueDate={issueDate}
               />
             )}
           </div>
@@ -373,10 +386,7 @@ const PoliticianGraph = (): JSX.Element => {
 };
 
 export default PoliticianGraph;
-interface Props {
-  left: number;
-  top: string;
-}
+interface Props {}
 const GraphButton = styled.button<Props>`
   height: 3rem;
   width: 3rem;
@@ -384,20 +394,10 @@ const GraphButton = styled.button<Props>`
   font-weight: bolder;
   border-radius: 30px;
   border-width: 0.5px;
-  position: relative;
-  left: ${props =>
-    props.left === 0 ? '0px' : document.body.offsetWidth - props.left + 'px'};
-  top: ${props => props.top || '250px'};
-
+  float: right;
   opacity: 0.9;
   transition-duration: 0.4s;
   background-color: #008cba;
-  @media screen and (max-width: 1500px) {
-    display: none;
-  }
-  @media screen and (min-width: 2000px) {
-    display: none;
-  }
   &:hover {
     color: white;
     background-color: skyblue;
