@@ -1,3 +1,5 @@
+import errorHandler from '@/api/errorHandler';
+import UserAPI from '@/api/UserAPI';
 import styled from '@emotion/styled';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -37,6 +39,18 @@ const Header = () => {
     } else {
       setIsMainFirstPage(false);
     }
+  }, []);
+
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const { data } = await UserAPI.getUserByEmail('wayo7813@naver.com');
+        setIsLogined(data.isLogined);
+      } catch (error) {
+        errorHandler(error);
+      }
+    };
+    fetchUserData();
   }, []);
 
   return (
