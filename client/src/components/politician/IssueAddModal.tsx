@@ -15,7 +15,7 @@ const IssueAddModal = ({
     <>
       {modalShow && (
         <Modal onClickToggleModal={handleModalToggle}>
-          <ModalDiv>정치인 추가</ModalDiv>
+          <ModalDiv>이슈 추가</ModalDiv>
         </Modal>
       )}
     </>

@@ -5,19 +5,13 @@ import kakaoSymbol from '@/assets/kakaoSymbol.png';
 import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
-  // const handleClickKaKao = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-  //   e.preventDefault();
-  //   try {
-  //     const { data } = await AuthAPI.getKaKao();
-  //     console.log(data);
-  //   } catch (error) {
-  //     errorHandler(error);
-  //   }
-  // };
-  const KaKaoID = import.meta.env.KAKAO_ID;
-  const RedirectURI = import.meta.env.RedirectURI;
-  const kakaoRequestURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KaKaoID}&redirect_uri=${RedirectURI}`;
+  const KakaoID = import.meta.env.VITE_KAKAO_ID;
+  const RedirectURI = import.meta.env.VITE_RedirectURI;
+  const kakaoRequestURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KakaoID}&redirect_uri=${RedirectURI}`;
 
+  React.useEffect(() => {
+    console.log(import.meta.env);
+  }, []);
   return (
     <>
       <Helmet>
