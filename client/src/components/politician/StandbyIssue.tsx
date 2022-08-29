@@ -40,40 +40,38 @@ const StandbyIssue = (): JSX.Element => {
   useEffect(() => {
     getIssue();
   }, [pageNum]);
-
+  console.log('밖', pageNum);
   //infinite scroll
   useEffect(() => {
-    if (isLoading) {
-      const observer = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
-          loadMore();
-          if (pageNum > maxPage) {
-            observer.unobserve(target.current);
-            alert('페이지의 마지막입니다.');
-          }
+    console.log('안', pageNum);
+    // if (isLoading) {
+    const observer = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        loadMore();
+        console.log('더 안', pageNum);
+        if (pageNum > maxPage) {
+          observer.unobserve(target.current);
+          alert('페이지의 마지막입니다.');
         }
-      });
-      observer.observe(target.current);
-    }
+      }
+    });
+    observer.observe(target.current);
+    // }
   }, []);
 
   return (
     <StandbyIssueContainer>
-      {isLoading ? (
-        <div>
-          {issueList.map(issue => {
-            return (
-              <Issue
-                issue={issue}
-                setIssueList={setIssueList}
-                key={issue._id}
-              />
-            );
-          })}
-        </div>
-      ) : (
+      {/* {isLoading ? ( */}
+      <div>
+        {issueList.map(issue => {
+          return (
+            <Issue issue={issue} setIssueList={setIssueList} key={issue._id} />
+          );
+        })}
+      </div>
+      {/* ) : (
         ''
-      )}
+      )} */}
       <div ref={target}>{''}</div>
     </StandbyIssueContainer>
   );
