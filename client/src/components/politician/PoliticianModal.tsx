@@ -19,6 +19,7 @@ interface ModalProps {
   content: [];
   contentId: [];
   issueDate: [];
+  resPoll: [];
 }
 const Modal = ({
   setOpen,
@@ -26,6 +27,7 @@ const Modal = ({
   content,
   contentId,
   issueDate,
+  resPoll,
 }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
 
@@ -46,9 +48,6 @@ const Modal = ({
     }
   }
   async function ClickHandler(index: number) {
-    console.log(element, 'gds');
-    console.log(content);
-
     let target = contentId[element.$context.dataIndex];
 
     setPoll(async () => {
@@ -58,10 +57,15 @@ const Modal = ({
         con: false,
       };
       if (index === 0) {
+        resPoll[element.$context.dataIndex].pro += 1;
         newPoll['pro'] = true;
       } else if (index === 1) {
+        resPoll[element.$context.dataIndex].neu += 1;
+
         newPoll['neu'] = true;
       } else {
+        resPoll[element.$context.dataIndex].con += 1;
+
         newPoll['con'] = true;
       }
       const res = await GraphAPI.updatePoll(target, newPoll);
@@ -80,6 +84,7 @@ const Modal = ({
                 style={{}}
                 onClick={() => {
                   setOpen(false);
+                  document.body.style.overflow = 'unset';
                 }}
               >
                 <IoCloseCircleOutline size="50" />
@@ -181,9 +186,15 @@ const ChooseBox = styled.div`
   width: 100%;
   background-color: #dedcdc;
   border-radius: 5px;
+  height: 80px;
 `;
 
 const ChooseItem = styled.button`
   border: none;
+  height: 100%;
   flex-grow: 1;
+  &:hover {
+    color: white;
+    background-color: #868387;
+  }
 `;

@@ -368,13 +368,12 @@ const PoliticianGraph = (): JSX.Element => {
             />
           )}
           <button
-            onClick={() => location.reload()}
+            onClick={ClickButton}
             style={{
               position: 'relative',
               float: 'right',
               marginTop: '-700px',
               marginRight: '100px',
-              zIndex: 2,
             }}
           >
             <BsArrowRepeat size="40" />
@@ -395,6 +394,7 @@ const PoliticianGraph = (): JSX.Element => {
                 content={content}
                 contentId={contentId}
                 issueDate={issueDate}
+                resPoll={poll}
               />
             )}
           </div>
