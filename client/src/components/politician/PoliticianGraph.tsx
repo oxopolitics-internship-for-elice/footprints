@@ -11,6 +11,10 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
+import Circle from '@/assets/img/circle.png';
+import Triangle from '@/assets/img/triangle.png';
+import X from '@/assets/img/x.png';
+
 import dateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
 import { getElementAtEvent, Line } from 'react-chartjs-2';
@@ -240,11 +244,7 @@ const PoliticianGraph = (): JSX.Element => {
             });
             const tableHead = document.createElement('div');
             function drow(div: Element, body: Element, index: number) {
-              const imgSrc = [
-                'img/circle.png',
-                'img/triangle.png',
-                'img/x.png',
-              ];
+              const imgSrc = [Circle, Triangle, X];
               const imageTh = document.createElement('span');
               const image = document.createElement('img');
               image.src = imgSrc[index];
@@ -321,22 +321,19 @@ const PoliticianGraph = (): JSX.Element => {
   const string2 = '>';
 
   return (
-    <>
     <div
       style={{
         display: 'flex',
         justifyContent: 'center',
-        paddingTop: '100px',
         height: '700px',
-        width: '90vw',
         marginBottom: '50px',
       }}
     >
-      <GraphButton onClick={getMoreData}>+</GraphButton>
       <div
         style={{
           display: 'flex',
           justifyContent: 'center',
+          width: '1500px',
           height: '700px',
           margin: '100px 0 100px 0px',
         }}
@@ -392,7 +389,6 @@ const PoliticianGraph = (): JSX.Element => {
           )}
           <div>
             {open && (
-              // <Modal setOpen={setOpen} element={point} content={content} />
               <Modal
                 setOpen={setOpen}
                 element={point}
@@ -404,11 +400,12 @@ const PoliticianGraph = (): JSX.Element => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
 export default PoliticianGraph;
+
 interface Props {}
 const GraphButton = styled.button<Props>`
   height: 3rem;

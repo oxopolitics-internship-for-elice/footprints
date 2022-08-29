@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
-import axios from 'axios';
 import GraphAPI from '@/api/GraphAPI';
+import Circle from '@/assets/img/circle.png';
+import Triangle from '@/assets/img/triangle.png';
+import X from '@/assets/img/x.png';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 type Element = {
   $context: Object;
@@ -28,7 +30,7 @@ const Modal = ({
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
 
   const ref = useRef<null | HTMLDivElement>(null);
-  const Imgsrc = ['img/circle.png', 'img/triangle.png', 'img/x.png'];
+  const Imgsrc = [Circle, Triangle, X];
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
