@@ -8,8 +8,11 @@ export type PoliticianIssueType = {
   issueDate: string;
   totalPolls: number;
   score: number;
+  targetPolitician: string;
 };
 
 export interface PoliticiansTypes {
-  [key: string]: PoliticianIssueType[];
+  _id: string;
+  name: string;
+  issues: PoliticianIssueType[];
 }

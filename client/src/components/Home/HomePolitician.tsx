@@ -10,16 +10,25 @@ import { IssueTypes } from '@/types/IssueTypes';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
 import { useNavigate } from 'react-router-dom';
+import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 
 interface HomePoliticianProps {
   politicanName: string;
+  politicansID: string;
 }
 
 type ImgSrc = { [politicanNames: string]: string };
 
-const HomePolitician = ({ politicanName }: HomePoliticianProps) => {
+const HomePolitician = ({
+  politicanName,
+  politicansID,
+}: HomePoliticianProps) => {
   const navigate = useNavigate();
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
+  const politicanIssue = fetchedPoliticans.find(
+    (politician: PoliticiansTypes) => politician.name === politicanName,
+  );
+
   const imgSrc: ImgSrc = {
     이재명: leejaemyung,
     윤석열: yoonseokyeol,
@@ -28,7 +37,7 @@ const HomePolitician = ({ politicanName }: HomePoliticianProps) => {
   const handleClickPolitician = (event: React.MouseEvent) => {
     event.preventDefault();
 
-    navigate(`/politician/${politicanName}`);
+    navigate(`/politician/${politicansID}`);
   };
 
   return (
@@ -51,7 +60,7 @@ const HomePolitician = ({ politicanName }: HomePoliticianProps) => {
               </NavigateButton>
             </Row>
             <AnimationOnScroll animateIn="animate__fadeIn" delay={500}>
-              <LifeGraph issues={fetchedPoliticans[politicanName]} />
+              <LifeGraph issues={politicanIssue} />
             </AnimationOnScroll>
           </Politician>
         </AnimationOnScroll>
