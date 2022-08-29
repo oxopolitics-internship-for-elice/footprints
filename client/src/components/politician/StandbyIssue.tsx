@@ -14,10 +14,10 @@ export interface IssueProps {
 const StandbyIssue = (): JSX.Element => {
   const [issueList, setIssueList] = useState<IssueTypes[]>([]);
   const targetPolitician = '6303bed2e9d44f884ed1d640';
-  const target = useRef<any>();
+  const targetRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
-  let maxPage: number;
+  const [maxPage, setMaxPage] = useState(null);
 
   const loadMore = () => {
     setPageNum(prev => prev + 1);
@@ -26,13 +26,14 @@ const StandbyIssue = (): JSX.Element => {
   //데이터 fetch
   const getIssue = async () => {
     try {
+      setIsLoading(true);
       const res = await StandbyIssueAPI.getList(targetPolitician, pageNum);
       setIssueList([...issueList, ...res.data.data]);
-      maxPage = res.data.meta.pageCount;
+      setMaxPage(res.data.meta.pageCount);
     } catch (error) {
       errorHandler(error);
     } finally {
-      setIsLoading(true);
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -40,23 +41,24 @@ const StandbyIssue = (): JSX.Element => {
   }, [pageNum]);
   //infinite scroll
   useEffect(() => {
-    // if (isLoading) {
-    const observer = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting) {
-        loadMore();
-        if (pageNum > maxPage) {
-          observer.unobserve(target.current);
-          alert('페이지의 마지막입니다.');
+    const observer: IntersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          loadMore();
+          observer.disconnect();
         }
-      }
-    });
-    observer.observe(target.current);
-    // }
-  }, []);
+      },
+    );
+    if (maxPage && pageNum > maxPage) {
+      alert('더 이상 로드할 컨텐츠가 없습니다.');
+      return;
+    }
+    observer.observe(targetRef.current);
+  }, [pageNum]);
 
   return (
     <StandbyIssueContainer>
-      {isLoading ? (
+      {!isLoading ? (
         <div>
           {issueList.map(issue => {
             return (
@@ -71,7 +73,7 @@ const StandbyIssue = (): JSX.Element => {
       ) : (
         <Loading />
       )}
-      <div ref={target}>{''}</div>
+      <div ref={targetRef}>{''}</div>
     </StandbyIssueContainer>
   );
 };
