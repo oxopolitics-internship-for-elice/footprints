@@ -54,8 +54,11 @@ export class IssueService {
       {
         $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
       },
+      {
+        $match: { regiStatus: 'inactive' },
+      },
       { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
-      { $sort: { sum: -1 } },
+      { $sort: { score: -1 } },
       { $limit: 3 },
     ]);
     return issues;
@@ -65,7 +68,7 @@ export class IssueService {
     const itemCount = await this.issueModel.find({ targetPolitician }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
-      .find({ targetPolitician })
+      .find({ targetPolitician, regiStatus: 'inactive' })
       .sort({ issueDate: 'asc' })
       .skip(pageOptions.skip)
       .limit(pageOptions.perPage);
