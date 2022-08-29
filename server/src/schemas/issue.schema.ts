@@ -40,6 +40,9 @@ export class Issue {
   pollDate: Date;
 
   @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
   content: string;
 
   @Prop({ default: true })
