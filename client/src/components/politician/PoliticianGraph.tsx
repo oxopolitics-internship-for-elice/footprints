@@ -333,9 +333,8 @@ const PoliticianGraph = (): JSX.Element => {
         style={{
           display: 'flex',
           justifyContent: 'center',
-          width: '1500px',
-          height: '700px',
-          margin: '100px 0 100px 0px',
+          width: '100%',
+          margin: '100px 0 30px 0px',
         }}
       >
         {NextPageable === false ? null : (
