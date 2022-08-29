@@ -22,6 +22,9 @@ export class User {
 
   @Prop({ default: '' })
   refreshToken?: string;
+
+  @Prop()
+  tribe?: string;
 }
 
 export const userSchema = SchemaFactory.createForClass(User);

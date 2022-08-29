@@ -28,7 +28,13 @@ export class UserService {
     }
     return user;
   }
-
+  async getUserById(id: string): Promise<User> {
+    const user = await this.userModel.findOne({ _id: id }).lean();
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
   async create(userData: CreateUserDto): Promise<User> {
     // const existingUser = this.getOne(userData.email);
     // if (existingUser) {
