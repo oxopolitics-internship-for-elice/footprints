@@ -80,7 +80,7 @@ const HeaderBlock = styled.header<HeaderBlockProps>`
   left: 0;
   right: 0;
   top: 0;
-  z-index: 300;
+  z-index: 2;
   background-color: ${props => (props.istransparent ? 'transparent' : '#fff')};
   transition: all 0.5s ease 0s;
 `;

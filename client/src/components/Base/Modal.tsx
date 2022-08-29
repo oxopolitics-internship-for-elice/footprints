@@ -38,6 +38,7 @@ const ModalContainer = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
+  z-index: 10000;
 `;
 
 const ExitButton = styled.button`
@@ -55,7 +56,7 @@ const ExitButton = styled.button`
 
 const DialogBox = styled.dialog`
   width: 500px;
-  height: 500px;
+  height: 578px;
   display: flex;
   flex-direction: column;
   align-items: center;
