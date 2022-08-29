@@ -1,19 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { IssueDocument, Issue } from '../schemas/issue.schema';
+import { Issue, IssueDocument } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
-import { PageOptionsDto } from 'src/common/pagination/pageOptions.dto';
-import { PageMetaDto } from 'src/common/pagination/pageMeta.dto';
-import { PageDto } from 'src/common/pagination/page.dto';
+import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
+import { Politician, PoliticianDocument } from '../schemas/politician.schema';
 
 @Injectable()
 export class IssueService {
   constructor(
     @InjectModel(Issue.name)
     private readonly issueModel: Model<IssueDocument>,
+    @InjectModel(Politician.name)
+    private readonly politicianModel: Model<PoliticianDocument>,
   ) {}
 
   async addIssue(issueData: AddIssueDto): Promise<boolean> {
@@ -27,13 +28,18 @@ export class IssueService {
     }
   }
 
-  async getIssuesRegistered(
-    targetPolitician: string,
-    pageOptions: PageOptionsDto,
-  ): Promise<PageDto<Issue>> {
-    const itemCount = await this.issueModel
-      .find({ targetPolitician, regiStatus: 'active' })
-      .count();
+  async getAllIssues() {
+    const allIssues = await this.politicianModel.find().select('_id name');
+    const result = [];
+    for (let i = 0; i < allIssues.length; i++) {
+      result[allIssues[i].name];
+    }
+    console.log(allIssues);
+    return allIssues;
+  }
+
+  async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
+    const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'active' })
@@ -48,21 +54,21 @@ export class IssueService {
       {
         $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
       },
+      {
+        $match: { regiStatus: 'inactive' },
+      },
       { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
-      { $sort: { sum: -1 } },
+      { $sort: { score: -1 } },
       { $limit: 3 },
     ]);
     return issues;
   }
 
-  async getIssueNotRegistered(
-    targetPolitician: string,
-    pageOptions: PageOptionsDto,
-  ): Promise<PageDto<Issue>> {
+  async getIssueNotRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
     const itemCount = await this.issueModel.find({ targetPolitician }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
-      .find({ targetPolitician })
+      .find({ targetPolitician, regiStatus: 'inactive' })
       .sort({ issueDate: 'asc' })
       .skip(pageOptions.skip)
       .limit(pageOptions.perPage);

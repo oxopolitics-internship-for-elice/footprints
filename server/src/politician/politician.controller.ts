@@ -12,7 +12,7 @@ export class PoliticianController {
       const result = await this.politicianService.getAllPoliticians();
       return response.json(result);
     } catch (err) {
-      return response.status(err.status).json(err.response);
+      console.log(err);
     }
   }
 }

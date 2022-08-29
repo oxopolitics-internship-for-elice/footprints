@@ -4,6 +4,7 @@ import {
   HttpStatus,
   Injectable,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from 'src/user/user.service';
@@ -14,6 +15,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private jwtService: JwtService,
   ) {
     super();
   }
@@ -49,7 +51,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   async validate(token: string) {
     try {
       console.log('token from validate:', token);
-      const tokenVerify = await this.authService.validateToken(token);
+      console.log('type of token: ', typeof token);
+      // const tokenVerify = await this.authService.validateToken(token);
+      const tokenVerify = await this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET_KEY,
+      });
+      console.log('verified token: ', tokenVerify);
 
       const tokenExpirationTime = new Date(tokenVerify['exp'] * 1000);
 
@@ -57,6 +64,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const timeToRemain = Math.floor(
         (tokenExpirationTime.getTime() - currentTime.getTime()) / 1000 / 60,
       );
+      console.log(timeToRemain);
 
       //accesstoken이 로그인토큰이 아니라면 verify 결과 반환
       if (tokenVerify.userToken !== 'loginToken') {

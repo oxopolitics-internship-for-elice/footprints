@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -29,10 +30,15 @@ export class UserController {
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/:email')
-  async getOne(@Res() response, @Param('email') email: string) {
+  async getOne(@Req() request, @Res() response, @Param('email') email: string) {
     try {
+      const reqUser = request.user;
+      console.log('req.user: ', reqUser);
+      const userId = reqUser._id;
+      const userById = await this.userService.getUserById(userId);
+      console.log('userById: ', userById);
       const user = await this.userService.getOne(email);
       return response.status(HttpStatus.OK).json({
         message: 'found successfully',
