@@ -1,10 +1,9 @@
 import React, { LegacyRef, useEffect, useRef, useState } from 'react';
-import issueState from '@/store/IssueState';
-import { useRecoilValue } from 'recoil';
 import { IssueTypes } from '@/types/IssueTypes';
-import * as Api from '@/api/Api';
 import Issue from './Issue';
 import styled from '@emotion/styled';
+import errorHandler from '@/api/ErrorHandler';
+import StandbyIssueAPI from '@/api/StandbyIssueAPI';
 
 export interface IssueProps {
   issue: IssueTypes;
@@ -26,13 +25,11 @@ const StandbyIssue = (): JSX.Element => {
   //데이터 fetch
   const getIssue = async () => {
     try {
-      const res = await Api.get(
-        `issues?targetPolitician=${targetPolitician}&perPage=10&pageNum=${pageNum}`,
-      );
+      const res = await StandbyIssueAPI.getList(targetPolitician, pageNum);
       setIssueList([...issueList, ...res.data.data]);
       maxPage = res.data.meta.pageCount;
-    } catch (Error) {
-      console.log(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
+    } catch (error) {
+      errorHandler(error);
     } finally {
       setIsLoading(true);
     }
