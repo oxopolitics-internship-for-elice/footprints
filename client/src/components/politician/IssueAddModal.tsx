@@ -7,6 +7,7 @@ import PoliticianAPI, { postIssueBody } from '@/api/PoliticianAPI';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import errorHandler from '@/api/ErrorHandler';
+import { Alert } from '@components/Base/Alert';
 
 interface IssueAddModalProps {
   modalShow: boolean;
@@ -30,6 +31,18 @@ const IssueAddModal = ({
 
   const handleIssueSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!issueTitle || !issueContent) {
+      return Alert.fire({
+        icon: 'error',
+        title: '제목과 내용을 입력해주세요.',
+      });
+    }
+    if (!issueDate) {
+      return Alert.fire({
+        icon: 'error',
+        title: '날짜를 선택해주세요.',
+      });
+    }
     try {
       const body: postIssueBody = {
         targetPolitician: '6303bed2e9d44f884ed1d640', // 이후 params(정치인 아이디) 으로 변경
