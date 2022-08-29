@@ -322,6 +322,17 @@ const PoliticianGraph = (): JSX.Element => {
 
   return (
     <>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        paddingTop: '100px',
+        height: '700px',
+        width: '90vw',
+        marginBottom: '50px',
+      }}
+    >
+      <GraphButton onClick={getMoreData}>+</GraphButton>
       <div
         style={{
           display: 'flex',
