@@ -29,7 +29,7 @@ export class UserController {
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/:email')
   async getOne(@Res() response, @Param('email') email: string) {
     try {
