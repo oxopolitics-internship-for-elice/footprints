@@ -3,9 +3,10 @@ import Modal from '@/components/Base/Modal';
 import styled from '@emotion/styled';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
-import dateFormatter from '@/utils/DateFormatter';
+import PoliticianAPI, { postIssueBody } from '@/api/PoliticianAPI';
 
 import 'react-datepicker/dist/react-datepicker.css';
+import errorHandler from '@/api/ErrorHandler';
 
 interface IssueAddModalProps {
   modalShow: boolean;
@@ -15,24 +16,33 @@ const IssueAddModal = ({
   modalShow,
   handleModalToggle,
 }: IssueAddModalProps) => {
-  const [startDate, setStartDate] = React.useState(new Date());
+  const [issueDate, setIssueDate] = React.useState(new Date());
   const [issueTitle, setIssueTitle] = React.useState('');
   const [issueContent, setIssueContent] = React.useState('');
   registerLocale('ko', ko);
 
   const handleChangeDate = (date: Date) => {
     if (!date) {
-      setStartDate(new Date());
+      setIssueDate(new Date());
     }
-    setStartDate(date);
+    setIssueDate(date);
   };
 
-  const handleIssueSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleIssueSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    console.log(startDate);
-    console.log(issueTitle);
-    console.log(issueContent);
+    try {
+      const body: postIssueBody = {
+        targetPolitician: '6303bed2e9d44f884ed1d640', // 이후 params(정치인 아이디) 으로 변경
+        regiUser: '62fe59d9d7b43bbae856d8da', // 이후 user정보에서 가져온 아이디로 변경
+        issueDate,
+        title: issueTitle,
+        content: issueContent,
+      };
+      await PoliticianAPI.postIssue(body);
+      handleModalToggle();
+    } catch (error) {
+      errorHandler(error);
+    }
   };
 
   return (
@@ -49,7 +59,7 @@ const IssueAddModal = ({
                     locale="ko"
                     showPopperArrow={false}
                     fixedHeight
-                    selected={startDate}
+                    selected={issueDate}
                     onChange={handleChangeDate}
                     dateFormat="yyyy-MM-dd"
                     disabledKeyboardNavigation
