@@ -15,13 +15,13 @@ export class PoliticianService {
 
   async getAllPoliticians() {
     const politicians = await this.politicianModel.find().select('_id name');
-    const resultArray = [];
+    // const resultArray = [];
     // const result = new Object();
-    for (let i = 0; i < politicians.length; i++) {
-      resultArray.push(
-        await this.issueModel.aggregate([
+    const array = await Promise.all(
+      politicians.map(async (politician) => {
+        const result = await this.issueModel.aggregate([
           {
-            $match: { $expr: { $eq: ['$targetPolitician', politicians[i]._id] } },
+            $match: { $expr: { $eq: ['$targetPolitician', politician._id] } },
           },
           {
             $project: {
@@ -39,10 +39,11 @@ export class PoliticianService {
           {
             $group: { _id: '$targetPolitician', issues: { $push: '$$ROOT' } },
           },
-          { $set: { name: politicians[i].name } },
-        ]),
-      );
-    }
-    return resultArray;
+          { $set: { name: politician.name } },
+        ]);
+        return result;
+      }),
+    );
+    return [array[0][0], array[1][0]];
   }
 }
