@@ -1,4 +1,16 @@
-import { PageOptionsDto } from './pageOptions.dto';
+import { IsArray } from 'class-validator';
+
+export class PageOptionsDto {
+  constructor(pageNum: number, perPage: number) {
+    this.pageNum = pageNum;
+    this.perPage = perPage;
+  }
+  readonly pageNum?: number;
+  readonly perPage?: number;
+  get skip(): number {
+    return (this.pageNum - 1) * this.perPage;
+  }
+}
 
 interface PageMetaDtoParameters {
   pageOptions: PageOptionsDto;
@@ -20,5 +32,17 @@ export class PageMetaDto {
     this.pageCount = Math.ceil(this.itemCount / this.perPage);
     this.hasPreviousPage = this.pageNum > 1;
     this.hasNextPage = this.pageNum < this.pageCount;
+  }
+}
+
+export class PageDto<T> {
+  @IsArray()
+  data: T[];
+
+  meta: PageMetaDto;
+
+  constructor(data: T[], meta: PageMetaDto) {
+    this.data = data;
+    this.meta = meta;
   }
 }

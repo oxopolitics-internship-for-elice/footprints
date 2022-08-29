@@ -5,9 +5,7 @@ import { Issue, IssueDocument } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
-import { PageOptionsDto } from 'src/common/pagination/pageOptions.dto';
-import { PageMetaDto } from 'src/common/pagination/pageMeta.dto';
-import { PageDto } from 'src/common/pagination/page.dto';
+import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
 import { Politician, PoliticianDocument } from '../schemas/politician.schema';
 
 @Injectable()
@@ -56,8 +54,11 @@ export class IssueService {
       {
         $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
       },
+      {
+        $match: { regiStatus: 'inactive' },
+      },
       { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
-      { $sort: { sum: -1 } },
+      { $sort: { score: -1 } },
       { $limit: 3 },
     ]);
     return issues;
@@ -67,7 +68,7 @@ export class IssueService {
     const itemCount = await this.issueModel.find({ targetPolitician }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
-      .find({ targetPolitician })
+      .find({ targetPolitician, regiStatus: 'inactive' })
       .sort({ issueDate: 'asc' })
       .skip(pageOptions.skip)
       .limit(pageOptions.perPage);
