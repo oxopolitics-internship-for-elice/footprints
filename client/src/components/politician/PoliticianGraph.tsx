@@ -11,12 +11,12 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import zoomPlugin from 'chartjs-plugin-zoom';
 import dateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
-import { getDatasetAtEvent, getElementAtEvent, Line } from 'react-chartjs-2';
+import { getElementAtEvent, Line } from 'react-chartjs-2';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
+import { BsArrowRepeat } from 'react-icons/bs';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,7 +26,6 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler,
-  zoomPlugin,
 );
 
 interface ResTypes {
@@ -54,19 +53,19 @@ const PoliticianGraph = (): JSX.Element => {
   const [content, setContent] = useState<any>([]);
   const [score, setScore] = useState<any>([]);
   const [data, setData] = useState<any>();
-  const [isFirst, setIsFirst] = useState(false);
+  const [isFirst, setIsFirst] = useState(true);
   const [index, setIndex] = useState<number>(1);
-  const [NextPageable, isNextPageable] = useState(true);
+  const [NextPageable, isNextPageable] = useState<boolean>(true);
+  const [contentId, setContentId] = useState<any>([]);
+  const [resData, setResData] = useState<any>([]);
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
   ) {
-    console.log(element, 'egd');
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
-      let toop = document.getElementsByClassName('css-11oqkmf');
-      console.log(toop, 'gs');
       setOpen(!open);
+      document.body.style.overflow = 'hidden';
 
       return element[0].element;
     }
@@ -77,53 +76,77 @@ const PoliticianGraph = (): JSX.Element => {
     const res = await GraphAPI.getGraph(target, index);
     console.log(res);
 
-    res.data.data.map((res: ResTypes) => {
+    res.data.data.map(async (res: ResTypes, index: number) => {
       setIssueDate((current: Date[] | []) => {
-        if (index >= 2) {
-          let date = dateFormatter(res.issueDate);
-          const temp = [date, ...current];
+        let data = dateFormatter(res.issueDate);
+        if (index === 0) {
+          const temp = [data];
+
           return temp;
         } else {
-          let date = dateFormatter(res.issueDate);
-          const temp = [...current, date];
+          const temp = [...current, data];
+
           return temp;
         }
       });
 
       setPoll((current: any) => {
-        if (index >= 2) {
-          const temp = [res.poll, ...current];
+        if (index === 0) {
+          const temp = [res.poll];
           return temp;
         } else {
           const temp = [...current, res.poll];
           return temp;
         }
       });
+
       setContent((current: any) => {
-        if (index >= 2) {
-          const temp = [res.content, ...current];
+        if (index === 0) {
+          const temp = [res.content];
           return temp;
         } else {
           const temp = [...current, res.content];
           return temp;
         }
       });
+
       setScore((current: any) => {
-        if (index >= 2) {
-          const temp = [res.poll.pro - res.poll.con, ...current];
+        if (index === 0) {
+          const temp = [res.poll.pro - res.poll.con];
           return temp;
         } else {
           const temp = [...current, res.poll.pro - res.poll.con];
           return temp;
         }
       });
+      setContentId((current: any) => {
+        if (index === 0) {
+          const temp = [res._id];
+          return temp;
+        } else {
+          const temp = [...current, res._id];
+          return temp;
+        }
+      });
     });
+
+    setResData((current: any) => {
+      if (index === 0) {
+        const temp = [res];
+        return temp;
+      } else {
+        const temp = [...current, res];
+        return temp;
+      }
+    });
+
     isNextPageable(res.data.meta.hasNextPage);
   };
 
   const start = async () => {
-    if (!isFirst) {
+    if (isFirst === true) {
       await getData(index);
+      setIsFirst(false);
     }
 
     setData({
@@ -140,21 +163,30 @@ const PoliticianGraph = (): JSX.Element => {
         },
       ],
     });
-    setIsFirst(true);
   };
-
-  const getMoreData = async () => {
-    if (NextPageable === true) {
-      await getData(index + 1);
-      setIndex(index + 1);
-    } else {
-      alert('더이상 불러올 데이터가 없습니다.');
+  useEffect(() => {
+    console.log(document.body.offsetWidth);
+  }, [document.body.offsetWidth]);
+  const getNextData = async () => {
+    await getData(index + 1);
+    setIndex(index + 1);
+  };
+  const getPreData = async () => {
+    await getData(index - 1);
+    setIndex(index - 1);
+  };
+  const ClickButton = async () => {
+    await start();
+  };
+  useEffect(() => {
+    if (isFirst === false) {
+      ClickButton();
     }
-  };
+  }, [index]);
 
   useEffect(() => {
     start();
-    if (isFirst) {
+    if (!isFirst) {
       setTimeout(() => {
         () => start();
       }, 1);
@@ -163,7 +195,8 @@ const PoliticianGraph = (): JSX.Element => {
         () => start();
       }, 1);
     }
-  }, [isFirst, index]);
+    console.log(isFirst);
+  }, [isFirst]);
 
   const options = {
     maintainAspectRatio: false,
@@ -172,8 +205,6 @@ const PoliticianGraph = (): JSX.Element => {
         enabled: false,
         maintainAspectRatio: true,
         external: function (context: any) {
-          // Tooltip Element
-
           let tooltipEl = document.getElementById('chartjs-tooltip');
           // Create element on first render
           if (!tooltipEl) {
@@ -276,6 +307,9 @@ const PoliticianGraph = (): JSX.Element => {
 
       title: {
         display: true,
+        font: {
+          size: 30,
+        },
         text: '윤석열 인생 그래프',
       },
       legend: {
@@ -283,8 +317,11 @@ const PoliticianGraph = (): JSX.Element => {
       },
     },
   };
+  const string1 = '<';
+  const string2 = '>';
 
   return (
+    <>
     <div
       style={{
         display: 'flex',
@@ -296,58 +333,94 @@ const PoliticianGraph = (): JSX.Element => {
       }}
     >
       <GraphButton onClick={getMoreData}>+</GraphButton>
-
       <div
         style={{
           display: 'flex',
           justifyContent: 'center',
-          position: 'relative',
-          height: '100%',
-          width: '100%',
+          height: '700px',
+          margin: '100px 0 100px 0px',
         }}
       >
-        {data && (
-          <Line
-            ref={chartRef}
-            onClick={event => {
-              let point = ClickHander(
-                getElementAtEvent(chartRef.current, event),
-                event,
-              );
-              console.log(point);
-              setPoint(point);
-            }}
-            options={options}
-            data={data}
-          />
+        {NextPageable === false ? null : (
+          <GraphButton
+            style={{ float: 'left', marginTop: '350px' }}
+            onClick={getNextData}
+          >
+            {string1}
+          </GraphButton>
         )}
-        <div>
-          {open && (
-            <Modal setOpen={setOpen} element={point} content={content} />
+
+        <div
+          style={{
+            height: '100%',
+            width: '80%',
+          }}
+        >
+          {data && (
+            <Line
+              ref={chartRef}
+              onClick={event => {
+                let point = ClickHander(
+                  getElementAtEvent(chartRef.current, event),
+                  event,
+                );
+                setPoint(point);
+              }}
+              options={options}
+              data={data}
+            />
           )}
+          <button
+            onClick={() => location.reload()}
+            style={{
+              position: 'relative',
+              float: 'right',
+              marginTop: '-700px',
+              marginRight: '100px',
+              zIndex: 2,
+            }}
+          >
+            <BsArrowRepeat size="40" />
+          </button>
+          {index === 1 ? null : (
+            <GraphButton
+              style={{ marginTop: '-350px', marginRight: '-10px' }}
+              onClick={getPreData}
+            >
+              {string2}
+            </GraphButton>
+          )}
+          <div>
+            {open && (
+              // <Modal setOpen={setOpen} element={point} content={content} />
+              <Modal
+                setOpen={setOpen}
+                element={point}
+                content={content}
+                contentId={contentId}
+                issueDate={issueDate}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
 export default PoliticianGraph;
-
-const GraphButton = styled.button`
+interface Props {}
+const GraphButton = styled.button<Props>`
   height: 3rem;
   width: 3rem;
   font-size: 30px;
   font-weight: bolder;
   border-radius: 30px;
   border-width: 0.5px;
-  position: relative;
-  top: 250px;
+  float: right;
   opacity: 0.9;
   transition-duration: 0.4s;
   background-color: #008cba;
-  @media screen and (max-width: 1500px) {
-    display: none;
-  }
   &:hover {
     color: white;
     background-color: skyblue;
