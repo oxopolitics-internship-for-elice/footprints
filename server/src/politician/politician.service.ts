@@ -15,8 +15,6 @@ export class PoliticianService {
 
   async getAllPoliticians() {
     const politicians = await this.politicianModel.find().select('_id name');
-    // const resultArray = [];
-    // const result = new Object();
     const array = await Promise.all(
       politicians.map(async (politician) => {
         const result = await this.issueModel.aggregate([
