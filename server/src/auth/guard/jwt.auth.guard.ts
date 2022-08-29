@@ -64,6 +64,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const timeToRemain = Math.floor(
         (tokenExpirationTime.getTime() - currentTime.getTime()) / 1000 / 60,
       );
+      console.log(timeToRemain);
 
       //accesstoken이 로그인토큰이 아니라면 verify 결과 반환
       if (tokenVerify.userToken !== 'loginToken') {
