@@ -46,7 +46,7 @@ const Div = styled.div`
     }
     span {
       margin-left: 0.5vw;
-      font-size: 1.2vw;
+      font-size: 1.2rem;
     }
   }
 `;

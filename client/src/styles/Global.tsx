@@ -24,9 +24,6 @@ const styles = css`
   textarea:focus {
     outline: none;
   }
-  html {
-    scroll-behavior: smooth;
-  }
   button {
     border: none;
     background: none;
