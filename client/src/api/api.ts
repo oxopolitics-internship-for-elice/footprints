@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getCookie } from '@/utils/Cookie';
 
 export const serverUrl = (() => {
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.MODE === 'development') {
     const localServerPort = 5000;
     const { protocol, hostname } = window.location;
     return `${protocol}//${hostname}:${localServerPort}/`;

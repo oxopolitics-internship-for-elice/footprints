@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { IssueTypes } from '@/types/IssueTypes';
 import * as Api from '@/api/Api';
 import Issue from './Issue';
+import styled from '@emotion/styled';
 
 export interface IssueProps {
   issue: IssueTypes;
@@ -57,7 +58,7 @@ const StandbyIssue = (): JSX.Element => {
   }, []);
 
   return (
-    <div>
+    <StandbyIssueContainer>
       {isLoading ? (
         <div>
           {issueList.map(issue => {
@@ -74,8 +75,12 @@ const StandbyIssue = (): JSX.Element => {
         ''
       )}
       <div ref={target}>{''}</div>
-    </div>
+    </StandbyIssueContainer>
   );
 };
 
 export default StandbyIssue;
+
+const StandbyIssueContainer = styled.div`
+  padding: 40px 20px 20px 20px;
+`;
