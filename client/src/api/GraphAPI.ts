@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import * as Api from './Api';
+import * as Api from './api';
 
 interface GraphAPI {
   getGraph(

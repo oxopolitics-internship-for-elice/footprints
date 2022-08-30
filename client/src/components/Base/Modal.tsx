@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import styled from '@emotion/styled';
+import { HiX } from 'react-icons/hi';
 
 interface ModalDefaultType {
   onClickToggleModal: () => void;
@@ -11,7 +12,12 @@ function Modal({
 }: PropsWithChildren<ModalDefaultType>) {
   return (
     <ModalContainer>
-      <DialogBox>{children}</DialogBox>
+      <DialogBox>
+        <ExitButton onClick={onClickToggleModal}>
+          <HiX />
+        </ExitButton>
+        {children}
+      </DialogBox>
       <Backdrop
         onClick={(e: React.MouseEvent) => {
           e.preventDefault();
@@ -32,16 +38,30 @@ const ModalContainer = styled.div`
   align-items: center;
   justify-content: center;
   position: fixed;
+  z-index: 10000;
+`;
+
+const ExitButton = styled.button`
+  position: absolute;
+  right: 28px;
+  top: 34px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  background-color: transparent;
+  border: none;
+  outline: none;
 `;
 
 const DialogBox = styled.dialog`
-  width: 800px;
-  height: 400px;
+  width: 500px;
+  height: 578px;
   display: flex;
   flex-direction: column;
   align-items: center;
   border: none;
-  border-radius: 3px;
+  border-radius: 15px;
   box-shadow: 0 0 30px rgba(30, 30, 30, 0.185);
   box-sizing: border-box;
   background-color: white;

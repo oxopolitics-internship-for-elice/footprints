@@ -18,8 +18,12 @@ const styles = css`
     -webkit-user-select: auto;
     -ms-user-select: auto;
     user-select: auto;
+    font-family: inherit;
   }
   input:focus {
+    outline: none;
+  }
+  textarea:focus {
     outline: none;
   }
   button {
