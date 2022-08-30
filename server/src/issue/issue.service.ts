@@ -29,13 +29,35 @@ export class IssueService {
   }
 
   async getAllIssues() {
-    const allIssues = await this.politicianModel.find().select('_id name');
-    const result = [];
-    for (let i = 0; i < allIssues.length; i++) {
-      result[allIssues[i].name];
-    }
-    console.log(allIssues);
-    return allIssues;
+    const politicians = await this.politicianModel.find().select('_id name');
+    const array = await Promise.all(
+      politicians.map(async (politician) => {
+        const result = await this.issueModel.aggregate([
+          {
+            $match: { $expr: { $eq: ['$targetPolitician', politician._id] } },
+          },
+          {
+            $project: {
+              _id: 1,
+              targetPolitician: 1,
+              issueDate: 1,
+              totalPolls: { $add: ['$poll.pro', '$poll.neu', '$poll.con'] },
+              score: { $subtract: ['$poll.pro', '$poll.con'] },
+              poll: 1,
+            },
+          },
+          { $sort: { totalPolls: -1 } },
+          { $limit: 20 },
+          { $sort: { issueDate: 1 } },
+          {
+            $group: { _id: '$targetPolitician', issues: { $push: '$$ROOT' } },
+          },
+          { $set: { name: politician.name } },
+        ]);
+        return result;
+      }),
+    );
+    return [array[0][0], array[1][0]];
   }
 
   async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
