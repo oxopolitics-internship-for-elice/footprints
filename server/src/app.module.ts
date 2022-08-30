@@ -26,7 +26,6 @@ import { PoliticianModule } from './politician/politician.module';
       },
     }),
 
-
     UserModule,
     AuthModule,
 

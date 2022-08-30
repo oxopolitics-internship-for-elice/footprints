@@ -7,6 +7,7 @@ import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
 import { Politician, PoliticianDocument } from '../schemas/politician.schema';
+import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class IssueService {
@@ -15,6 +16,8 @@ export class IssueService {
     private readonly issueModel: Model<IssueDocument>,
     @InjectModel(Politician.name)
     private readonly politicianModel: Model<PoliticianDocument>,
+    @InjectModel(User.name)
+    private readonly userModel: Model<UserDocument>,
   ) {}
 
   async addIssue(issueData: AddIssueDto): Promise<boolean> {
@@ -97,28 +100,6 @@ export class IssueService {
     return value;
   }
 
-  // 사자부족 poll pro 개수 확인 함수
-  async pollcountProLion(id) {
-    const issue = await this.issueModel.findById(id);
-    const value: number = issue.poll.lion.pro;
-    console.log(value);
-    return value;
-  }
-
-  // poll con 개수 확인 함수
-  async pollcountCon(id) {
-    const issue = await this.issueModel.findById(id);
-    const value: number = issue.poll.con;
-    return value;
-  }
-
-  // poll neu 개수 확인 함수
-  async pollcountNeu(id) {
-    const issue = await this.issueModel.findById(id);
-    const value: number = issue.poll.neu;
-    return value;
-  }
-
   async setIssueRegi(id, regiData: SetIssueRegiDto): Promise<boolean> {
     const proResult: number = await this.regicountPro(id);
     const conResult: number = await this.regicountCon(id);
@@ -156,16 +137,37 @@ export class IssueService {
     return true;
   }
 
-  async setIssuePoll(id, regiData: SetIssuePollDto): Promise<boolean> {
-    const proResult: number = await this.pollcountProLion(id);
-    const neuResult: number = await this.pollcountNeu(id);
-    const conResult: number = await this.pollcountCon(id);
+  // poll pro 개수 확인 함수
+  async pollcountPro(id, tribe) {
+    const issue = await this.issueModel.findById(id);
+    const value = issue.poll;
+    return value[tribe].pro;
+  }
+
+  // poll con 개수 확인 함수
+  async pollcountCon(id, tribe) {
+    const issue = await this.issueModel.findById(id);
+    const value = issue.poll;
+    return value[tribe].con;
+  }
+
+  // poll neu 개수 확인 함수
+  async pollcountNeu(id, tribe) {
+    const issue = await this.issueModel.findById(id);
+    const value = issue.poll;
+    return value[tribe].neu;
+  }
+
+  async setIssuePoll(id, regiData: SetIssuePollDto, tribe): Promise<boolean> {
+    const proResult = await this.pollcountPro(id, tribe);
+    const neuResult = await this.pollcountNeu(id, tribe);
+    const conResult = await this.pollcountCon(id, tribe);
     if (regiData.pro === true) {
-      await this.issueModel.updateOne(
+      await this.issueModel.findOneAndUpdate(
         { _id: id },
         {
           $set: {
-            poll: { pro: proResult + 1, neu: neuResult, con: conResult },
+            poll.[tribe]: { pro: proResult + 1, neu: neuResult, con: conResult },
           },
         },
       );

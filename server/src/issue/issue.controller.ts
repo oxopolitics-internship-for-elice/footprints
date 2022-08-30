@@ -62,17 +62,19 @@ export class IssueController {
     }
   }
 
-  @Get('/graphTribe')
-  async getGraphTribe(@Res() response) {
-    try {
-      const graphTribe = await this.issueService.getGraphTribe();
-      return response.json(graphTribe);
-    } catch (err) {
-      return response.status(err.status).json(err.response);
-    }
-  }
+  // 부족별 그래프
+  // @Get('/graphTribe')
+  // async getGraphTribe(@Res() response) {
+  //   try {
+  //     const graphTribe = await this.issueService.getGraphTribe();
+  //     return response.json(graphTribe);
+  //   } catch (err) {
+  //     return response.status(err.status).json(err.response);
+  //   }
+  // }
 
   // 이슈 등록 투표
+  @UseGuards(JwtAuthGuard)
   @Patch('/:issueId/regi')
   async setIssueRegi(@Param('issueId') id: string, @Body() regi: SetIssueRegiDto, @Res() response) {
     try {
@@ -86,42 +88,48 @@ export class IssueController {
   }
 
   // 이슈 여론 투표
+  @UseGuards(JwtAuthGuard)
   @Patch('/:issueId/poll')
-  async setIssuePoll(@Param('issueId') id: string, @Body() poll: SetIssuePollDto, @Res() response) {
+  async setIssuePoll(@Param('issueId') id: string, @Body() poll: SetIssuePollDto, @Res() response, @Req() request) {
     try {
-      const issue = await this.issueService.setIssuePoll(id, poll);
+      const tribe = request.user.tribe;
+      console.log('컨트롤러 부족:', tribe);
+      const issue = await this.issueService.setIssuePoll(id, poll, tribe);
       if (issue) {
         return response.json({ message: 'success' });
+        console.log(issue);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // 로그인한 유저의 이슈 여론 투표
-  @UseGuards(JwtAuthGuard)
-  @Patch('/:issueId/user-poll')
-  async setUserIssuePoll(
-    @Param('issueId') issueId: string,
-    @Body() poll: SetIssuePollDto,
-    @Req() request,
-    @Res() response,
-  ) {
-    try {
-      const userId = request.user._id;
-      const issueUser = await this.userService.getUserPollResult(userId, issueId);
+  // @UseGuards(JwtAuthGuard)
+  // @Patch('/:issueId/user-poll')
+  // async setUserIssuePoll(
+  //   @Param('issueId') issueId: string,
+  //   @Body() poll: SetIssuePollDto,
+  //   @Req() request,
+  //   @Res() response,
+  // ) {
+  //   try {
+  //     const userId = request.user._id;
+  //     const issueUser = await this.userService.getUserPollResult(userId, issueId);
 
-      if (Object.keys(issueUser).length === 0) {
-        const userPoll = await this.userService.setUserPoll(userId, issueId, poll);
-        const issue = await this.issueService.setIssuePoll(issueId, poll);
-        if (userPoll && issue) {
-          return response.json({ message: 'success', possible: false });
-        }
-      } else {
-        return response.json({ message: 'failure - already voted', possible: false });
-      }
-    } catch (err) {
-      throw new Error(err);
-    }
-  }
+  //     if (Object.keys(issueUser).length === 0) {
+  //       const userPoll = await this.userService.setUserPoll(userId, issueId, poll);
+  //       // const issue = await this.issueService.setIssuePoll(issueId, poll);
+  //       if (userPoll && issue) {
+  //         return response.json({ message: 'success', possible: false });
+  //       }
+  //     } else {
+  //       return response.json({ message: 'failure - already voted', possible: false });
+  //     }
+  //   } catch (err) {
+  //     throw new Error(err);
+  //   }
+  // }
 
   // 로그인한 유저의 이슈 투표 취소
   @UseGuards(JwtAuthGuard)
