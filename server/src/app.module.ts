@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
-import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
 import { IssueModule } from './issue/issue.module';
 import { PoliticianModule } from './politician/politician.module';
@@ -26,6 +25,11 @@ import { PoliticianModule } from './politician/politician.module';
         return connection;
       },
     }),
+
+
+    UserModule,
+    AuthModule,
+
     UserModule,
     IssueModule,
     PoliticianModule,
