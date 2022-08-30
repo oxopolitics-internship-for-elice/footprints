@@ -10,6 +10,9 @@ class PollResults {
 
   @Prop()
   vote: string;
+
+  @Prop()
+  agree?: string;
 }
 
 const PollResultsSchema = SchemaFactory.createForClass(PollResults);
