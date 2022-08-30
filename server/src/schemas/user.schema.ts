@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 
-export type UserDocument = User & Document;
+export type UserDocument = User & mongoose.Document;
 
 @Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class User {
@@ -27,8 +26,8 @@ export class User {
   @Prop({ default: '' })
   tribe?: string;
 
-  @Prop({ default: { issudId: '', poll: '' }, type: mongoose.Schema.Types.Mixed })
-  pollResult?;
+  @Prop({ type: [{ issueId: { type: mongoose.Schema.Types.ObjectId }, vote: { type: String } }] })
+  pollResults?;
 }
 
 export const userSchema = SchemaFactory.createForClass(User);

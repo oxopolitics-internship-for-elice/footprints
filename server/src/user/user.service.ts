@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel('users')
+    @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
 
@@ -50,13 +50,24 @@ export class UserService {
 
   async setUserPoll(userId, issueId, poll) {
     const user = await this.getUserById(userId);
+    const result = Object.keys(poll).find((key) => poll[key] === true);
+    console.log('result from setUserpoll : ', result);
 
     // user poll 결과 반영
-    const update = {
-      $set: {
-        pollResult: [],
+    // const update = {
+    //   $set: {
+    //     pollResult: { issueId: issueId, vote: result },
+    //   },
+    // };
+    const pollResult = { issueId: issueId, vote: result };
+    const newUser = await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        $push: { pollResults: pollResult },
       },
-    };
-    const newUser = await this.userModel.findOneAndUpdate({ _id: userId }, [update], { new: true });
+      { new: true },
+    );
+    console.log('newUser: ', newUser);
+    return newUser;
   }
 }

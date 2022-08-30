@@ -98,8 +98,9 @@ export class IssueController {
     try {
       //
       const userId = request.user._id;
-      console.log(userId);
-      await this.userService.setUserPoll(userId, issueId, poll);
+      console.log('userid: ', userId);
+      const userPoll = await this.userService.setUserPoll(userId, issueId, poll);
+      console.log('user poll: ', userPoll);
 
       const issue = await this.issueService.setIssuePoll(issueId, poll);
       if (issue) {
