@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { scheduleJob, scheduledJobs } from 'node-schedule';
 import { Issue, IssueDocument } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
@@ -20,9 +21,13 @@ export class IssueService {
   async addIssue(issueData: AddIssueDto): Promise<boolean> {
     const instance = await new this.issueModel(issueData);
     const save = await instance.save();
+    const week = 7 * 24 * 60 * 60 * 1000;
+    const dueDate = new Date(Date.now() + week);
 
-    const now = new Date(Date.now());
-    console.log(now);
+    const setRegiStatusInactiveJob = scheduleJob(dueDate, () => {
+      this.setRegiStatus(save._id, 'expired');
+    });
+
     if (!save) {
       throw new Error('생성 오류');
     } else {
@@ -115,6 +120,10 @@ export class IssueService {
   async setIssueRegi(id, regiData: SetIssueRegiDto): Promise<boolean> {
     const proResult: number = await this.regicountPro(id);
     const conResult: number = await this.regicountCon(id);
+    const korDiff = 9 * 60 * 60 * 1000;
+    const week = 7 * 24 * 60 * 60 * 1000;
+    const korDate = new Date(Date.now() + korDiff);
+
     if (regiData.pro === true) {
       if (proResult + 1 >= 75 && proResult + 1 >= conResult * 3) {
         await this.issueModel.updateOne(
@@ -123,6 +132,7 @@ export class IssueService {
             $set: {
               regi: { pro: proResult + 1, con: conResult },
               regiStatus: 'active',
+              pollDate: korDate,
             },
           },
         );
@@ -182,5 +192,19 @@ export class IssueService {
       );
     }
     return true;
+  }
+
+  async setRegiStatus(_id, regiStatus): Promise<void> {
+    const result = await this.issueModel.updateOne(
+      { _id },
+      {
+        $set: {
+          regiStatus,
+        },
+      },
+    );
+    if (result.modifiedCount !== 1) {
+      throw new Error('cronjob not worked');
+    }
   }
 }

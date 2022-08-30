@@ -34,6 +34,7 @@ export class Issue {
       elephant: { pro: 0, neu: 0, con: 0 },
       dinosaur: { pro: 0, neu: 0, con: 0 },
       hippo: { pro: 0, neu: 0, con: 0 },
+      total: { pro: 0, neu: 0, con: 0 },
     },
     type: mongoose.Schema.Types.Mixed,
   })
