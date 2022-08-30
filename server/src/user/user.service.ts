@@ -49,11 +49,6 @@ export class UserService {
   }
 
   async setUserPoll(userId, issueId, poll) {
-    // const user = await this.getUserById(userId);
-    // console.log('id비교: ', userId, user._id);
-    // if (userId === user._id) {
-    //   console.log('user validated');
-    // }
     const result = Object.keys(poll).find((key) => poll[key] === true);
     const pollResult = { issueId: issueId, vote: result };
     const newUser = await this.userModel.findOneAndUpdate(
@@ -71,5 +66,18 @@ export class UserService {
     const issueUser = await this.userModel.find({ _id: userId }).find({ 'pollResults.issueId': issueId });
 
     return issueUser;
+  }
+
+  async deleteUserPollResult(userId, issueId) {
+    const issueUser = this.getUserPollResult(userId, issueId);
+    const result = await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { pollResults: { issueId: issueId } } },
+    );
+    if (result) {
+      return true;
+    } else {
+      return null;
+    }
   }
 }
