@@ -60,6 +60,16 @@ export class IssueController {
     }
   }
 
+  @Get('/graphTribe')
+  async getGraphTribe(@Res() response) {
+    try {
+      const graphTribe = await this.issueService.getGraphTribe();
+      return response.json(graphTribe);
+    } catch (err) {
+      return response.status(err.status).json(err.response);
+    }
+  }
+
   // 이슈 등록 투표
   @Patch('/:issueId/regi')
   async setIssueRegi(@Param('issueId') id: string, @Body() regi: SetIssueRegiDto, @Res() response) {
