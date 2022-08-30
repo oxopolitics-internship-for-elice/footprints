@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { User, UserDocument } from '../schemas/user.schema';
-import { CreateUserDto } from './dto/User.dto';
+import { CreateUserDto } from './dto/add.user.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -23,11 +23,18 @@ export class UserService {
     const user = await this.userModel.findOne({ email }).lean();
     console.log(user);
     if (!user) {
-      throw new NotFoundException(`User with email ${email} not found`);
+      // throw new NotFoundException(`User with email ${email} not found`);
+      return null;
     }
     return user;
   }
-
+  async getUserById(id: string): Promise<User> {
+    const user = await this.userModel.findOne({ _id: id }).lean();
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
   async create(userData: CreateUserDto): Promise<User> {
     // const existingUser = this.getOne(userData.email);
     // if (existingUser) {
@@ -39,5 +46,13 @@ export class UserService {
     user.password = userData.password;
     const result = await user.save();
     return result;
+  }
+
+  async updateRefreshToken(email: string, refreshToken: string) {
+    await this.userModel.findOneAndUpdate(
+      { email: email },
+      { refreshToken: refreshToken },
+      { new: true },
+    );
   }
 }
