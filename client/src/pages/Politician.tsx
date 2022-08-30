@@ -1,4 +1,3 @@
-import DrowGraph from '@components/politician/PoliticianGraph';
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import StandbyIssue from '@components/politician/StandbyIssue';
