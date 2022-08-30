@@ -104,10 +104,10 @@ export class IssueController {
         const userPoll = await this.userService.setUserPoll(userId, issueId, poll);
         const issue = await this.issueService.setIssuePoll(issueId, poll);
         if (userPoll && issue) {
-          return response.json({ message: 'success', userPoll });
+          return response.json({ message: 'success', userPoll, possible: false });
         }
       } else {
-        return response.json({ message: 'failure - already voted' });
+        return response.json({ message: 'failure - already voted', possible: false });
       }
     } catch (err) {}
   }
