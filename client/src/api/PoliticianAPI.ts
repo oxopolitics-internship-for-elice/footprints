@@ -1,8 +1,16 @@
 import { AxiosResponse } from 'axios';
 import * as Api from './Api';
 
+export type postIssueBody = {
+  targetPolitician: string;
+  regiUser: string;
+  issueDate: Date;
+  title: string;
+  content: string;
+};
 interface IPoliticianAPI {
-  getList(): Promise<AxiosResponse<any>>; // response type 선언 후 수정
+  getList(): Promise<AxiosResponse<any>>;
+  postIssue(body: postIssueBody): Promise<AxiosResponse<any>>;
 }
 
 const PoliticianAPI: IPoliticianAPI = (() => {
@@ -13,6 +21,9 @@ const PoliticianAPI: IPoliticianAPI = (() => {
       // somethingCommon();
 
       return Api.get(`politicians`);
+    },
+    postIssue: (body: postIssueBody) => {
+      return Api.post(`issues`, body);
     },
   };
 })();

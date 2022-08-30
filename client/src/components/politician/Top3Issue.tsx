@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import * as Api from '@/api/Api';
+import * as Api from '@/api/api';
 import styled from '@emotion/styled';
 import Issue from './Issue';
 import { IssueTypes } from '@/types/IssueTypes';

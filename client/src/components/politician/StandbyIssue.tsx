@@ -2,7 +2,7 @@ import React, { LegacyRef, useEffect, useRef, useState } from 'react';
 import issueState from '@/store/IssueState';
 import { useRecoilValue } from 'recoil';
 import { IssueTypes } from '@/types/IssueTypes';
-import * as Api from '@/api/Api';
+import * as Api from '@/api/api';
 import Issue from './Issue';
 import styled from '@emotion/styled';
 

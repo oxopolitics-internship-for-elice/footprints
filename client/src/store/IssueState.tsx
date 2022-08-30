@@ -1,5 +1,5 @@
 import { selector } from 'recoil';
-import * as Api from '@/api/Api';
+import * as Api from '@/api/api';
 
 const issueState = selector({
   key: 'issueSelector',
