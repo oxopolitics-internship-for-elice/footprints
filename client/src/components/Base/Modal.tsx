@@ -39,6 +39,9 @@ const ModalContainer = styled.div`
   justify-content: center;
   position: fixed;
   z-index: 10000;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const ExitButton = styled.button`

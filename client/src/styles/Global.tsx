@@ -41,7 +41,6 @@ const styles = css`
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     padding: 0;
-    margin: 20px;
   }
 `;
 
