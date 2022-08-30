@@ -31,21 +31,46 @@ ChartJS.register(
   Legend,
   Filler,
 );
+type poll = {
+  pro: number;
+  neu: number;
+  con: number;
+};
 
-interface ResTypes {
-  targetPolitician: string;
+export interface ResTypes {
+  id: string;
   _id: string;
+  targetPolitician: string;
   createdAt: Date;
   regiUser: string;
   regiStatus: string;
   regi: { pro: number; con: number };
-  poll: { pro: number; con: number; neu: number };
+  poll: poll;
   issueDate: Date;
   pollDate: Date;
   content: string;
   isPollActive: boolean;
   updatedAt: Date;
   score: number;
+  title: string;
+}
+
+export interface ResDataTypes {
+  id: string;
+  _id: string;
+  targetPolitician: string;
+  createdAt: Date;
+  regiUser: string;
+  regiStatus: string;
+  regi: { pro: number; con: number };
+  poll: poll[];
+  issueDate: Date;
+  pollDate: Date;
+  content: string;
+  isPollActive: boolean;
+  updatedAt: Date;
+  score: number;
+  title: string;
 }
 
 const PoliticianGraph = (): JSX.Element => {
@@ -79,68 +104,32 @@ const PoliticianGraph = (): JSX.Element => {
     let target = '6303bed2e9d44f884ed1d640';
     const res = await GraphAPI.getGraph(target, index);
     console.log(res);
+
     res.data.data.map(async (res: ResTypes, index: number) => {
-      setIssueDate((current: Date[] | []) => {
-        let data = dateFormatter(res.issueDate);
+      setResData((current: any) => {
+        let tempdata = dateFormatter(res.issueDate);
+
         if (index === 0) {
-          const temp = [data];
+          const issueDate = [tempdata];
+          const poll = [res.poll];
+          const content = [res.content];
+          const score = [res.poll.pro - res.poll.con];
+          const id = [res._id];
+          const title = [res.title];
 
-          return temp;
+          return { issueDate, poll, content, score, id, title };
         } else {
-          const temp = [...current, data];
+          const issueDate = [...current.issueDate, tempdata];
+          const poll = [...current.poll, res.poll];
+          const content = [...current.content, res.content];
 
-          return temp;
+          const score = [...current.score, res.poll.pro - res.poll.con];
+          const id = [...current.id, res._id];
+          const title = [...current.title, res.title];
+
+          return { issueDate, poll, content, score, id, title };
         }
       });
-
-      setPoll((current: any) => {
-        if (index === 0) {
-          const temp = [res.poll];
-          return temp;
-        } else {
-          const temp = [...current, res.poll];
-          return temp;
-        }
-      });
-
-      setContent((current: any) => {
-        if (index === 0) {
-          const temp = [res.content];
-          return temp;
-        } else {
-          const temp = [...current, res.content];
-          return temp;
-        }
-      });
-
-      setScore((current: any) => {
-        if (index === 0) {
-          const temp = [res.poll.pro - res.poll.con];
-          return temp;
-        } else {
-          const temp = [...current, res.poll.pro - res.poll.con];
-          return temp;
-        }
-      });
-      setContentId((current: any) => {
-        if (index === 0) {
-          const temp = [res._id];
-          return temp;
-        } else {
-          const temp = [...current, res._id];
-          return temp;
-        }
-      });
-    });
-
-    setResData((current: any) => {
-      if (index === 0) {
-        const temp = [res];
-        return temp;
-      } else {
-        const temp = [...current, res];
-        return temp;
-      }
     });
 
     isNextPageable(res.data.meta.hasNextPage);
@@ -151,12 +140,11 @@ const PoliticianGraph = (): JSX.Element => {
       await getData(index);
       setIsFirst(false);
     }
-
     setData({
-      labels: issueDate,
+      labels: resData.issueDate,
       datasets: [
         {
-          data: score,
+          data: resData.score,
           tension: 0.3,
           fill: {
             target: { value: 0 },
@@ -232,7 +220,7 @@ const PoliticianGraph = (): JSX.Element => {
           }
 
           function getBody() {
-            return poll;
+            return resData.poll;
           }
           // Set Text
           if (tooltipModel.body) {
@@ -247,12 +235,10 @@ const PoliticianGraph = (): JSX.Element => {
               const imgSrc = [Circle, Triangle, X];
               const imageTh = document.createElement('div');
               const image = document.createElement('img');
-              console.log(resData);
               if (index === 0) {
                 const Title = document.createElement('div');
                 const TitleText = document.createTextNode(
-                  resData[0].data.data[tooltipModel.dataPoints[0].dataIndex]
-                    .title,
+                  resData.title[tooltipModel.dataPoints[0].dataIndex],
                 );
                 const TitleText2 = document.createTextNode(
                   '===============================',
@@ -402,17 +388,6 @@ const PoliticianGraph = (): JSX.Element => {
               data={data}
             />
           )}
-          {/* <button
-            onClick={ClickButton}
-            style={{
-              position: 'relative',
-              float: 'right',
-              marginTop: '-700px',
-              marginRight: '100px',
-            }}
-          >
-            <BsArrowRepeat size="40" />
-          </button> */}
           {index === 1 ? null : (
             <GraphButton
               style={{ marginTop: '-350px', marginRight: '-10px' }}
@@ -429,7 +404,7 @@ const PoliticianGraph = (): JSX.Element => {
                 content={content}
                 contentId={contentId}
                 issueDate={issueDate}
-                resPoll={poll}
+                resData={resData}
               />
             )}
           </div>

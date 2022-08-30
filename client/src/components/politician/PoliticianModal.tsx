@@ -5,16 +5,13 @@ import Circle from '@/assets/img/circle.png';
 import Triangle from '@/assets/img/triangle.png';
 import X from '@/assets/img/x.png';
 import { IoCloseCircleOutline } from 'react-icons/io5';
+import { ResDataTypes, ResTypes } from './PoliticianGraph';
 type Element = {
   $context: Object;
   x: number;
   y: number;
 };
-type ResPoll = {
-  pro: number;
-  neu: number;
-  con: number;
-};
+
 type Object = {
   dataIndex: number;
 };
@@ -24,15 +21,14 @@ interface ModalProps {
   content: [];
   contentId: [];
   issueDate: [];
-  resPoll: ResPoll[];
+  resData: ResDataTypes;
 }
 const Modal = ({
   setOpen,
   element,
   content,
-  contentId,
   issueDate,
-  resPoll,
+  resData,
 }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
 
@@ -53,7 +49,7 @@ const Modal = ({
     }
   }
   async function ClickHandler(index: number) {
-    let target = contentId[element.$context.dataIndex];
+    let target = resData.id[element.$context.dataIndex];
 
     setPoll(async () => {
       let newPoll: { pro: boolean; neu: boolean; con: boolean } = {
@@ -61,18 +57,32 @@ const Modal = ({
         neu: false,
         con: false,
       };
+      console.log(resData);
       try {
         if (index === 0) {
-          resPoll[element.$context.dataIndex].pro += 1;
-          newPoll['pro'] = true;
-        } else if (index === 1) {
-          resPoll[element.$context.dataIndex].neu += 1;
-          newPoll['neu'] = true;
-        } else {
-          resPoll[element.$context.dataIndex].con += 1;
-          newPoll['con'] = true;
+          newPoll = { pro: true, neu: false, con: false };
         }
+        if (index === 1) {
+          newPoll = { pro: false, neu: true, con: false };
+        }
+        if (index === 2) {
+          newPoll = { pro: false, neu: false, con: true };
+        }
+        console.log(newPoll);
         const res = await GraphAPI.updatePoll(target, newPoll);
+        console.log(res.status);
+        if (res.status === 200) {
+          if (index === 0) {
+            resData.poll[element.$context.dataIndex].pro += 1;
+            newPoll['pro'] = true;
+          } else if (index === 1) {
+            resData.poll[element.$context.dataIndex].neu += 1;
+            newPoll['neu'] = true;
+          } else {
+            resData.poll[element.$context.dataIndex].con += 1;
+            newPoll['con'] = true;
+          }
+        }
       } catch (err) {}
 
       return newPoll;
