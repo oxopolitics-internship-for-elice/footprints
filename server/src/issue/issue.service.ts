@@ -18,13 +18,17 @@ export class IssueService {
     private readonly politicianModel: Model<PoliticianDocument>,
   ) {}
 
-  async addIssue(issueData: AddIssueDto): Promise<boolean> {
+  async addIssue(body: AddIssueDto): Promise<boolean> {
+    const week = 7 * 24 * 60 * 60 * 1000;
+    const regiDueDate = new Date(Date.now() + week);
+
+    const { targetPolitician, regiUser, issueDate, content, title } = body;
+
+    const issueData = { targetPolitician, regiUser, issueDate, content, title, regiDueDate };
     const instance = await new this.issueModel(issueData);
     const save = await instance.save();
-    const week = 7 * 24 * 60 * 60 * 1000;
-    const dueDate = new Date(Date.now() + week);
 
-    const setRegiStatusInactiveJob = scheduleJob(dueDate, () => {
+    const setRegiStatusInactiveJob = scheduleJob(regiDueDate, () => {
       this.setRegiStatus(save._id, 'expired');
     });
 
@@ -122,7 +126,8 @@ export class IssueService {
     const conResult: number = await this.regicountCon(id);
     const korDiff = 9 * 60 * 60 * 1000;
     const week = 7 * 24 * 60 * 60 * 1000;
-    const korDate = new Date(Date.now() + korDiff);
+    const pollDate = new Date(Date.now() + korDiff);
+    const pollDueDate = new Date(Date.now() + korDiff + week);
 
     if (regiData.pro === true) {
       if (proResult + 1 >= 75 && proResult + 1 >= conResult * 3) {
@@ -132,10 +137,15 @@ export class IssueService {
             $set: {
               regi: { pro: proResult + 1, con: conResult },
               regiStatus: 'active',
-              pollDate: korDate,
+              pollDate,
+              pollDueDate,
             },
           },
         );
+        const setIsPollActiveFalse = scheduleJob(pollDueDate, () => {
+          this.setIsPollActive(id, false);
+        });
+        console.log(pollDueDate);
       } else {
         await this.issueModel.updateOne(
           { _id: id },
@@ -204,7 +214,21 @@ export class IssueService {
       },
     );
     if (result.modifiedCount !== 1) {
-      throw new Error('cronjob not worked');
+      throw new Error('cronjob updating regiStatus did not worked');
+    }
+  }
+
+  async setIsPollActive(_id, isPollActive): Promise<void> {
+    const result = await this.issueModel.updateOne(
+      { _id },
+      {
+        $set: {
+          isPollActive,
+        },
+      },
+    );
+    if (result.modifiedCount !== 1) {
+      throw new Error('cronjob updating isPollActive did not worked');
     }
   }
 }
