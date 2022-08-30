@@ -4,7 +4,7 @@ import React from 'react';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/leejaemyung.webp';
 import yoonseokyeol from '@/assets/yoonseokyeol.webp';
-import LifeGraph from './LifeGraph';
+import LifeGraph from '@components/home/LifeGraph';
 import issueState from '@/store/IssueState';
 import { IssueTypes } from '@/types/IssueTypes';
 import { useRecoilValue } from 'recoil';
