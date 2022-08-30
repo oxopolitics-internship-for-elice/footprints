@@ -339,20 +339,19 @@ function darwTooltip(context: any, resData: ResDataTypes) {
         const TitleText = document.createTextNode(
           resData.title[tooltipModel.dataPoints[0].dataIndex],
         );
-        const TitleText2 = document.createTextNode(
-          '===============================',
-        );
         Title.style.whiteSpace = 'nowrap';
         Title.style.overflow = 'hidden';
         Title.style.textOverflow = 'ellipsis';
-        Title.style.width = '300px';
+        Title.style.width = '330px';
+        Title.style.height = '30px';
         Title.style.textAlign = 'center';
         Title.style.fontWeight = '700';
         Title.style.fontSize = '23px';
+        Title.style.backgroundColor = '#f1f1f1';
+        Title.style.paddingBottom = '40px';
         Title.appendChild(TitleText);
         tableHead.appendChild(Title);
         tableHead.appendChild(br);
-        tableHead.appendChild(TitleText2);
       }
 
       image.src = imgSrc[index];
@@ -402,11 +401,9 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   tooltipEl.style.top =
     position.top + window.pageYOffset + tooltipModel.caretY + 'px';
   // tooltipEl.style.font = bodyFont.string;
-  tooltipEl.style.padding =
-    tooltipModel.padding + 'px ' + tooltipModel.padding + 'px';
+
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = '#f5f5dc';
-  tooltipEl.style.padding = '15px';
   tooltipEl.style.borderRadius = '5px';
   tooltipEl.style.width = '330px';
   tooltipEl.style.height = '225px';
