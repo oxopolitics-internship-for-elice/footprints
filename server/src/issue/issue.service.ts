@@ -33,8 +33,8 @@ export class IssueService {
   }
 
   async getGraphTribe() {
-    const pollResult = await this.issueModel.find().select('_id poll');
-    console.log(pollResult);
+    const tribes = await this.issueModel.find().select('_id poll');
+    console.log(tribes);
     const tribeResult = await this.issueModel.aggregate([
       {
         $project: {
@@ -97,10 +97,11 @@ export class IssueService {
     return value;
   }
 
-  // poll pro 개수 확인 함수
-  async pollcountPro(id) {
+  // 사자부족 poll pro 개수 확인 함수
+  async pollcountProLion(id) {
     const issue = await this.issueModel.findById(id);
-    const value: number = issue.poll.pro;
+    const value: number = issue.poll.lion.pro;
+    console.log(value);
     return value;
   }
 
@@ -156,7 +157,7 @@ export class IssueService {
   }
 
   async setIssuePoll(id, regiData: SetIssuePollDto): Promise<boolean> {
-    const proResult: number = await this.pollcountPro(id);
+    const proResult: number = await this.pollcountProLion(id);
     const neuResult: number = await this.pollcountNeu(id);
     const conResult: number = await this.pollcountCon(id);
     if (regiData.pro === true) {
