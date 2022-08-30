@@ -49,16 +49,12 @@ export class UserService {
   }
 
   async setUserPoll(userId, issueId, poll) {
-    const user = await this.getUserById(userId);
+    // const user = await this.getUserById(userId);
+    // console.log('id비교: ', userId, user._id);
+    // if (userId === user._id) {
+    //   console.log('user validated');
+    // }
     const result = Object.keys(poll).find((key) => poll[key] === true);
-    console.log('result from setUserpoll : ', result);
-
-    // user poll 결과 반영
-    // const update = {
-    //   $set: {
-    //     pollResult: { issueId: issueId, vote: result },
-    //   },
-    // };
     const pollResult = { issueId: issueId, vote: result };
     const newUser = await this.userModel.findOneAndUpdate(
       { _id: userId },
@@ -69,5 +65,11 @@ export class UserService {
     );
     console.log('newUser: ', newUser);
     return newUser;
+  }
+
+  async getUserPollResult(userId, issueId) {
+    const issueUser = await this.userModel.find({ _id: userId }).find({ 'pollResults.issueId': issueId });
+
+    return issueUser;
   }
 }

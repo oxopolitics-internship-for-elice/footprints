@@ -98,13 +98,16 @@ export class IssueController {
     try {
       //
       const userId = request.user._id;
-      console.log('userid: ', userId);
-      const userPoll = await this.userService.setUserPoll(userId, issueId, poll);
-      console.log('user poll: ', userPoll);
 
-      const issue = await this.issueService.setIssuePoll(issueId, poll);
-      if (issue) {
-        return response.json({ message: 'success' });
+      const issueUser = await this.userService.getUserPollResult(userId, issueId);
+      if (!issueUser) {
+        const userPoll = await this.userService.setUserPoll(userId, issueId, poll);
+        const issue = await this.issueService.setIssuePoll(issueId, poll);
+        if (userPoll && issue) {
+          return response.json({ message: 'success', userPoll });
+        }
+      } else {
+        return response.json({ message: 'failure - already voted' });
       }
     } catch (err) {}
   }

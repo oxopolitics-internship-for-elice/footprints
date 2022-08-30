@@ -3,8 +3,21 @@ import * as mongoose from 'mongoose';
 
 export type UserDocument = User & mongoose.Document;
 
+@Schema({ _id: false, versionKey: false })
+class PollResults {
+  @Prop()
+  issueId: string;
+
+  @Prop()
+  vote: string;
+}
+
+const PollResultsSchema = SchemaFactory.createForClass(PollResults);
 @Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class User {
+  @Prop()
+  _id: mongoose.Schema.Types.ObjectId;
+
   @Prop()
   userName: string;
 
@@ -26,8 +39,8 @@ export class User {
   @Prop({ default: '' })
   tribe?: string;
 
-  @Prop({ type: [{ issueId: { type: mongoose.Schema.Types.ObjectId }, vote: { type: String } }] })
-  pollResults?;
+  @Prop([{ type: PollResultsSchema }])
+  pollResults?: PollResults[];
 }
 
 export const userSchema = SchemaFactory.createForClass(User);
