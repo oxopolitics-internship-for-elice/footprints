@@ -79,7 +79,6 @@ const PoliticianGraph = (): JSX.Element => {
     let target = '6303bed2e9d44f884ed1d640';
     const res = await GraphAPI.getGraph(target, index);
     console.log(res);
-
     res.data.data.map(async (res: ResTypes, index: number) => {
       setIssueDate((current: Date[] | []) => {
         let data = dateFormatter(res.issueDate);
@@ -248,6 +247,29 @@ const PoliticianGraph = (): JSX.Element => {
               const imgSrc = [Circle, Triangle, X];
               const imageTh = document.createElement('div');
               const image = document.createElement('img');
+              console.log(resData);
+              if (index === 0) {
+                const Title = document.createElement('div');
+                const TitleText = document.createTextNode(
+                  resData[0].data.data[tooltipModel.dataPoints[0].dataIndex]
+                    .title,
+                );
+                const TitleText2 = document.createTextNode(
+                  '===============================',
+                );
+                Title.style.whiteSpace = 'nowrap';
+                Title.style.overflow = 'hidden';
+                Title.style.textOverflow = 'ellipsis';
+                Title.style.width = '300px';
+                Title.style.textAlign = 'center';
+                Title.style.fontWeight = '700';
+                Title.style.fontSize = '23px';
+                Title.appendChild(TitleText);
+                tableHead.appendChild(Title);
+                tableHead.appendChild(br);
+                tableHead.appendChild(TitleText2);
+              }
+
               image.src = imgSrc[index];
               image.height = 20;
               image.width = 20;
@@ -257,26 +279,14 @@ const PoliticianGraph = (): JSX.Element => {
               image.style.display = 'inline-block';
               imageTh.appendChild(image);
 
-              const numSpan = document.createElement('span');
               const num = document.createTextNode(': ' + body);
-              imageTh.style.marginLeft = '100px';
+              imageTh.style.marginLeft = '120px';
 
               imageTh.appendChild(num);
 
               div.appendChild(imageTh);
               div.appendChild(br);
             }
-
-            const Title = document.createElement('div');
-            const TitleText = document.createTextNode('현재사건러ㅓㅓ....');
-            const TitleText2 = document.createTextNode(
-              '===========================',
-            );
-            Title.style.textAlign = 'center';
-            Title.appendChild(TitleText);
-            tableHead.appendChild(Title);
-            tableHead.appendChild(br);
-            tableHead.appendChild(TitleText2);
 
             result[tooltipModel.dataPoints[0].dataIndex].forEach(
               (body: any, index: number) => {
@@ -313,8 +323,8 @@ const PoliticianGraph = (): JSX.Element => {
           tooltipEl.style.background = '#f5f5dc';
           tooltipEl.style.padding = '15px';
           tooltipEl.style.borderRadius = '5px';
-          tooltipEl.style.width = '300px';
-          tooltipEl.style.height = '200px';
+          tooltipEl.style.width = '330px';
+          tooltipEl.style.height = '225px';
         },
       },
 
