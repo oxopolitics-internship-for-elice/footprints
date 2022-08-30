@@ -81,10 +81,26 @@ export class IssueController {
           throw new Error('failed to register issue');
         }
       } else {
-        return response.json({ message: 'already voted' });
+        return response.json({ message: 'already registered' });
       }
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  //그래프 점 클릭시 모달창에서 쓸 이슈 및, 투표 정보(pro, con 정보)
+  @UseGuards(JwtAuthGuard)
+  @Get('/:issueId/poll')
+  async getIssuePoll(@Param('issueId') issueId: string, @Req() request, @Res() response) {
+    const userId = request.user._id;
+    const issueUser = await this.userService.getUserPollResult(userId, issueId);
+
+    if (Object.keys(issueUser).length !== 0) {
+      const pollResult = issueUser[0].pollResults.find((key) => key.issueId === issueId);
+
+      return response.json({ message: 'success', pollResult: pollResult.vote });
+    } else {
+      return response.json({ message: 'first', pollResult: null });
     }
   }
 
