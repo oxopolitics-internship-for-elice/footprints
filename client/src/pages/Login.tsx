@@ -19,7 +19,7 @@ const Login = () => {
           <Title>로그인</Title>
           <ButtonWrap>
             <KaKaoLogin>
-              <a id="kakaoSignInDiv" href={kakaoRequestURL}>
+              <a id="kakaoSignInDiv" href={'http://localhost:5000/auth/kakao'}>
                 <img width="25px" src={kakaoSymbol} alt="kakaoSymbol" />
                 <div>Kakao로 시작하기</div>
               </a>

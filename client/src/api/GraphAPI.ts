@@ -6,6 +6,7 @@ interface GraphAPI {
     targetPolitician: String,
     index: Number,
   ): Promise<AxiosResponse<any>>;
+  updatePoll(target: String, newPoll: Object): Promise<AxiosResponse<any>>;
 }
 
 const GraphAPI: GraphAPI = (() => {
@@ -14,6 +15,9 @@ const GraphAPI: GraphAPI = (() => {
       return Api.get(
         `issues?targetPolitician=${targetPolitician}&regiStatus=true&perPage=10&pageNum=${index}`,
       );
+    },
+    updatePoll: (target, newPoll) => {
+      return Api.patch(`issues/${target}/poll`, newPoll);
     },
   };
 })();
