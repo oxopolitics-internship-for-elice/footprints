@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -21,6 +21,8 @@ import { getElementAtEvent, Line } from 'react-chartjs-2';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
 import { BsArrowRepeat } from 'react-icons/bs';
+import { useLocation } from 'react-router-dom';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -62,6 +64,8 @@ const PoliticianGraph = (): JSX.Element => {
   const [NextPageable, isNextPageable] = useState<boolean>(true);
   const [contentId, setContentId] = useState<any>([]);
   const [resData, setResData] = useState<any>([]);
+  const id = useLocation().pathname.split('/')[2];
+
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -76,9 +80,7 @@ const PoliticianGraph = (): JSX.Element => {
   }
 
   const getData = async (index: number | Number) => {
-    let target = '6303bed2e9d44f884ed1d640';
-    const res = await GraphAPI.getGraph(target, index);
-    console.log(res);
+    const res = await GraphAPI.getGraph(id, index);
 
     res.data.data.map(async (res: ResTypes, index: number) => {
       setIssueDate((current: Date[] | []) => {
@@ -168,9 +170,7 @@ const PoliticianGraph = (): JSX.Element => {
       ],
     });
   };
-  useEffect(() => {
-    console.log(document.body.offsetWidth);
-  }, [document.body.offsetWidth]);
+  useEffect(() => {}, [document.body.offsetWidth]);
   const getNextData = async () => {
     await getData(index + 1);
     setIndex(index + 1);
@@ -199,7 +199,6 @@ const PoliticianGraph = (): JSX.Element => {
         () => start();
       }, 1);
     }
-    console.log(isFirst);
   }, [isFirst]);
 
   const options = {
@@ -315,6 +314,19 @@ const PoliticianGraph = (): JSX.Element => {
       legend: {
         display: false,
       },
+      datalabels: {
+        font: {
+          size: 15,
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 15,
+        hoverRadius: 15,
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
+      },
     },
   };
   const string1 = '<';
@@ -364,6 +376,7 @@ const PoliticianGraph = (): JSX.Element => {
               }}
               options={options}
               data={data}
+              plugins={[ChartDataLabels]}
             />
           )}
           <button
