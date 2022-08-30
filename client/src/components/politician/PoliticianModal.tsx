@@ -10,6 +10,11 @@ type Element = {
   x: number;
   y: number;
 };
+type ResPoll = {
+  pro: number;
+  neu: number;
+  con: number;
+};
 type Object = {
   dataIndex: number;
 };
@@ -19,7 +24,7 @@ interface ModalProps {
   content: [];
   contentId: [];
   issueDate: [];
-  resPoll: [];
+  resPoll: ResPoll[];
 }
 const Modal = ({
   setOpen,
@@ -56,19 +61,19 @@ const Modal = ({
         neu: false,
         con: false,
       };
-      if (index === 0) {
-        resPoll[element.$context.dataIndex].pro += 1;
-        newPoll['pro'] = true;
-      } else if (index === 1) {
-        resPoll[element.$context.dataIndex].neu += 1;
-
-        newPoll['neu'] = true;
-      } else {
-        resPoll[element.$context.dataIndex].con += 1;
-
-        newPoll['con'] = true;
-      }
-      const res = await GraphAPI.updatePoll(target, newPoll);
+      try {
+        if (index === 0) {
+          resPoll[element.$context.dataIndex].pro += 1;
+          newPoll['pro'] = true;
+        } else if (index === 1) {
+          resPoll[element.$context.dataIndex].neu += 1;
+          newPoll['neu'] = true;
+        } else {
+          resPoll[element.$context.dataIndex].con += 1;
+          newPoll['con'] = true;
+        }
+        const res = await GraphAPI.updatePoll(target, newPoll);
+      } catch (err) {}
 
       return newPoll;
     });

@@ -168,9 +168,7 @@ const PoliticianGraph = (): JSX.Element => {
       ],
     });
   };
-  useEffect(() => {
-    console.log(document.body.offsetWidth);
-  }, [document.body.offsetWidth]);
+
   const getNextData = async () => {
     await getData(index + 1);
     setIndex(index + 1);
@@ -204,6 +202,7 @@ const PoliticianGraph = (): JSX.Element => {
 
   const options = {
     maintainAspectRatio: false,
+
     plugins: {
       tooltip: {
         enabled: false,
@@ -243,9 +242,11 @@ const PoliticianGraph = (): JSX.Element => {
               return Object.values(body);
             });
             const tableHead = document.createElement('div');
+            const br = document.createElement('br');
+
             function drow(div: Element, body: Element, index: number) {
               const imgSrc = [Circle, Triangle, X];
-              const imageTh = document.createElement('span');
+              const imageTh = document.createElement('div');
               const image = document.createElement('img');
               image.src = imgSrc[index];
               image.height = 20;
@@ -258,13 +259,25 @@ const PoliticianGraph = (): JSX.Element => {
 
               const numSpan = document.createElement('span');
               const num = document.createTextNode(': ' + body);
-              numSpan.appendChild(num);
+              imageTh.style.marginLeft = '100px';
 
-              const br = document.createElement('br');
+              imageTh.appendChild(num);
+
               div.appendChild(imageTh);
-              div.appendChild(numSpan);
               div.appendChild(br);
             }
+
+            const Title = document.createElement('div');
+            const TitleText = document.createTextNode('현재사건러ㅓㅓ....');
+            const TitleText2 = document.createTextNode(
+              '===========================',
+            );
+            Title.style.textAlign = 'center';
+            Title.appendChild(TitleText);
+            tableHead.appendChild(Title);
+            tableHead.appendChild(br);
+            tableHead.appendChild(TitleText2);
+
             result[tooltipModel.dataPoints[0].dataIndex].forEach(
               (body: any, index: number) => {
                 const div = document.createElement('div');
@@ -300,8 +313,8 @@ const PoliticianGraph = (): JSX.Element => {
           tooltipEl.style.background = '#f5f5dc';
           tooltipEl.style.padding = '15px';
           tooltipEl.style.borderRadius = '5px';
-          tooltipEl.style.width = '150px';
-          tooltipEl.style.height = '100px';
+          tooltipEl.style.width = '300px';
+          tooltipEl.style.height = '200px';
         },
       },
 
@@ -314,6 +327,18 @@ const PoliticianGraph = (): JSX.Element => {
       },
       legend: {
         display: false,
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        grid: {
+          display: false,
+        },
       },
     },
   };
@@ -367,7 +392,7 @@ const PoliticianGraph = (): JSX.Element => {
               data={data}
             />
           )}
-          <button
+          {/* <button
             onClick={ClickButton}
             style={{
               position: 'relative',
@@ -377,7 +402,7 @@ const PoliticianGraph = (): JSX.Element => {
             }}
           >
             <BsArrowRepeat size="40" />
-          </button>
+          </button> */}
           {index === 1 ? null : (
             <GraphButton
               style={{ marginTop: '-350px', marginRight: '-10px' }}
@@ -417,9 +442,9 @@ const GraphButton = styled.button<Props>`
   float: right;
   opacity: 0.9;
   transition-duration: 0.4s;
-  background-color: #008cba;
+  background-color: #babbbd;
   &:hover {
     color: white;
-    background-color: skyblue;
+    background-color: #676168;
   }
 `;
