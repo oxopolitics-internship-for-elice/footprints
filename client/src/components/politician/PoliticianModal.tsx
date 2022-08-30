@@ -57,7 +57,6 @@ const Modal = ({
         neu: false,
         con: false,
       };
-      console.log(resData);
       try {
         if (index === 0) {
           newPoll = { pro: true, neu: false, con: false };
@@ -68,7 +67,6 @@ const Modal = ({
         if (index === 2) {
           newPoll = { pro: false, neu: false, con: true };
         }
-        console.log(newPoll);
         const res = await GraphAPI.updatePoll(target, newPoll);
         console.log(res.status);
         if (res.status === 200) {
@@ -94,7 +92,7 @@ const Modal = ({
         <Container {...element} ref={ref}>
           <Header ref={ref}>
             <HeaderText>
-              {issueDate[element.$context.dataIndex]}
+              {resData.title[element.$context.dataIndex]}
               <CloseButton
                 style={{}}
                 onClick={() => {
@@ -106,7 +104,7 @@ const Modal = ({
               </CloseButton>
             </HeaderText>
           </Header>
-          <Content>{content[element.$context.dataIndex]}</Content>
+          <Content>{resData.content[element.$context.dataIndex]}</Content>
           <ChooseBox>
             {Imgsrc.map((src, index) => {
               return (

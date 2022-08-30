@@ -21,6 +21,7 @@ import { getElementAtEvent, Line } from 'react-chartjs-2';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
 import { BsArrowRepeat } from 'react-icons/bs';
+import { deflateRaw } from 'zlib';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -78,9 +79,7 @@ const PoliticianGraph = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [point, setPoint] = useState<any>();
   const [issueDate, setIssueDate] = useState<any>([]);
-  const [poll, setPoll] = useState<any>([]);
   const [content, setContent] = useState<any>([]);
-  const [score, setScore] = useState<any>([]);
   const [data, setData] = useState<any>();
   const [isFirst, setIsFirst] = useState(true);
   const [index, setIndex] = useState<number>(1);
@@ -103,7 +102,6 @@ const PoliticianGraph = (): JSX.Element => {
   const getData = async (index: number | Number) => {
     let target = '6303bed2e9d44f884ed1d640';
     const res = await GraphAPI.getGraph(target, index);
-    console.log(res);
 
     res.data.data.map(async (res: ResTypes, index: number) => {
       setResData((current: any) => {
@@ -176,15 +174,8 @@ const PoliticianGraph = (): JSX.Element => {
   useEffect(() => {
     start();
     if (!isFirst) {
-      setTimeout(() => {
-        () => start();
-      }, 1);
-    } else {
-      setTimeout(() => {
-        () => start();
-      }, 1);
+      start();
     }
-    console.log(isFirst);
   }, [isFirst]);
 
   const options = {
@@ -195,122 +186,7 @@ const PoliticianGraph = (): JSX.Element => {
         enabled: false,
         maintainAspectRatio: true,
         external: function (context: any) {
-          let tooltipEl = document.getElementById('chartjs-tooltip');
-          // Create element on first render
-          if (!tooltipEl) {
-            tooltipEl = document.createElement('div');
-            tooltipEl.id = 'chartjs-tooltip';
-            tooltipEl.innerHTML = '<div></div>';
-            document.body.appendChild(tooltipEl);
-          }
-
-          // Hide if no tooltip
-          const tooltipModel = context.tooltip;
-          if (tooltipModel.opacity === 0) {
-            tooltipEl.style.opacity = '0';
-            return;
-          }
-
-          // Set caret Position
-          tooltipEl.classList.remove('above', 'below', 'no-transform');
-          if (tooltipModel.yAlign) {
-            tooltipEl.classList.add(tooltipModel.yAlign);
-          } else {
-            tooltipEl.classList.add('no-transform');
-          }
-
-          function getBody() {
-            return resData.poll;
-          }
-          // Set Text
-          if (tooltipModel.body) {
-            const bodyLines = tooltipModel.body.map(getBody);
-            const result = bodyLines[0].map((body: any) => {
-              return Object.values(body);
-            });
-            const tableHead = document.createElement('div');
-            const br = document.createElement('br');
-
-            function drow(div: Element, body: Element, index: number) {
-              const imgSrc = [Circle, Triangle, X];
-              const imageTh = document.createElement('div');
-              const image = document.createElement('img');
-              if (index === 0) {
-                const Title = document.createElement('div');
-                const TitleText = document.createTextNode(
-                  resData.title[tooltipModel.dataPoints[0].dataIndex],
-                );
-                const TitleText2 = document.createTextNode(
-                  '===============================',
-                );
-                Title.style.whiteSpace = 'nowrap';
-                Title.style.overflow = 'hidden';
-                Title.style.textOverflow = 'ellipsis';
-                Title.style.width = '300px';
-                Title.style.textAlign = 'center';
-                Title.style.fontWeight = '700';
-                Title.style.fontSize = '23px';
-                Title.appendChild(TitleText);
-                tableHead.appendChild(Title);
-                tableHead.appendChild(br);
-                tableHead.appendChild(TitleText2);
-              }
-
-              image.src = imgSrc[index];
-              image.height = 20;
-              image.width = 20;
-              image.style.position = 'relative';
-              image.style.top = '3px';
-              imageTh.style.padding = '10px';
-              image.style.display = 'inline-block';
-              imageTh.appendChild(image);
-
-              const num = document.createTextNode(': ' + body);
-              imageTh.style.marginLeft = '120px';
-
-              imageTh.appendChild(num);
-
-              div.appendChild(imageTh);
-              div.appendChild(br);
-            }
-
-            result[tooltipModel.dataPoints[0].dataIndex].forEach(
-              (body: any, index: number) => {
-                const div = document.createElement('div');
-                drow(div, body, index);
-                tableHead.appendChild(div);
-              },
-            );
-
-            const tableRoot = tooltipEl.querySelector('div');
-
-            // Remove old children
-            if (tableRoot && tableRoot.firstChild) {
-              while (tableRoot.firstChild) {
-                tableRoot.firstChild.remove();
-              }
-            }
-            // Add new children
-            tableRoot?.appendChild(tableHead);
-          }
-
-          const position = context.chart.canvas.getBoundingClientRect();
-
-          tooltipEl.style.opacity = '1';
-          tooltipEl.style.position = 'absolute';
-          tooltipEl.style.left =
-            position.left + window.pageXOffset + tooltipModel.caretX + 'px';
-          tooltipEl.style.top =
-            position.top + window.pageYOffset + tooltipModel.caretY + 'px';
-          // tooltipEl.style.font = bodyFont.string;
-          tooltipEl.style.padding =
-            tooltipModel.padding + 'px ' + tooltipModel.padding + 'px';
-          tooltipEl.style.pointerEvents = 'none';
-          tooltipEl.style.background = '#f5f5dc';
-          tooltipEl.style.padding = '15px';
-          tooltipEl.style.borderRadius = '5px';
-          tooltipEl.style.width = '330px';
-          tooltipEl.style.height = '225px';
+          darwTooltip(context, resData);
         },
       },
 
@@ -415,6 +291,126 @@ const PoliticianGraph = (): JSX.Element => {
 };
 
 export default PoliticianGraph;
+
+function darwTooltip(context: any, resData: ResDataTypes) {
+  let tooltipEl = document.getElementById('chartjs-tooltip');
+  console.log(context);
+  // Create element on first render
+  if (!tooltipEl) {
+    tooltipEl = document.createElement('div');
+    tooltipEl.id = 'chartjs-tooltip';
+    tooltipEl.innerHTML = '<div></div>';
+    document.body.appendChild(tooltipEl);
+  }
+
+  // Hide if no tooltip
+  const tooltipModel = context.tooltip;
+  if (tooltipModel.opacity === 0) {
+    tooltipEl.style.opacity = '0';
+    return;
+  }
+
+  // Set caret Position
+  tooltipEl.classList.remove('above', 'below', 'no-transform');
+  if (tooltipModel.yAlign) {
+    tooltipEl.classList.add(tooltipModel.yAlign);
+  } else {
+    tooltipEl.classList.add('no-transform');
+  }
+
+  function getBody() {
+    return resData.poll;
+  }
+  // Set Text
+  if (tooltipModel.body) {
+    const bodyLines = tooltipModel.body.map(getBody);
+    const result = bodyLines[0].map((body: any) => {
+      return Object.values(body);
+    });
+    const tableHead = document.createElement('div');
+    const br = document.createElement('br');
+
+    function drow(div: Element, body: Element, index: number) {
+      const imgSrc = [Circle, Triangle, X];
+      const imageTh = document.createElement('div');
+      const image = document.createElement('img');
+      if (index === 0) {
+        const Title = document.createElement('div');
+        const TitleText = document.createTextNode(
+          resData.title[tooltipModel.dataPoints[0].dataIndex],
+        );
+        const TitleText2 = document.createTextNode(
+          '===============================',
+        );
+        Title.style.whiteSpace = 'nowrap';
+        Title.style.overflow = 'hidden';
+        Title.style.textOverflow = 'ellipsis';
+        Title.style.width = '300px';
+        Title.style.textAlign = 'center';
+        Title.style.fontWeight = '700';
+        Title.style.fontSize = '23px';
+        Title.appendChild(TitleText);
+        tableHead.appendChild(Title);
+        tableHead.appendChild(br);
+        tableHead.appendChild(TitleText2);
+      }
+
+      image.src = imgSrc[index];
+      image.height = 20;
+      image.width = 20;
+      image.style.position = 'relative';
+      image.style.top = '3px';
+      imageTh.style.padding = '10px';
+      image.style.display = 'inline-block';
+      imageTh.appendChild(image);
+
+      const num = document.createTextNode(': ' + body);
+      imageTh.style.marginLeft = '120px';
+
+      imageTh.appendChild(num);
+
+      div.appendChild(imageTh);
+      div.appendChild(br);
+    }
+
+    result[tooltipModel.dataPoints[0].dataIndex].forEach(
+      (body: any, index: number) => {
+        const div = document.createElement('div');
+        drow(div, body, index);
+        tableHead.appendChild(div);
+      },
+    );
+
+    const tableRoot = tooltipEl.querySelector('div');
+
+    // Remove old children
+    if (tableRoot && tableRoot.firstChild) {
+      while (tableRoot.firstChild) {
+        tableRoot.firstChild.remove();
+      }
+    }
+    // Add new children
+    tableRoot?.appendChild(tableHead);
+  }
+
+  const position = context.chart.canvas.getBoundingClientRect();
+
+  tooltipEl.style.opacity = '1';
+  tooltipEl.style.position = 'absolute';
+  tooltipEl.style.left =
+    position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+  tooltipEl.style.top =
+    position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+  // tooltipEl.style.font = bodyFont.string;
+  tooltipEl.style.padding =
+    tooltipModel.padding + 'px ' + tooltipModel.padding + 'px';
+  tooltipEl.style.pointerEvents = 'none';
+  tooltipEl.style.background = '#f5f5dc';
+  tooltipEl.style.padding = '15px';
+  tooltipEl.style.borderRadius = '5px';
+  tooltipEl.style.width = '330px';
+  tooltipEl.style.height = '225px';
+}
 
 interface Props {}
 const GraphButton = styled.button<Props>`
