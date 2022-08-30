@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '@/components/Base/Modal';
+import Modal from '@/components/base/Modal';
 import styled from '@emotion/styled';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
