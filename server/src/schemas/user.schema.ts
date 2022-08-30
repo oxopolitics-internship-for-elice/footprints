@@ -27,6 +27,8 @@ export class User {
   @Prop({ default: '' })
   tribe?: string;
 
+  @Prop({ default: { issudId: '', poll: '' }, type: mongoose.Schema.Types.Mixed })
+  pollResult?;
 }
 
 export const userSchema = SchemaFactory.createForClass(User);

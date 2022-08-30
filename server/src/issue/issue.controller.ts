@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Patch, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { QueryIssueDto } from './dto/issue.query.dto';
 import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
@@ -6,10 +7,11 @@ import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssueRegiStatusDto } from './dto/issue.setIssueRegiStatus.dto';
 import { IssueService } from './issue.service';
+import { UserService } from 'src/user/user.service';
 
 @Controller('issues')
 export class IssueController {
-  constructor(private issueService: IssueService) {}
+  constructor(private issueService: IssueService, private userService: UserService) {}
 
   // 이슈 등록
   @Post()
@@ -78,6 +80,28 @@ export class IssueController {
   async setIssuePoll(@Param('issueId') id: string, @Body() poll: SetIssuePollDto, @Res() response) {
     try {
       const issue = await this.issueService.setIssuePoll(id, poll);
+      if (issue) {
+        return response.json({ message: 'success' });
+      }
+    } catch (err) {}
+  }
+
+  // 로그인한 유저의 이슈 여론 투표
+  @UseGuards(JwtAuthGuard)
+  @Patch('/:issueId/user-poll')
+  async setUserIssuePoll(
+    @Param('issueId') issueId: string,
+    @Body() poll: SetIssuePollDto,
+    @Req() request,
+    @Res() response,
+  ) {
+    try {
+      //
+      const userId = request.user._id;
+      console.log(userId);
+      await this.userService.setUserPoll(userId, issueId, poll);
+
+      const issue = await this.issueService.setIssuePoll(issueId, poll);
       if (issue) {
         return response.json({ message: 'success' });
       }

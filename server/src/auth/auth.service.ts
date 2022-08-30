@@ -6,10 +6,7 @@ import * as CryptoJS from 'crypto-js';
 import { CreateUserDto } from 'src/user/dto/add.user.dto';
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userService: UserService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
 
   async validateUser(email: string): Promise<any> {
     const user = await this.userService.getOne(email);
@@ -35,10 +32,7 @@ export class AuthService {
       expiresIn: '1m',
     });
 
-    const refreshToken = CryptoJS.AES.encrypt(
-      JSON.stringify(token),
-      process.env.AES_KEY,
-    ).toString();
+    const refreshToken = CryptoJS.AES.encrypt(JSON.stringify(token), process.env.AES_KEY).toString();
 
     await this.userService.updateRefreshToken(user.email, refreshToken);
 

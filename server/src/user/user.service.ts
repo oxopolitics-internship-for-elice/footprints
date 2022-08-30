@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from './dto/add.user.dto';
 import { Model } from 'mongoose';
@@ -49,10 +45,18 @@ export class UserService {
   }
 
   async updateRefreshToken(email: string, refreshToken: string) {
-    await this.userModel.findOneAndUpdate(
-      { email: email },
-      { refreshToken: refreshToken },
-      { new: true },
-    );
+    await this.userModel.findOneAndUpdate({ email: email }, { refreshToken: refreshToken }, { new: true });
+  }
+
+  async setUserPoll(userId, issueId, poll) {
+    const user = await this.getUserById(userId);
+
+    // user poll 결과 반영
+    const update = {
+      $set: {
+        pollResult: [],
+      },
+    };
+    const newUser = await this.userModel.findOneAndUpdate({ _id: userId }, [update], { new: true });
   }
 }
