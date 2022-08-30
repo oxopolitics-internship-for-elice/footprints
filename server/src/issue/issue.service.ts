@@ -21,6 +21,8 @@ export class IssueService {
     const instance = await new this.issueModel(issueData);
     const save = await instance.save();
 
+    const now = new Date(Date.now());
+    console.log(now);
     if (!save) {
       throw new Error('생성 오류');
     } else {
