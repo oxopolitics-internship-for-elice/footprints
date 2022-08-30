@@ -1,10 +1,10 @@
 import React from 'react';
-import ServiceInfo from '@/components/home/ServiceInfo';
+import ServiceInfo from '@/components/Home/ServiceInfo';
 import { FullPage, Slide } from 'react-full-page';
 import HomePolitician from './HomePolitician';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
-import Loading from '../base/Loading';
+import Loading from '../Base/Loading';
 
 const SlideFullPage = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);

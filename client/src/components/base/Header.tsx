@@ -1,4 +1,4 @@
-import errorHandler from '@/api/ErrorHandler';
+import errorHandler from '@/api/errorHandler';
 import UserAPI from '@/api/UserAPI';
 import styled from '@emotion/styled';
 import React from 'react';
