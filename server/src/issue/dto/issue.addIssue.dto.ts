@@ -15,4 +15,7 @@ export class AddIssueDto {
 
   @IsString()
   readonly content: string;
+
+  @IsString()
+  readonly title: string;
 }

@@ -1,6 +1,6 @@
 import Router from '@/router/Router';
 import { Suspense } from 'react';
-import Loading from './components/Base/Loading';
+import Loading from './components/base/Loading';
 
 function App() {
   return (

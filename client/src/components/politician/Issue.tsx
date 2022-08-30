@@ -20,13 +20,13 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         if (issue._id === targetElem.dataset.id) {
           if (targetElem.innerText === '반대') {
             issue.regi.con += 1;
-            const res = await Api.patch(`issues/${_id}/regi`, {
+            await Api.patch(`issues/${_id}/regi`, {
               pro: false,
               con: true,
             });
           } else {
             issue.regi.pro += 1;
-            const res = await Api.patch(`issues/${_id}/regi`, {
+            await Api.patch(`issues/${_id}/regi`, {
               pro: true,
               con: false,
             });
@@ -44,6 +44,12 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         <div>
           <BolderSpan>찬성</BolderSpan> {`${regi.pro} ∙ `}
           <BolderSpan>반대</BolderSpan> {`${regi.con}`}
+          <LighterDiv>
+            {`등록까지 찬성 ${Math.max(
+              75 - regi.pro,
+              regi.con * 3 - regi.pro,
+            )}표`}
+          </LighterDiv>
         </div>
       </SubContainer>
       <Content>{content}</Content>
@@ -85,6 +91,11 @@ const Date = styled.div`
 `;
 const BolderSpan = styled.span`
   font-weight: bolder;
+`;
+const LighterDiv = styled.div`
+  font-size: 12px;
+  color: ${theme.colors.mainColor};
+  text-align: right;
 `;
 const Content = styled.div`
   font-size: 16px;
