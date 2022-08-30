@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
-import { QueryIssueDto } from './dto/issue.query.dto';
+import { QueryIssueDto } from './dto/issue.paginationQuery.dto';
 import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';

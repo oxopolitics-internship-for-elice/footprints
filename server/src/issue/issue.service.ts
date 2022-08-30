@@ -40,12 +40,44 @@ export class IssueService {
   }
 
   async getAllIssues() {
-    const allIssues = await this.politicianModel.find().select('_id name');
-    const result = [];
-    for (let i = 0; i < allIssues.length; i++) {
-      result[allIssues[i].name];
-    }
-    console.log(allIssues);
+    const allIssues = await this.issueModel.aggregate([
+      {
+        $project: {
+          _id: 1,
+          targetPolitician: 1,
+          issueDate: 1,
+          totalPolls: { $add: ['$poll.total.pro', '$poll.total.neu', '$poll.total.con'] },
+          score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
+          poll: 1,
+        },
+      },
+      { $sort: { totalPolls: -1 } },
+      { $limit: 40 },
+      { $sort: { issueDate: 1 } },
+      {
+        $group: { _id: '$targetPolitician', issues: { $push: '$$ROOT' } },
+      },
+      {
+        $lookup: {
+          from: 'politicians',
+          localField: '_id',
+          foreignField: '_id',
+          as: 'politicianInfo',
+          pipeline: [
+            {
+              $project: {
+                issues: 0,
+                _id: 0,
+                createdAt: 0,
+                updatedAt: 0,
+                __v: 0,
+              },
+            },
+          ],
+        },
+      },
+    ]);
+
     return allIssues;
   }
 
