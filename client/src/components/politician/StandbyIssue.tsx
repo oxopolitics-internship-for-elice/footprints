@@ -1,4 +1,5 @@
-import React, { LegacyRef, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { IssueTypes } from '@/types/IssueTypes';
 import Issue from './Issue';
 import styled from '@emotion/styled';
@@ -13,12 +14,12 @@ export interface IssueProps {
 
 const StandbyIssue = (): JSX.Element => {
   const [issueList, setIssueList] = useState<IssueTypes[]>([]);
-  const targetPolitician = '6303bed2e9d44f884ed1d640';
   const targetRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [maxPage, setMaxPage] = useState(null);
 
+  const id = useLocation().pathname.split('/')[2];
   const loadMore = () => {
     setPageNum(prev => prev + 1);
   };
@@ -27,7 +28,7 @@ const StandbyIssue = (): JSX.Element => {
   const getIssue = async () => {
     try {
       setIsLoading(true);
-      const res = await StandbyIssueAPI.getList(targetPolitician, pageNum);
+      const res = await StandbyIssueAPI.getList(id, pageNum);
       setIssueList([...issueList, ...res.data.data]);
       setMaxPage(res.data.meta.pageCount);
     } catch (error) {

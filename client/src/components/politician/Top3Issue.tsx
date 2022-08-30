@@ -5,21 +5,22 @@ import Issue from './Issue';
 import { IssueTypes } from '@/types/IssueTypes';
 import theme from '@/styles/theme';
 import errorHandler from '@/api/ErrorHandler';
+import { useLocation } from 'react-router-dom';
 
 const Top3Issue = () => {
-  const target = '6303bed2e9d44f884ed1d640';
+  const id = useLocation().pathname.split('/')[2];
   const [topIssue, setTopIssue] = useState<IssueTypes[]>([]);
   useEffect(() => {
     const getTopIssue = async () => {
       try {
-        const res = await TopIssueAPI.getList(target);
+        const res = await TopIssueAPI.getList(id);
         setTopIssue(res.data);
       } catch (error) {
         errorHandler(error);
       }
     };
     getTopIssue();
-  }, [target]);
+  }, [id]);
 
   return (
     <>
