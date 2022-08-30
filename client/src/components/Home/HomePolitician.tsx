@@ -25,8 +25,8 @@ const HomePolitician = ({
 }: HomePoliticianProps) => {
   const navigate = useNavigate();
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
-  const politicanIssue = fetchedPoliticans.find(
-    (politician: PoliticiansTypes) => politician.name === politicanName,
+  const politican = fetchedPoliticans.find(
+    (politician: PoliticiansTypes) => politician._id === politicansID,
   );
 
   const imgSrc: ImgSrc = {
@@ -60,7 +60,7 @@ const HomePolitician = ({
               </NavigateButton>
             </Row>
             <AnimationOnScroll animateIn="animate__fadeIn" delay={500}>
-              <LifeGraph issues={politicanIssue} />
+              <LifeGraph issues={politican.issues} />
             </AnimationOnScroll>
           </Politician>
         </AnimationOnScroll>

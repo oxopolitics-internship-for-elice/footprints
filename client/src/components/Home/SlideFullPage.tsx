@@ -20,9 +20,7 @@ const SlideFullPage = () => {
   const politicansID = fetchedPoliticans.map(
     (politician: PoliticiansTypes) => politician?._id,
   );
-  React.useEffect(() => {
-    console.log(fetchedPoliticans);
-  }, []);
+
   return (
     <FullPage>
       <Slide>
