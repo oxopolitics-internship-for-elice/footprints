@@ -25,6 +25,11 @@ import { PoliticianModule } from './politician/politician.module';
         return connection;
       },
     }),
+
+
+    UserModule,
+    AuthModule,
+
     UserModule,
     AuthModule,
     IssueModule,
