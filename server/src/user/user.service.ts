@@ -63,6 +63,19 @@ export class UserService {
     return newUser;
   }
 
+  async updateUserPoll(userId, issueId, vote) {
+    
+    const newUser = await this.userModel.findOneAndUpdate(
+      [{ _id: userId }, {pollResults.issueId: issueId}],
+      {
+        $set: { 'pollResults.$.vote': vote },
+      },
+      { new: true },
+    );
+    console.log('newUser: ', newUser);
+    return newUser;
+  }
+
   async setUserIssueRegi(userId, issueId, regi: SetIssueRegiDto) {
     const regiResult = Object.keys(regi).find((key) => regi[key] === true);
     const regiPollResult = { issueId: issueId, agree: regiResult };

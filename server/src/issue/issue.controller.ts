@@ -88,7 +88,7 @@ export class IssueController {
     }
   }
 
-  //그래프 점 클릭시 모달창에서 쓸 이슈 및, 투표 정보(pro, con 정보)
+  //그래프 점 클릭시 모달창에서 쓸 이슈 및 투표 정보(pro, con 정보)
   @UseGuards(JwtAuthGuard)
   @Get('/:issueId/poll')
   async getIssuePoll(@Param('issueId') issueId: string, @Req() request, @Res() response) {
@@ -101,6 +101,67 @@ export class IssueController {
       return response.json({ message: 'success', pollResult: pollResult.vote });
     } else {
       return response.json({ message: 'first', pollResult: null });
+    }
+  }
+
+  // 이슈 여론 투표(pro, con 변경 가능)
+  @UseGuards(JwtAuthGuard)
+  @Patch('/:issueId/poll')
+  async setIssuePoll(
+    @Param('issueId') issueId: string,
+    @Body() poll: SetIssuePollDto,
+    @Req() request,
+    @Res() response,
+  ) {
+    try {
+      const userId = request.user._id;
+      const issueUser = await this.userService.getUserPollResult(userId, issueId);
+      const vote = Object.values(poll).find((key) => key === true);
+      console.log(vote);
+
+      //유저id와 이슈id로 조회되는 유저 정보가 없다면 투표 결과 등록
+      if (Object.keys(issueUser).length !== 0) {
+        const issueUser = await this.userService.setUserPoll(userId, issueId, poll);
+        const issue = await this.issueService.setIssuePoll(issueId, poll);
+        if (issueUser && issue) {
+          return response.json({ message: 'success', now: vote });
+        } else {
+          throw new Error('failed to set user info or issue');
+        }
+      } else {
+        const voteExist = issueUser[0].pollResults.find((key) => key.issueId === issueId).vote;
+
+        if (voteExist === vote) {
+          return response.json({ message: 'same vote' });
+        } else {
+          // vote로 pollResults의 해당 이슈에 대한 vote 필드 업데이트
+          const newResult = await this.userService.updateUserPoll(userId, issueId, vote);
+          if (newResult) {
+            return response.json({ message: 'success', before: voteExist, now: vote });
+          }
+        }
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  // 로그인한 유저의 이슈 투표 취소
+  @UseGuards(JwtAuthGuard)
+  @Patch('/:issueId/abort')
+  async deleteUserIssuePoll(@Param('issueId') issueId: string, @Req() request, @Res() response) {
+    try {
+      const userId = request.user._id;
+      // const issueUser = await this.userService.getUserPollResult(userId, issueId);
+      const result = await this.userService.deleteUserPollResult(userId, issueId);
+      //해당 이슈에 대한 투표기록이 삭제되면 true 값이 반환됨
+      if (result) {
+        response.json({ message: `vote for ${issueId} has successfully deleted`, possible: true });
+      } else {
+        return response.json({ message: `vote for ${issueId} has failed`, possible: false });
+      }
+    } catch (err) {
+      throw new Error(err);
     }
   }
 
