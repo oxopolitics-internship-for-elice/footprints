@@ -24,6 +24,8 @@ import { BsArrowRepeat } from 'react-icons/bs';
 import { useLocation } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { deflateRaw } from 'zlib';
+import PoliticianNameState from '@/store/PoliticianNameState';
+import { useRecoilValue } from 'recoil';
 
 ChartJS.register(
   CategoryScale,
@@ -90,6 +92,10 @@ const PoliticianGraph = (): JSX.Element => {
   const [contentId, setContentId] = useState<any>([]);
   const [resData, setResData] = useState<any>([]);
   const id = useLocation().pathname.split('/')[2];
+  const name = useRecoilValue(PoliticianNameState).find(
+    (politician: any) => politician[id],
+  )[id];
+  console.log(name);
 
   function ClickHander(
     element: InteractionItem[],
@@ -198,7 +204,7 @@ const PoliticianGraph = (): JSX.Element => {
         font: {
           size: 30,
         },
-        text: '윤석열 인생 그래프',
+        text: `${name}의 그래프`,
       },
       legend: {
         display: false,
