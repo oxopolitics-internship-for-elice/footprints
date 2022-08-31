@@ -76,12 +76,12 @@ export class IssueController {
         const userIssue = await this.userService.setUserIssueRegi(userId, id, regi);
         const issue = await this.issueService.setIssueRegi(id, regi);
         if (userIssue && issue) {
-          return response.json({ message: 'success' });
+          return response.json({ message: 'success', hasVoted: false });
         } else {
           throw new Error('failed to register issue');
         }
       } else {
-        return response.json({ message: 'already registered' });
+        return response.json({ message: 'already registered', hasVoted: true });
       }
     } catch (err) {
       console.log(err);
