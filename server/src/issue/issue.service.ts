@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { scheduleJob, scheduledJobs } from 'node-schedule';
+import { scheduleJob } from 'node-schedule';
 import { Issue, IssueDocument } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
@@ -135,22 +135,22 @@ export class IssueService {
   // poll pro 개수 확인 함수
   async pollcountPro(id) {
     const issue = await this.issueModel.findById(id);
-    const value: number = issue.poll.pro;
+    const value: number = issue.poll.lion.pro;
     return value;
   }
 
   // poll con 개수 확인 함수
   async pollcountCon(id) {
     const issue = await this.issueModel.findById(id);
-    const value: number = issue.poll.con;
+    const value: number = issue.poll.lion.con;
     return value;
   }
 
   // poll neu 개수 확인 함수
   async pollcountNeu(id) {
     const issue = await this.issueModel.findById(id);
-    const value: number = issue.poll.neu;
-    return value;
+    const lion: number = issue.poll.lion.neu;
+    return lion;
   }
 
   async setIssueRegi(id, regiData: SetIssueRegiDto): Promise<boolean> {
@@ -202,6 +202,7 @@ export class IssueService {
   }
 
   async setIssuePoll(id, regiData: SetIssuePollDto): Promise<boolean> {
+    const { pro, neu, con } = regiData;
     const proResult: number = await this.pollcountPro(id);
     const neuResult: number = await this.pollcountNeu(id);
     const conResult: number = await this.pollcountCon(id);
@@ -219,7 +220,11 @@ export class IssueService {
         { _id: id },
         {
           $set: {
-            poll: { pro: proResult, neu: neuResult + 1, con: conResult },
+            'poll.lion': {
+              pro: pro ? proResult + 1 : proResult,
+              neu: neu ? neuResult + 1 : neuResult,
+              con: con ? conResult + 1 : conResult,
+            },
           },
         },
       );

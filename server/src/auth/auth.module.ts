@@ -23,6 +23,6 @@ import { UserService } from 'src/user/user.service';
   ],
   controllers: [AuthController],
   providers: [AuthService, KakaoStrategy, UserService, JwtService],
-  exports: [AuthService, PassportModule, JwtModule],
+  exports: [AuthService, PassportModule, JwtModule, UserService],
 })
 export class AuthModule {}
