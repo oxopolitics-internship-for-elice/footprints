@@ -138,8 +138,6 @@ export class IssueController {
       } else {
         // 이슈id로 조회되는 유저정보에 vote필드가 있고 현재 투표 결과와 다르다면 업데이트
         const voteExist = issueUser[0].pollResults.find((key) => key.issueId === issueId).vote;
-        console.log('vote exist?: ', voteExist);
-        console.log('vote: ', vote);
 
         if (voteExist === vote) {
           return response.json({ message: 'same vote' });

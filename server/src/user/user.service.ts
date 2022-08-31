@@ -64,7 +64,6 @@ export class UserService {
   }
 
   async updateUserPoll(userId, issueId, vote) {
-    console.log('vote from update: ', vote)
     const newUser = await this.userModel.findOneAndUpdate(
       { _id: userId, pollResults: { $elemMatch: { issueId: issueId } } },
       {
@@ -72,7 +71,7 @@ export class UserService {
       },
       { new: true },
     );
-    console.log('newUser: ', newUser);
+
     return newUser;
   }
 
