@@ -1,5 +1,6 @@
-import { IsOptional, IsString } from 'class-validator';
-export class CreateUserDto {
+import { IsString, IsOptional } from 'class-validator';
+
+export class AddUserPollDto {
   @IsString()
   readonly userName: string;
   @IsString()
@@ -12,4 +13,6 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   readonly userStatus?: string;
+  @IsString()
+  readonly tribe?: string;
 }
