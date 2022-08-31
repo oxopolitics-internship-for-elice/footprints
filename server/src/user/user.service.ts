@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from './dto/add.user.dto';
 import { Model } from 'mongoose';
@@ -11,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel('users')
+    @InjectModel(User.name)
     private readonly userModel: Model<UserDocument>,
   ) {}
 
@@ -49,10 +45,39 @@ export class UserService {
   }
 
   async updateRefreshToken(email: string, refreshToken: string) {
-    await this.userModel.findOneAndUpdate(
-      { email: email },
-      { refreshToken: refreshToken },
+    await this.userModel.findOneAndUpdate({ email: email }, { refreshToken: refreshToken }, { new: true });
+  }
+
+  async setUserPoll(userId, issueId, poll) {
+    const result = Object.keys(poll).find((key) => poll[key] === true);
+    const pollResult = { issueId: issueId, vote: result };
+    const newUser = await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        $push: { pollResults: pollResult },
+      },
       { new: true },
     );
+    console.log('newUser: ', newUser);
+    return newUser;
+  }
+
+  async getUserPollResult(userId, issueId) {
+    const issueUser = await this.userModel.find({ _id: userId }).find({ 'pollResults.issueId': issueId });
+
+    return issueUser;
+  }
+
+  async deleteUserPollResult(userId, issueId) {
+    const issueUser = this.getUserPollResult(userId, issueId);
+    const result = await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { pollResults: { issueId: issueId } } },
+    );
+    if (result) {
+      return true;
+    } else {
+      return null;
+    }
   }
 }

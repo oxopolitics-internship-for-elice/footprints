@@ -1,9 +1,4 @@
-import {
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { AuthGuard } from '@nestjs/passport';
@@ -12,11 +7,7 @@ import { AuthService } from '../auth.service';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(
-    private authService: AuthService,
-    private userService: UserService,
-    private jwtService: JwtService,
-  ) {
+  constructor(private authService: AuthService, private userService: UserService, private jwtService: JwtService) {
     super();
   }
 
@@ -61,9 +52,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const tokenExpirationTime = new Date(tokenVerify['exp'] * 1000);
 
       const currentTime = new Date();
-      const timeToRemain = Math.floor(
-        (tokenExpirationTime.getTime() - currentTime.getTime()) / 1000 / 60,
-      );
+      const timeToRemain = Math.floor((tokenExpirationTime.getTime() - currentTime.getTime()) / 1000 / 60);
       console.log(timeToRemain);
 
       //accesstoken이 로그인토큰이 아니라면 verify 결과 반환
@@ -75,15 +64,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       const LIMIT = 5;
       if (timeToRemain < LIMIT) {
         const user = await this.userService.getOne(tokenVerify.email);
-        const refreshToken = await this.authService.validateToken(
-          user.refreshToken,
-        );
-        const refreshTokenUser = await this.userService.getOne(
-          refreshToken.email,
-        );
-        const newToken = await this.authService.createLoginToken(
-          refreshTokenUser,
-        );
+        const refreshToken = await this.authService.validateToken(user.refreshToken);
+        const refreshTokenUser = await this.userService.getOne(refreshToken.email);
+        const newToken = await this.authService.createLoginToken(refreshTokenUser);
 
         return {
           user: refreshTokenUser,
