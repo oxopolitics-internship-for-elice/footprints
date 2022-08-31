@@ -101,12 +101,12 @@ const LighterDiv = styled.div`
 `;
 const Title = styled.div`
   font-size: 16px;
-  font-weight: 600;
-  padding: 10px 0 10px 0;
+  font-weight: 800;
+  padding-top: 10px;
 `;
 const Content = styled.div`
   font-size: 16px;
-  padding: 10px 0 10px 0;
+  padding: 5px 0 30px 0;
 `;
 type ButtonProps = {
   toggle: boolean;
