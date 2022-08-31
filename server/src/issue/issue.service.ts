@@ -85,20 +85,6 @@ export class IssueService {
     return allIssues;
   }
 
-  async getGraphTribe() {
-    const tribes = await this.issueModel.find().select('_id poll');
-    console.log(tribes);
-    const tribeResult = await this.issueModel.aggregate([
-      {
-        $project: {
-          poll: 1,
-        },
-      },
-    ]);
-
-    return tribeResult;
-  }
-
   async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
     const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });

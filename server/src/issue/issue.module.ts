@@ -5,7 +5,6 @@ import { issueSchema, Issue } from 'src/schemas/issue.schema';
 import { politicianSchema, Politician } from 'src/schemas/politician.schema';
 import { IssueController } from './issue.controller';
 import { IssueService } from './issue.service';
-import { UserModule } from 'src/user/user.module';
 import { UserService } from 'src/user/user.service';
 import { userSchema, User } from 'src/schemas/user.schema';
 @Module({

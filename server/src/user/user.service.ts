@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from './dto/add.user.dto';
 import { Model } from 'mongoose';
