@@ -6,6 +6,7 @@ import styled from '@emotion/styled';
 import errorHandler from '@/api/ErrorHandler';
 import StandbyIssueAPI from '@/api/StandbyIssueAPI';
 import Loading from '@components/base/Loading';
+import { Alert } from '@components/base/Alert';
 
 export interface IssueProps {
   issue: IssueTypes;
@@ -51,7 +52,10 @@ const StandbyIssue = (): JSX.Element => {
       },
     );
     if (maxPage && pageNum > maxPage) {
-      alert('더 이상 로드할 컨텐츠가 없습니다.');
+      Alert.fire({
+        icon: 'error',
+        title: '마지막 페이지입니다.',
+      });
       return;
     }
     observer.observe(targetRef.current);
