@@ -1,3 +1,4 @@
+import React from 'react';
 import ServiceInfo from '@/components/home/ServiceInfo';
 import { FullPage, Slide } from 'react-full-page';
 import HomePolitician from '@/components/home/HomePolitician';
@@ -10,10 +11,10 @@ const SlideFullPage = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
   const politicansName = fetchedPoliticans.map(
     (politician: PoliticiansTypes) => {
-      if (!politician?.name) {
+      if (!politician?.politicianInfo[0].name) {
         return 'null';
       }
-      return politician.name;
+      return politician?.politicianInfo[0].name;
     },
   );
   const politicansID = fetchedPoliticans.map(

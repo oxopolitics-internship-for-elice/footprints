@@ -7,6 +7,7 @@ import theme from '@/styles/theme';
 import { RecoilRoot } from 'recoil';
 import { CookiesProvider } from 'react-cookie';
 import { ThemeProvider } from '@emotion/react';
+import Layout from './components/layout/Layout';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <ThemeProvider theme={theme}>
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <GlobalStyle />
       <HelmetProvider>
         <CookiesProvider>
-          <App />
+          <Layout>
+            <App />
+          </Layout>
         </CookiesProvider>
       </HelmetProvider>
     </RecoilRoot>

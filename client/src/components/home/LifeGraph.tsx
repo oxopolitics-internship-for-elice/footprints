@@ -12,6 +12,7 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import styled from '@emotion/styled';
 import { IssueTypes } from '@/types/IssueTypes';
+import { useState, useEffect } from 'react';
 import dateFormatter from '@/utils/DateFormatter';
 
 ChartJS.register(
@@ -25,14 +26,14 @@ ChartJS.register(
 );
 
 interface lifeGraphProps {
-  issues: IssueTypes[];
+  issues: any[];
 }
 
 const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
-  const graphData = issues.map(
-    (issue: { poll: { pro: number; con: number } }) =>
-      issue.poll.pro - issue.poll.con,
-  );
+  // const issues: IssueTypes[] = useRecoilValue(issueState);
+  // const issueDates: Date[] = useRecoilValue(issueDateState);
+
+  const graphData = issues.map((issue: any) => issue.totalPolls);
 
   const issueDates = issues.map(issue => dateFormatter(issue.issueDate));
 
@@ -44,17 +45,6 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
       },
       tooltip: {
         enabled: false,
-      },
-      datalabels: {
-        formatter: function (value: any, context: any) {
-          const max = Math.max(...context.dataset.data);
-          const min = Math.min(...context.dataset.data);
-          if (value === max || value === min) {
-            return value;
-          } else {
-            return '';
-          }
-        },
       },
     },
     scales: {
@@ -101,13 +91,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
 
   return (
     <GraphContainer>
-      <Line
-        width={'1300px'}
-        height={'400px'}
-        data={data}
-        options={options}
-        plugins={[ChartDataLabels]}
-      />
+      <Line width={'1300px'} height={'400px'} data={data} options={options} />
     </GraphContainer>
   );
 };
