@@ -98,7 +98,7 @@ const SubContainer = styled.div`
 `;
 const Date = styled.div`
   color: ${theme.colors.thirdColor};
-  font-size: 12px;
+  font-size: 14px;
 `;
 const BolderSpan = styled.span`
   font-weight: bolder;
@@ -111,7 +111,7 @@ const LighterDiv = styled.div`
 const Title = styled.div`
   font-size: 16px;
   font-weight: 800;
-  padding-top: 10px;
+  padding-top: 5px;
 `;
 const Content = styled.div`
   font-size: 16px;

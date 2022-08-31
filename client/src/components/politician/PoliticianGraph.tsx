@@ -95,9 +95,8 @@ const PoliticianGraph = (): JSX.Element => {
   const name = useRecoilValue(PoliticianNameState).find(
     (politician: any) => politician[id],
   )[id];
-  console.log(name);
 
-  function ClickHander(
+  function ClickHandler(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
   ) {
@@ -275,7 +274,7 @@ const PoliticianGraph = (): JSX.Element => {
             <Line
               ref={chartRef}
               onClick={event => {
-                let point = ClickHander(
+                let point = ClickHandler(
                   getElementAtEvent(chartRef.current, event),
                   event,
                 );
