@@ -116,11 +116,18 @@ export class IssueController {
     try {
       const userId = request.user._id;
       const issueUser = await this.userService.getUserPollResult(userId, issueId);
-      const vote = Object.values(poll).find((key) => key === true);
-      console.log(vote);
+      console.log('issueUser: ', issueUser);
+      let vote = '';
+      for (const [key, value] of Object.entries(poll)) {
+        if (value === true) {
+          vote = key;
+        }
+      }
+
+      console.log('vote:', vote);
 
       //유저id와 이슈id로 조회되는 유저 정보가 없다면 투표 결과 등록
-      if (Object.keys(issueUser).length !== 0) {
+      if (Object.keys(issueUser).length === 0) {
         const issueUser = await this.userService.setUserPoll(userId, issueId, poll);
         const issue = await this.issueService.setIssuePoll(issueId, poll);
         if (issueUser && issue) {
@@ -129,12 +136,14 @@ export class IssueController {
           throw new Error('failed to set user info or issue');
         }
       } else {
+        // 이슈id로 조회되는 유저정보에 vote필드가 있고 현재 투표 결과와 다르다면 업데이트
         const voteExist = issueUser[0].pollResults.find((key) => key.issueId === issueId).vote;
+        console.log('vote exist?: ', voteExist);
+        console.log('vote: ', vote);
 
         if (voteExist === vote) {
           return response.json({ message: 'same vote' });
         } else {
-          // vote로 pollResults의 해당 이슈에 대한 vote 필드 업데이트
           const newResult = await this.userService.updateUserPoll(userId, issueId, vote);
           if (newResult) {
             return response.json({ message: 'success', before: voteExist, now: vote });
