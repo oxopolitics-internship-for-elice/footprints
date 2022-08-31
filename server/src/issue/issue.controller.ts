@@ -93,11 +93,9 @@ export class IssueController {
   async setIssuePoll(@Param('issueId') id: string, @Body() poll: SetIssuePollDto, @Res() response, @Req() request) {
     try {
       const tribe = request.user.tribe;
-      console.log('컨트롤러 부족:', tribe);
       const issue = await this.issueService.setIssuePoll(id, poll, tribe);
       if (issue) {
         return response.json({ message: 'success' });
-        console.log(issue);
       }
     } catch (err) {
       console.log(err);

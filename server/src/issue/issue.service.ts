@@ -6,6 +6,7 @@ import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
+import { validateTribe } from 'src/common/validateTribe';
 import { Politician, PoliticianDocument } from '../schemas/politician.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
@@ -162,33 +163,113 @@ export class IssueService {
     const proResult = await this.pollcountPro(id, tribe);
     const neuResult = await this.pollcountNeu(id, tribe);
     const conResult = await this.pollcountCon(id, tribe);
-    if (regiData.pro === true) {
-      await this.issueModel.findOneAndUpdate(
-        { _id: id },
-        {
-          $set: {
-            poll.[tribe]: { pro: proResult + 1, neu: neuResult, con: conResult },
-          },
-        },
-      );
-    } else if (regiData.neu === true) {
-      await this.issueModel.updateOne(
-        { _id: id },
-        {
-          $set: {
-            poll: { pro: proResult, neu: neuResult + 1, con: conResult },
-          },
-        },
-      );
-    } else {
-      await this.issueModel.updateOne(
-        { _id: id },
-        {
-          $set: {
-            poll: { pro: proResult, neu: neuResult, con: conResult + 1 },
-          },
-        },
-      );
+    const tribes = validateTribe(tribe);
+    const { pro, neu, con } = regiData;
+    switch (tribes) {
+      case 'tiger':
+        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+          await this.issueModel.findOneAndUpdate(
+            { _id: id },
+            {
+              $set: {
+                'poll.tiger': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+                'poll.total': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+              },
+            },
+          );
+        }
+      case 'hippo':
+        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+          await this.issueModel.findOneAndUpdate(
+            { _id: id },
+            {
+              $set: {
+                'poll.hippo': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+                'poll.total': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+              },
+            },
+          );
+        }
+      case 'elephant':
+        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+          await this.issueModel.findOneAndUpdate(
+            { _id: id },
+            {
+              $set: {
+                'poll.elephant': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+                'poll.total': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+              },
+            },
+          );
+        }
+      case 'dinosaur':
+        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+          await this.issueModel.findOneAndUpdate(
+            { _id: id },
+            {
+              $set: {
+                'poll.dinosaur': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+                'poll.total': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+              },
+            },
+          );
+        }
+      case 'lion':
+        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+          await this.issueModel.findOneAndUpdate(
+            { _id: id },
+            {
+              $set: {
+                'poll.lion': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+                'poll.total': {
+                  pro: pro ? proResult + 1 : proResult,
+                  neu: neu ? neuResult + 1 : neuResult,
+                  con: con ? conResult + 1 : conResult,
+                },
+              },
+            },
+          );
+        }
+        break;
+      default:
+        console.log('존재하지 않는 부족입니다.');
+        break;
     }
     return true;
   }
