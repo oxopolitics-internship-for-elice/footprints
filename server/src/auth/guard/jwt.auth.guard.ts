@@ -16,7 +16,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const res = context.switchToHttp().getResponse();
     // const cookie = req.cookies;
     // console.log('cookie: ', cookie);
-    console.log('req.headers: ', req.headers);
+    // console.log('req.headers: ', req.headers);
     const { authorization } = req.headers;
     if (!authorization) {
       throw new HttpException('토큰 전송 에러', HttpStatus.UNAUTHORIZED);
@@ -26,7 +26,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     // console.log('token: ', token);
     const token = authorization.replace('Bearer ', '');
     const validatedToken = await this.validate(token);
-    console.log('validatedToken', validatedToken);
+    // console.log('validatedToken', validatedToken);
 
     //검증을 거친 토큰이 재발급된 토큰이면 헤더에 accesstoken으로 새로 발급한 토큰을 붙임
     if (validatedToken.reissueToken) {
@@ -41,19 +41,19 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   async validate(token: string) {
     try {
-      console.log('token from validate:', token);
-      console.log('type of token: ', typeof token);
+      // console.log('token from validate:', token);
+      // console.log('type of token: ', typeof token);
       // const tokenVerify = await this.authService.validateToken(token);
       const tokenVerify = await this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET_KEY,
       });
-      console.log('verified token: ', tokenVerify);
+      // console.log('verified token: ', tokenVerify);
 
       const tokenExpirationTime = new Date(tokenVerify['exp'] * 1000);
 
       const currentTime = new Date();
       const timeToRemain = Math.floor((tokenExpirationTime.getTime() - currentTime.getTime()) / 1000 / 60);
-      console.log(timeToRemain);
+      // console.log(timeToRemain);
 
       //accesstoken이 로그인토큰이 아니라면 verify 결과 반환
       if (tokenVerify.userToken !== 'loginToken') {
