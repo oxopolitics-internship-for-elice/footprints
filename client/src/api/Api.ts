@@ -40,8 +40,8 @@ async function patch(endpoint: any, data: any) {
   // JSON.stringify 함수: Javascript 객체를 JSON 형태로 변환함.
   // 예시: {name: "Kim"} => {"name": "Kim"}
   const bodyData = JSON.stringify(data);
-  console.log(`%cPUT 요청: ${serverUrl + endpoint}`, 'color: #059c4b;');
-  console.log(`%cPUT 요청 데이터: ${bodyData}`, 'color: #059c4b;');
+  console.log(`%cPATCH 요청: ${serverUrl + endpoint}`, 'color: #059c4b;');
+  console.log(`%cPATCH 요청 데이터: ${bodyData}`, 'color: #059c4b;');
 
   return axios.patch(serverUrl + endpoint, bodyData, {
     headers: {

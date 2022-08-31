@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '@/components/Base/Modal';
+import Modal from '@/components/base/Modal';
 import styled from '@emotion/styled';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
@@ -22,6 +22,7 @@ const IssueAddModal = ({
   const [issueTitle, setIssueTitle] = React.useState('');
   const [issueContent, setIssueContent] = React.useState('');
   const { politicianID } = useParams();
+
   registerLocale('ko', ko);
 
   const handleChangeDate = (date: Date) => {
@@ -45,6 +46,7 @@ const IssueAddModal = ({
         title: '날짜를 선택해주세요.',
       });
     }
+
     if (!politicianID) {
       return Alert.fire({
         icon: 'error',
@@ -59,6 +61,7 @@ const IssueAddModal = ({
         title: issueTitle,
         content: issueContent,
       };
+
       const { data } = await PoliticianAPI.postIssue(body);
       if (data) {
         Alert.fire({
