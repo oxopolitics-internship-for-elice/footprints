@@ -219,108 +219,108 @@ export class IssueService {
     return value[tribe].neu;
   }
 
-  async setIssuePoll(id, regiData: SetIssuePollDto, tribe): Promise<boolean> {
+  async setIssuePoll(id, vote, voteExist, tribe): Promise<boolean> {
     const proResult = await this.pollcountPro(id, tribe);
     const neuResult = await this.pollcountNeu(id, tribe);
     const conResult = await this.pollcountCon(id, tribe);
     const tribes = validateTribe(tribe);
-    const { pro, neu, con } = regiData;
+
     switch (tribes) {
       case 'tiger':
-        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+        if (vote) {
           await this.issueModel.findOneAndUpdate(
             { _id: id },
             {
               $set: {
                 'poll.tiger': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
                 'poll.total': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
               },
             },
           );
         }
       case 'hippo':
-        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+        if (vote) {
           await this.issueModel.findOneAndUpdate(
             { _id: id },
             {
               $set: {
                 'poll.hippo': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
                 'poll.total': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
               },
             },
           );
         }
       case 'elephant':
-        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+        if (vote) {
           await this.issueModel.findOneAndUpdate(
             { _id: id },
             {
               $set: {
                 'poll.elephant': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
                 'poll.total': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
               },
             },
           );
         }
       case 'dinosaur':
-        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+        if (vote) {
           await this.issueModel.findOneAndUpdate(
             { _id: id },
             {
               $set: {
                 'poll.dinosaur': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
                 'poll.total': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
               },
             },
           );
         }
       case 'lion':
-        if (regiData.pro === true || regiData.neu === true || regiData.con === true) {
+        if (vote) {
           await this.issueModel.findOneAndUpdate(
             { _id: id },
             {
               $set: {
                 'poll.lion': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
                 'poll.total': {
-                  pro: pro ? proResult + 1 : proResult,
-                  neu: neu ? neuResult + 1 : neuResult,
-                  con: con ? conResult + 1 : conResult,
+                  pro: vote === 'pro' ? proResult + 1 : voteExist === 'pro' ? proResult - 1 : proResult,
+                  neu: vote === 'neu' ? neuResult + 1 : voteExist === 'neu' ? neuResult - 1 : neuResult,
+                  con: vote === 'con' ? conResult + 1 : voteExist === 'con' ? conResult - 1 : conResult,
                 },
               },
             },
@@ -328,7 +328,7 @@ export class IssueService {
         }
         break;
       default:
-        console.log('존재하지 않는 부족입니다.');
+        throw new Error('tribe data error');
         break;
     }
     return true;

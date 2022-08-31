@@ -144,7 +144,7 @@ export class IssueController {
       //유저id와 이슈id로 조회되는 유저 정보가 없다면 투표 결과 등록
       if (Object.keys(issueUser).length === 0) {
         const issueUser = await this.userService.setUserPoll(userId, issueId, poll);
-        const issue = await this.issueService.setIssuePoll(issueId, poll, tribe);
+        const issue = await this.issueService.setIssuePoll(issueId, vote, null, tribe);
         if (issueUser && issue) {
           return response.json({ message: 'success', now: vote });
         } else {
@@ -158,6 +158,8 @@ export class IssueController {
           return response.json({ message: 'same vote' });
         } else {
           const newResult = await this.userService.updateUserPoll(userId, issueId, vote);
+
+          const result = await this.issueService.setIssuePoll(issueId, vote, voteExist, tribe);
           if (newResult) {
             return response.json({ message: 'success', before: voteExist, now: vote });
           }
