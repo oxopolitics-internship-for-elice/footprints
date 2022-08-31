@@ -27,6 +27,9 @@ export class Issue {
   @Prop({ default: { pro: 0, con: 0 }, type: mongoose.Schema.Types.Mixed })
   regi;
 
+  @Prop()
+  regiDueDate: Date;
+
   @Prop({
     default: {
       lion: { pro: 0, neu: 0, con: 0 },
@@ -45,6 +48,9 @@ export class Issue {
 
   @Prop()
   pollDate: Date;
+
+  @Prop()
+  pollDueDate: Date;
 
   @Prop({ required: true })
   title: string;

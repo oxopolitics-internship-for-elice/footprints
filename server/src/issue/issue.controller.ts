@@ -14,6 +14,7 @@ export class IssueController {
   constructor(private issueService: IssueService, private userService: UserService) {}
 
   // 이슈 등록
+  @UseGuards(JwtAuthGuard)
   @Post()
   async addIssue(@Body() issueData: AddIssueDto, @Res() response) {
     try {
@@ -27,6 +28,7 @@ export class IssueController {
   }
 
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getIssues(@Query() issueQuery: QueryIssueDto, @Res() response) {
     try {
@@ -149,20 +151,20 @@ export class IssueController {
   }
 
   // (관리자) 이슈 내용 수정
-  @Patch('/:issueId/content')
-  async setIssueContent(@Param('issueId') id: string, @Body() content: SetIssueContentDto) {
-    try {
-      // const issue = await this.issueService.setIssueContent(id, content);
-      return {};
-    } catch (err) {}
-  }
+  // @Patch('/:issueId/content')
+  // async setIssueContent(@Param('issueId') id: string, @Body() content: SetIssueContentDto) {
+  //   try {
+  //     // const issue = await this.issueService.setIssueContent(id, content);
+  //     return {};
+  //   } catch (err) {}
+  // }
 
   // (관리자) 이슈 상태 수정
-  @Patch('/:issueId/regiStatus')
-  async setIssueRegiStatus(@Param('issueId') id: string, @Body() regiStatus: SetIssueRegiStatusDto) {
-    try {
-      // const issue = await this.issueService.setIssueStatus(id, regiStatus);
-      return {};
-    } catch (err) {}
-  }
+  // @Patch('/:issueId/regiStatus')
+  // async setIssueRegiStatus(@Param('issueId') id: string, @Body() regiStatus: SetIssueRegiStatusDto) {
+  //   try {
+  //     // const issue = await this.issueService.setIssueStatus(id, regiStatus);
+  //     return {};
+  //   } catch (err) {}
+  // }
 }
