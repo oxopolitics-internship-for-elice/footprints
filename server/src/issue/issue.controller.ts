@@ -78,8 +78,6 @@ export class IssueController {
   //   }
   // }
 
-  
-
   @UseGuards(JwtAuthGuard)
   @Patch('/:issueId/regi')
   async setIssueRegi(@Param('issueId') id: string, @Body() regi: SetIssueRegiDto, @Req() request, @Res() response) {
@@ -103,7 +101,6 @@ export class IssueController {
       console.log(err);
     }
   }
-
 
   //그래프 점 클릭시 모달창에서 쓸 이슈 및 투표 정보(pro, con 정보)
   @UseGuards(JwtAuthGuard)
@@ -147,7 +144,7 @@ export class IssueController {
       //유저id와 이슈id로 조회되는 유저 정보가 없다면 투표 결과 등록
       if (Object.keys(issueUser).length === 0) {
         const issueUser = await this.userService.setUserPoll(userId, issueId, poll);
-        const issue = await this.issueService.setIssuePoll(id, poll, tribe);
+        const issue = await this.issueService.setIssuePoll(issueId, poll, tribe);
         if (issueUser && issue) {
           return response.json({ message: 'success', now: vote });
         } else {
@@ -170,49 +167,6 @@ export class IssueController {
       throw new Error(err);
     }
   }
-
-  // 이슈 여론 투표
-  @UseGuards(JwtAuthGuard)
-  @Patch('/:issueId/poll')
-  async setIssuePoll(@Param('issueId') id: string, @Body() poll: SetIssuePollDto, @Res() response, @Req() request) {
-    try {
-      const tribe = request.user.tribe;
-      const issue = await this.issueService.setIssuePoll(id, poll, tribe);
-      if (issue) {
-        return response.json({ message: 'success' });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
-  // 로그인한 유저의 이슈 여론 투표
-  // @UseGuards(JwtAuthGuard)
-  // @Patch('/:issueId/user-poll')
-  // async setUserIssuePoll(
-  //   @Param('issueId') issueId: string,
-  //   @Body() poll: SetIssuePollDto,
-  //   @Req() request,
-  //   @Res() response,
-  // ) {
-  //   try {
-  //     const userId = request.user._id;
-  //     const issueUser = await this.userService.getUserPollResult(userId, issueId);
-
-  //     if (Object.keys(issueUser).length === 0) {
-  //       const userPoll = await this.userService.setUserPoll(userId, issueId, poll);
-  //       // const issue = await this.issueService.setIssuePoll(issueId, poll);
-  //       if (userPoll && issue) {
-  //         return response.json({ message: 'success', possible: false });
-  //       }
-  //     } else {
-  //       return response.json({ message: 'failure - already voted', possible: false });
-  //     }
-  //   } catch (err) {
-  //     throw new Error(err);
-  //   }
-  // }
-
 
   // 로그인한 유저의 이슈 투표 취소
   @UseGuards(JwtAuthGuard)
