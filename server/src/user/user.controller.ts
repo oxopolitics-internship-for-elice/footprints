@@ -1,19 +1,9 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/add.user.dto';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
   @Get()
@@ -31,8 +21,13 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/:email')
-  async getOne(@Res() response, @Param('email') email: string) {
+  async getOne(@Req() request, @Res() response, @Param('email') email: string) {
     try {
+      const reqUser = request.user;
+      console.log('req.user: ', reqUser);
+      const userId = reqUser._id;
+      const userById = await this.userService.getUserById(userId);
+      console.log('userById: ', userById);
       const user = await this.userService.getOne(email);
       return response.status(HttpStatus.OK).json({
         message: 'found successfully',

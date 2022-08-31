@@ -114,8 +114,8 @@ const IssueAddModal = ({
                   <FormTextArea
                     name="content"
                     rows={1}
-                    placeholder="이슈 내용을 100자 내로 입력해주세요."
-                    maxLength={100}
+                    placeholder="이슈 내용을 200자 내로 입력해주세요."
+                    maxLength={200}
                     value={issueContent}
                     onChange={event => setIssueContent(event.target.value)}
                   />
