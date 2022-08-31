@@ -5,6 +5,7 @@ import dateFormatter from '@/utils/DateFormatter';
 import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import { useState } from 'react';
+import errorHandler from '@/api/ErrorHandler';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
@@ -20,16 +21,24 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         if (issue._id === targetElem.dataset.id) {
           if (targetElem.innerText === '반대') {
             issue.regi.con += 1;
-            await RegiAPI.patch(_id, {
-              pro: false,
-              con: true,
-            });
+            try {
+              await RegiAPI.patch(_id, {
+                pro: false,
+                con: true,
+              });
+            } catch (error) {
+              errorHandler(error);
+            }
           } else {
             issue.regi.pro += 1;
-            await RegiAPI.patch(_id, {
-              pro: true,
-              con: false,
-            });
+            try {
+              await RegiAPI.patch(_id, {
+                pro: true,
+                con: false,
+              });
+            } catch (error) {
+              errorHandler(error);
+            }
           }
         }
       });
