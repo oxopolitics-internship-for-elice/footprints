@@ -14,9 +14,10 @@ export class IssueController {
   // 이슈 등록
   @UseGuards(JwtAuthGuard)
   @Post()
-  async addIssue(@Body() issueData: AddIssueDto, @Res() response) {
+  async addIssue(@Body() issueData: AddIssueDto, @Req() request, @Res() response) {
     try {
-      const issue = await this.issueService.addIssue(issueData);
+      const { _id } = await request.user;
+      const issue = await this.issueService.addIssue(issueData, _id);
       if (issue) {
         return response.json({ message: 'success' });
       }

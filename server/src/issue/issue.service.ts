@@ -22,11 +22,11 @@ export class IssueService {
     private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async addIssue(body: AddIssueDto): Promise<boolean> {
+  async addIssue(body: AddIssueDto, regiUser: string): Promise<boolean> {
     const week = 7 * 24 * 60 * 60 * 1000;
     const regiDueDate = new Date(Date.now() + week);
 
-    const { targetPolitician, regiUser, issueDate, content, title } = body;
+    const { targetPolitician, issueDate, content, title } = body;
 
     const issueData = { targetPolitician, regiUser, issueDate, content, title, regiDueDate };
     const instance = await new this.issueModel(issueData);
@@ -52,7 +52,6 @@ export class IssueService {
           issueDate: 1,
           totalPolls: { $add: ['$poll.total.pro', '$poll.total.neu', '$poll.total.con'] },
           score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
-          poll: 1,
         },
       },
       { $sort: { totalPolls: -1 } },
