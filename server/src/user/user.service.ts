@@ -3,6 +3,7 @@ import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from './dto/add.user.dto';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { SetIssueRegiDto } from '../issue/dto/issue.setIssueRegi.dto';
 
 @Injectable()
 export class UserService {
@@ -59,6 +60,31 @@ export class UserService {
       { new: true },
     );
     console.log('newUser: ', newUser);
+    return newUser;
+  }
+
+  async updateUserPoll(userId, issueId, vote) {
+    const newUser = await this.userModel.findOneAndUpdate(
+      { _id: userId, pollResults: { $elemMatch: { issueId: issueId } } },
+      {
+        $set: { 'pollResults.$.vote': vote },
+      },
+      { new: true },
+    );
+
+    return newUser;
+  }
+
+  async setUserIssueRegi(userId, issueId, regi: SetIssueRegiDto) {
+    const regiResult = Object.keys(regi).find((key) => regi[key] === true);
+    const regiPollResult = { issueId: issueId, agree: regiResult };
+    const newUser = await this.userModel.findOneAndUpdate(
+      { _id: userId },
+      {
+        $push: { pollResults: regiPollResult },
+      },
+      { new: true },
+    );
     return newUser;
   }
 
