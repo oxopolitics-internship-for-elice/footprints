@@ -10,9 +10,12 @@ export type PoliticianIssueType = {
   score: number;
   targetPolitician: string;
 };
-
+export type PoliticianInfo = {
+  name: string;
+};
 export interface PoliticiansTypes {
   _id: string;
   name: string;
   issues: PoliticianIssueType[];
+  politicianInfo: PoliticianInfo[];
 }

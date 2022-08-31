@@ -14,14 +14,23 @@ import {
 import Circle from '@/assets/img/circle.png';
 import Triangle from '@/assets/img/triangle.png';
 import X from '@/assets/img/x.png';
-
-import dateFormatter from '@/utils/DateFormatter';
+import { PollFormatter, ScoreFormatter } from '@/utils/Formatter';
+import DateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
 import { getElementAtEvent, Line } from 'react-chartjs-2';
+import dinosaur from '@/assets/tribe/dinosaur.png';
+import elephant from '@/assets/tribe/elephant.png';
+import hippo from '@/assets/tribe/hippo.png';
+import lion from '@/assets/tribe/lion.png';
+import tiger from '@/assets/tribe/tiger.png';
+
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import { BsArrowRepeat } from 'react-icons/bs';
-import { deflateRaw } from 'zlib';
+import { PoliticiansTypes } from '@/types/PoliticiansTypes';
+import { useRecoilValue } from 'recoil';
+import PoliticiansState from '@/store/PoliticiansState';
+import { useParams } from 'react-router-dom';
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,10 +41,19 @@ ChartJS.register(
   Legend,
   Filler,
 );
-type poll = {
+type pollDeep = {
   pro: number;
   neu: number;
   con: number;
+};
+
+type poll = {
+  dinosaur: pollDeep;
+  elephant: pollDeep;
+  hippo: pollDeep;
+  lion: pollDeep;
+  tiger: pollDeep;
+  total: pollDeep;
 };
 
 export interface ResTypes {
@@ -86,6 +104,14 @@ const PoliticianGraph = (): JSX.Element => {
   const [NextPageable, isNextPageable] = useState<boolean>(true);
   const [contentId, setContentId] = useState<any>([]);
   const [resData, setResData] = useState<any>([]);
+  const params = useParams();
+  const fetchedPoliticans = useRecoilValue(PoliticiansState);
+  const politicansName = fetchedPoliticans.map(
+    (politician: PoliticiansTypes) => {
+      return [politician?._id, politician.politicianInfo[0].name];
+    },
+  );
+
   function ClickHander(
     element: InteractionItem[],
     event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
@@ -102,26 +128,27 @@ const PoliticianGraph = (): JSX.Element => {
   const getData = async (index: number | Number) => {
     let target = '6303bed2e9d44f884ed1d640';
     const res = await GraphAPI.getGraph(target, index);
-
+    console.log(res);
     res.data.data.map(async (res: ResTypes, index: number) => {
       setResData((current: any) => {
-        let tempdata = dateFormatter(res.issueDate);
+        let tempData = DateFormatter(res.issueDate);
+        let tempPoll = PollFormatter(res);
+        let tempScore = ScoreFormatter(res);
 
         if (index === 0) {
-          const issueDate = [tempdata];
-          const poll = [res.poll];
+          const issueDate = [tempData];
+          const poll = [tempPoll];
           const content = [res.content];
-          const score = [res.poll.pro - res.poll.con];
+          const score = [tempScore];
           const id = [res._id];
           const title = [res.title];
 
           return { issueDate, poll, content, score, id, title };
         } else {
-          const issueDate = [...current.issueDate, tempdata];
-          const poll = [...current.poll, res.poll];
+          const issueDate = [...current.issueDate, tempData];
+          const poll = [...current.poll, tempPoll];
           const content = [...current.content, res.content];
-
-          const score = [...current.score, res.poll.pro - res.poll.con];
+          const score = [...current.score, tempScore];
           const id = [...current.id, res._id];
           const title = [...current.title, res.title];
 
@@ -132,26 +159,81 @@ const PoliticianGraph = (): JSX.Element => {
 
     isNextPageable(res.data.meta.hasNextPage);
   };
-
+  const Img = [dinosaur, elephant, hippo, lion, tiger];
+  const chartPoint = Img.map(img => {
+    const chartPoint = new Image();
+    chartPoint.src = img;
+    chartPoint.width = 30;
+    chartPoint.height = 30;
+    return chartPoint;
+  });
   const start = async () => {
     if (isFirst === true) {
       await getData(index);
       setIsFirst(false);
-    }
-    setData({
-      labels: resData.issueDate,
-      datasets: [
-        {
-          data: resData.score,
-          tension: 0.3,
-          fill: {
-            target: { value: 0 },
-            below: 'rgba(255, 26, 104, 0.2)',
-            above: 'rgba(75, 192, 192,0.2)',
+    } else {
+      setData({
+        labels: resData.issueDate,
+        datasets: [
+          {
+            data: resData.score.map((score: any) => {
+              return score.dinosaur.score;
+            }),
+            tension: 0.3,
+            borderColor: 'yellow',
+            pointStyle: chartPoint[0],
+            pointBorderColor: 'black',
+            pointRadius: 5,
           },
-        },
-      ],
-    });
+          {
+            data: resData.score.map((score: any) => {
+              return score.elephant.score;
+            }),
+            tension: 0.3,
+            borderColor: 'skyblue',
+            pointStyle: chartPoint[1],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            data: resData.score.map((score: any) => {
+              return score.hippo.score;
+            }),
+            tension: 0.3,
+            borderColor: 'gray',
+            pointStyle: chartPoint[2],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            data: resData.score.map((score: any) => {
+              return score.lion.score;
+            }),
+            tension: 0.3,
+            borderColor: 'red',
+            pointStyle: chartPoint[3],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            data: resData.score.map((score: any) => {
+              return score.tiger.score;
+            }),
+            tension: 0.3,
+            borderColor: 'pink',
+            pointStyle: chartPoint[4],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            data: resData.score.map((score: any) => {
+              return score.total.score;
+            }),
+            tension: 0.3,
+          },
+        ],
+      });
+    }
   };
 
   const getNextData = async () => {
@@ -195,7 +277,7 @@ const PoliticianGraph = (): JSX.Element => {
         font: {
           size: 30,
         },
-        text: '윤석열 인생 그래프',
+        text: `${params.politicianID} 인생 그래프`,
       },
       legend: {
         display: false,
@@ -293,8 +375,10 @@ const PoliticianGraph = (): JSX.Element => {
 export default PoliticianGraph;
 
 function darwTooltip(context: any, resData: ResDataTypes) {
+  const ImgTribe = [dinosaur, elephant, hippo, lion, tiger];
+  const ImgPoll = [Circle, Triangle, X];
+
   let tooltipEl = document.getElementById('chartjs-tooltip');
-  console.log(context);
   // Create element on first render
   if (!tooltipEl) {
     tooltipEl = document.createElement('div');
@@ -330,10 +414,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     const tableHead = document.createElement('div');
     const br = document.createElement('br');
 
-    function drow(div: Element, body: Element, index: number) {
-      const imgSrc = [Circle, Triangle, X];
-      const imageTh = document.createElement('div');
-      const image = document.createElement('img');
+    function drow(div: Element, body: pollDeep, index: number) {
       if (index === 0) {
         const Title = document.createElement('div');
         const TitleText = document.createTextNode(
@@ -342,7 +423,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
         Title.style.whiteSpace = 'nowrap';
         Title.style.overflow = 'hidden';
         Title.style.textOverflow = 'ellipsis';
-        Title.style.width = '330px';
+        Title.style.width = '500px';
         Title.style.height = '30px';
         Title.style.textAlign = 'center';
         Title.style.fontWeight = '700';
@@ -354,28 +435,51 @@ function darwTooltip(context: any, resData: ResDataTypes) {
         tableHead.appendChild(br);
       }
 
-      image.src = imgSrc[index];
-      image.height = 20;
-      image.width = 20;
-      image.style.position = 'relative';
-      image.style.top = '3px';
-      imageTh.style.padding = '10px';
-      image.style.display = 'inline-block';
-      imageTh.appendChild(image);
+      const imageTh = document.createElement('div');
+      const imageTribe = document.createElement('img');
+      const imageCircle = document.createElement('img');
+      const imageTriangle = document.createElement('img');
+      const imageX = document.createElement('img');
+      imageTribe.src = ImgTribe[index];
+      imageTribe.height = 80;
+      imageTribe.width = 80;
+      imageTh.appendChild(imageTribe);
+      imageTh.style.marginLeft = '50px';
+      imageTh.style.fontSize = '25px';
+      const img = [imageCircle, imageTriangle, imageX];
+      for (let i = 0; i <= 2; i++) {
+        const tempDiv = document.createElement('div');
+        img[i].src = ImgPoll[i];
+        img[i].height = 25;
+        img[i].width = 25;
 
-      const num = document.createTextNode(': ' + body);
-      imageTh.style.marginLeft = '120px';
+        const count =
+          i === 0
+            ? document.createTextNode(': ' + body.pro)
+            : i === 1
+            ? document.createTextNode(': ' + body.neu)
+            : document.createTextNode(': ' + body.con);
+        img[i].style.marginTop = '30px';
+        img[i].style.position = 'relative';
+        img[i].style.top = '5px';
+        tempDiv.style.display = 'inline';
+        tempDiv.style.flexDirection = 'row';
+        tempDiv.style.marginRight = '10px';
+        tempDiv.style.position = 'relative';
+        tempDiv.style.bottom = '20px';
 
-      imageTh.appendChild(num);
+        tempDiv.appendChild(img[i]);
+        tempDiv.appendChild(count);
+        imageTh.appendChild(tempDiv);
+      }
 
       div.appendChild(imageTh);
-      div.appendChild(br);
     }
 
     result[tooltipModel.dataPoints[0].dataIndex].forEach(
       (body: any, index: number) => {
         const div = document.createElement('div');
-        drow(div, body, index);
+        index === 5 ? null : drow(div, body, index);
         tableHead.appendChild(div);
       },
     );
@@ -405,8 +509,8 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = '#f5f5dc';
   tooltipEl.style.borderRadius = '5px';
-  tooltipEl.style.width = '330px';
-  tooltipEl.style.height = '225px';
+  tooltipEl.style.width = '500px';
+  tooltipEl.style.height = '600px';
 }
 
 interface Props {}
