@@ -26,11 +26,11 @@ import { PoliticianModule } from './politician/politician.module';
       },
     }),
 
-
     UserModule,
     AuthModule,
 
     UserModule,
+    AuthModule,
     IssueModule,
     PoliticianModule,
   ],

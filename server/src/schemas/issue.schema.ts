@@ -27,8 +27,18 @@ export class Issue {
   @Prop({ default: { pro: 0, con: 0 }, type: mongoose.Schema.Types.Mixed })
   regi;
 
+  @Prop()
+  regiDueDate: Date;
+
   @Prop({
-    default: { pro: 0, neu: 0, con: 0 },
+    default: {
+      lion: { pro: 0, neu: 0, con: 0 },
+      tiger: { pro: 0, neu: 0, con: 0 },
+      elephant: { pro: 0, neu: 0, con: 0 },
+      dinosaur: { pro: 0, neu: 0, con: 0 },
+      hippo: { pro: 0, neu: 0, con: 0 },
+      total: { pro: 0, neu: 0, con: 0 },
+    },
     type: mongoose.Schema.Types.Mixed,
   })
   poll;
@@ -38,6 +48,9 @@ export class Issue {
 
   @Prop()
   pollDate: Date;
+
+  @Prop()
+  pollDueDate: Date;
 
   @Prop({ required: true })
   title: string;

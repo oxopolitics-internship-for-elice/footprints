@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
-import { QueryIssueDto } from './dto/issue.query.dto';
+import { QueryIssueDto } from './dto/issue.paginationQuery.dto';
 import { SetIssueContentDto } from './dto/issue.setIssueContent.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
@@ -15,6 +15,7 @@ export class IssueController {
   constructor(private issueService: IssueService, private userService: UserService) {}
 
   // 이슈 등록
+  @UseGuards(JwtAuthGuard)
   @Post()
   async addIssue(@Body() issueData: AddIssueDto, @Res() response) {
     try {
@@ -28,6 +29,7 @@ export class IssueController {
   }
 
   // 정치인 메인페이지, 등록된 이슈(10개 사건 그래프)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async getIssues(@Query() issueQuery: QueryIssueDto, @Res() response) {
     try {
@@ -64,6 +66,20 @@ export class IssueController {
   }
 
   // 이슈 등록 찬반 투표
+
+  // 부족별 그래프
+  // @Get('/graphTribe')
+  // async getGraphTribe(@Res() response) {
+  //   try {
+  //     const graphTribe = await this.issueService.getGraphTribe();
+  //     return response.json(graphTribe);
+  //   } catch (err) {
+  //     return response.status(err.status).json(err.response);
+  //   }
+  // }
+
+  
+
   @UseGuards(JwtAuthGuard)
   @Patch('/:issueId/regi')
   async setIssueRegi(@Param('issueId') id: string, @Body() regi: SetIssueRegiDto, @Req() request, @Res() response) {
@@ -87,6 +103,7 @@ export class IssueController {
       console.log(err);
     }
   }
+
 
   //그래프 점 클릭시 모달창에서 쓸 이슈 및 투표 정보(pro, con 정보)
   @UseGuards(JwtAuthGuard)
@@ -115,6 +132,7 @@ export class IssueController {
   ) {
     try {
       const userId = request.user._id;
+      const tribe = request.user.tribe;
       const issueUser = await this.userService.getUserPollResult(userId, issueId);
       console.log('issueUser: ', issueUser);
       let vote = '';
@@ -129,7 +147,7 @@ export class IssueController {
       //유저id와 이슈id로 조회되는 유저 정보가 없다면 투표 결과 등록
       if (Object.keys(issueUser).length === 0) {
         const issueUser = await this.userService.setUserPoll(userId, issueId, poll);
-        const issue = await this.issueService.setIssuePoll(issueId, poll);
+        const issue = await this.issueService.setIssuePoll(id, poll, tribe);
         if (issueUser && issue) {
           return response.json({ message: 'success', now: vote });
         } else {
@@ -153,6 +171,49 @@ export class IssueController {
     }
   }
 
+  // 이슈 여론 투표
+  @UseGuards(JwtAuthGuard)
+  @Patch('/:issueId/poll')
+  async setIssuePoll(@Param('issueId') id: string, @Body() poll: SetIssuePollDto, @Res() response, @Req() request) {
+    try {
+      const tribe = request.user.tribe;
+      const issue = await this.issueService.setIssuePoll(id, poll, tribe);
+      if (issue) {
+        return response.json({ message: 'success' });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // 로그인한 유저의 이슈 여론 투표
+  // @UseGuards(JwtAuthGuard)
+  // @Patch('/:issueId/user-poll')
+  // async setUserIssuePoll(
+  //   @Param('issueId') issueId: string,
+  //   @Body() poll: SetIssuePollDto,
+  //   @Req() request,
+  //   @Res() response,
+  // ) {
+  //   try {
+  //     const userId = request.user._id;
+  //     const issueUser = await this.userService.getUserPollResult(userId, issueId);
+
+  //     if (Object.keys(issueUser).length === 0) {
+  //       const userPoll = await this.userService.setUserPoll(userId, issueId, poll);
+  //       // const issue = await this.issueService.setIssuePoll(issueId, poll);
+  //       if (userPoll && issue) {
+  //         return response.json({ message: 'success', possible: false });
+  //       }
+  //     } else {
+  //       return response.json({ message: 'failure - already voted', possible: false });
+  //     }
+  //   } catch (err) {
+  //     throw new Error(err);
+  //   }
+  // }
+
+
   // 로그인한 유저의 이슈 투표 취소
   @UseGuards(JwtAuthGuard)
   @Patch('/:issueId/abort')
@@ -173,20 +234,20 @@ export class IssueController {
   }
 
   // (관리자) 이슈 내용 수정
-  @Patch('/:issueId/content')
-  async setIssueContent(@Param('issueId') id: string, @Body() content: SetIssueContentDto) {
-    try {
-      // const issue = await this.issueService.setIssueContent(id, content);
-      return {};
-    } catch (err) {}
-  }
+  // @Patch('/:issueId/content')
+  // async setIssueContent(@Param('issueId') id: string, @Body() content: SetIssueContentDto) {
+  //   try {
+  //     // const issue = await this.issueService.setIssueContent(id, content);
+  //     return {};
+  //   } catch (err) {}
+  // }
 
   // (관리자) 이슈 상태 수정
-  @Patch('/:issueId/regiStatus')
-  async setIssueRegiStatus(@Param('issueId') id: string, @Body() regiStatus: SetIssueRegiStatusDto) {
-    try {
-      // const issue = await this.issueService.setIssueStatus(id, regiStatus);
-      return {};
-    } catch (err) {}
-  }
+  // @Patch('/:issueId/regiStatus')
+  // async setIssueRegiStatus(@Param('issueId') id: string, @Body() regiStatus: SetIssueRegiStatusDto) {
+  //   try {
+  //     // const issue = await this.issueService.setIssueStatus(id, regiStatus);
+  //     return {};
+  //   } catch (err) {}
+  // }
 }
