@@ -6,7 +6,7 @@ const PoliticanNameState = selector({
   get: ({ get }) => {
     const Politicians = get(PoliticansState);
     return Politicians.map((politician: any) => {
-      return { [politician._id]: politician.name };
+      return { [politician._id]: politician.politicianInfo[0].name };
     });
   },
 });
