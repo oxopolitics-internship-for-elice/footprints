@@ -9,15 +9,13 @@ export const serverUrl = (() => {
   }
   return window.location.origin;
 })();
-const cookie =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IndheW83ODEzQG5hdmVyLmNvbSIsInVzZXJUb2tlbiI6ImxvZ2luVG9rZW4iLCJpYXQiOjE2NjE4Mzg0NzQsImV4cCI6MTY2MjcwMjQ3NH0.C9vsRoce3wcL9mvQoxDNfXGBM52crBd8wBBpw9j_SCU';
 async function get(endpoint: any) {
   console.log(`%cGET 요청 ${serverUrl + endpoint}`, 'color: #a25cd1;');
 
   return axios.get(serverUrl + endpoint, {
     // JWT 엑세스토큰을 헤더에 담아 백엔드 서버에 보냄.
     headers: {
-      Authorization: `Bearer  ${cookie}`,
+      Authorization: `Bearer ${getCookie('access_token')}`,
     },
   });
 }
