@@ -6,7 +6,7 @@ import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import { useState } from 'react';
 import errorHandler from '@/api/ErrorHandler';
-import { errorAlert } from '../base/Alert';
+import { Alert, errorAlert } from '../base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
@@ -15,49 +15,67 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
-    setToggle(targetElem.innerText);
-    setIssueList((prev: any): IssueTypes[] => {
-      const prevIssueList: IssueTypes[] = JSON.parse(JSON.stringify(prev));
-      prevIssueList.forEach(async issue => {
-        if (issue._id === targetElem.dataset.id) {
-          if (targetElem.innerText === '반대') {
-            issue.regi.con += 1;
-
-            try {
-              const { data } = await RegiAPI.patch(_id, {
-                pro: false,
-                con: true,
-              });
-              if (data.hasVoted) {
-                errorAlert('이미 투표하셨습니다.');
-                issue.regi.con -= 1;
-                setToggle('');
+    try {
+      if (targetElem.innerText === '반대') {
+        const { data } = await RegiAPI.patch(_id, {
+          pro: false,
+          con: true,
+        });
+        if (data.hasVoted) {
+          errorAlert('이미 투표하셨습니다.');
+          setToggle('');
+        } else {
+          Alert.fire({
+            icon: 'success',
+            title: '투표되었습니다.',
+          });
+          setIssueList(prev =>
+            prev.map(item => {
+              if (item._id === _id) {
+                item.regi.con++;
               }
-            } catch (error) {
-              errorHandler(error);
-            }
-          } else {
-            issue.regi.pro += 1;
-            try {
-              const { data } = await RegiAPI.patch(_id, {
-                pro: true,
-                con: false,
-              });
-              if (data.hasVoted) {
-                errorAlert('이미 투표하셨습니다.');
-                issue.regi.pro -= 1;
-                setToggle('');
-              }
-            } catch (error) {
-              errorHandler(error);
-            }
-          }
+              return item;
+            }),
+          );
         }
-      });
-      return prevIssueList;
-    });
+      } else {
+        const { data } = await RegiAPI.patch(_id, {
+          pro: true,
+          con: false,
+        });
+        if (data.hasVoted) {
+          errorAlert('이미 투표하셨습니다.');
+          setToggle('');
+        } else {
+          Alert.fire({
+            icon: 'success',
+            title: '투표되었습니다.',
+          });
+          setIssueList(prev =>
+            prev.map(item => {
+              if (item._id === _id) {
+                item.regi.pro++;
+              }
+              return item;
+            }),
+          );
+        }
+      }
+    } catch (e) {
+      errorHandler(e);
+    }
   };
 
+  const mouseDownHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const targetElem = event.target as HTMLButtonElement;
+    setToggle(targetElem.innerText);
+  };
+
+  const mouseUpHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setToggle('');
+  };
   return (
     <IssueContainer>
       <SubContainer>
@@ -81,6 +99,8 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         data-id={_id}
         toggle={toggle === '찬성' ? true : false}
         onClick={regiHandler}
+        onMouseDown={mouseDownHandler}
+        onMouseUp={mouseUpHandler}
       >
         찬성
       </RegiProButton>
@@ -88,6 +108,8 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         data-id={_id}
         toggle={toggle === '반대' ? true : false}
         onClick={regiHandler}
+        onMouseDown={mouseDownHandler}
+        onMouseUp={mouseUpHandler}
       >
         반대
       </RegiConButton>
