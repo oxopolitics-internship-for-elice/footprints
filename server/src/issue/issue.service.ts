@@ -89,7 +89,7 @@ export class IssueService {
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'active' })
-      .sort({ issueDate: 'asc' })
+      .sort({ issueDate: -1 })
       .skip(pageOptions.skip)
       .limit(pageOptions.perPage);
     return { data: issues, meta: pageMeta };
@@ -111,7 +111,7 @@ export class IssueService {
   }
 
   async getIssueNotRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
-    const itemCount = await this.issueModel.find({ targetPolitician }).count();
+    const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'inactive' }).count();
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'inactive' })
