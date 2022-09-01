@@ -5,7 +5,7 @@ import Circle from '@/assets/img/circle.png';
 import Triangle from '@/assets/img/triangle.png';
 import X from '@/assets/img/x.png';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { ResDataTypes, ResTypes, pollDeep } from '@/types/GraphTypes';
+import { ResDataTypes } from '@/types/GraphTypes';
 type Element = {
   $context: Object;
   x: number;
@@ -76,6 +76,7 @@ const Modal = ({
 
   React.useEffect(() => {
     const fetchPollInfo = async () => {
+      console.log(resData);
       const target = resData.id[element.$context.dataIndex];
       const res = await GraphAPI.getPollInfo(target);
       console.log(res.data);

@@ -164,7 +164,7 @@ const PoliticianGraph = (): JSX.Element => {
               return score.lion.score;
             }),
             tension: 0.3,
-            borderColor: 'red',
+            borderColor: '#ff3f9f',
             pointStyle: chartPoint[3],
             pointBorderColor: 'black',
             pointRadius: 5,
@@ -176,7 +176,7 @@ const PoliticianGraph = (): JSX.Element => {
               return score.tiger.score;
             }),
             tension: 0.3,
-            borderColor: 'pink',
+            borderColor: '#964b00',
             pointStyle: chartPoint[4],
             pointBorderColor: 'black',
             pointRadius: 5,
