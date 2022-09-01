@@ -1,10 +1,10 @@
-type pollDeep = {
+export type pollDeep = {
   pro: number;
   neu: number;
   con: number;
 };
 
-type poll = {
+export type poll = {
   dinosaur: pollDeep;
   elephant: pollDeep;
   hippo: pollDeep;

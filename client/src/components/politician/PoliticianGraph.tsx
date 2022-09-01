@@ -30,7 +30,7 @@ import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
 import { useParams } from 'react-router-dom';
-
+import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -41,56 +41,6 @@ ChartJS.register(
   Legend,
   Filler,
 );
-type pollDeep = {
-  pro: number;
-  neu: number;
-  con: number;
-};
-
-type poll = {
-  dinosaur: pollDeep;
-  elephant: pollDeep;
-  hippo: pollDeep;
-  lion: pollDeep;
-  tiger: pollDeep;
-  total: pollDeep;
-};
-
-export interface ResTypes {
-  id: string;
-  _id: string;
-  targetPolitician: string;
-  createdAt: Date;
-  regiUser: string;
-  regiStatus: string;
-  regi: { pro: number; con: number };
-  poll: poll;
-  issueDate: Date;
-  pollDate: Date;
-  content: string;
-  isPollActive: boolean;
-  updatedAt: Date;
-  score: number;
-  title: string;
-}
-
-export interface ResDataTypes {
-  id: string;
-  _id: string;
-  targetPolitician: string;
-  createdAt: Date;
-  regiUser: string;
-  regiStatus: string;
-  regi: { pro: number; con: number };
-  poll: poll[];
-  issueDate: Date;
-  pollDate: Date;
-  content: string;
-  isPollActive: boolean;
-  updatedAt: Date;
-  score: number;
-  title: string;
-}
 
 const PoliticianGraph = (): JSX.Element => {
   const chartRef = useRef<any>(null);
@@ -106,29 +56,36 @@ const PoliticianGraph = (): JSX.Element => {
   const [resData, setResData] = useState<any>([]);
   const params = useParams();
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
-  const politicansName = fetchedPoliticans.map(
+
+  const politicansID = fetchedPoliticans.map(
+    (politician: PoliticiansTypes) => politician?._id,
+  );
+
+  const politicansName = fetchedPoliticans.filter(
     (politician: PoliticiansTypes) => {
-      return [politician?._id, politician.politicianInfo[0].name];
+      console.log(politician.name);
+      if (!politician?.name) {
+        return 'null';
+      }
+      return politician.name;
     },
   );
 
-  function ClickHander(
-    element: InteractionItem[],
-    event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
-  ) {
+  function ClickHander(element: InteractionItem[]) {
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
       setOpen(!open);
       document.body.style.overflow = 'hidden';
-
       return element[0].element;
     }
   }
 
   const getData = async (index: number | Number) => {
+    console.log(politicansName, politicansID);
+
     let target = '6303bed2e9d44f884ed1d640';
     const res = await GraphAPI.getGraph(target, index);
-    console.log(res);
+
     res.data.data.map(async (res: ResTypes, index: number) => {
       setResData((current: any) => {
         let tempData = DateFormatter(res.issueDate);
@@ -167,6 +124,7 @@ const PoliticianGraph = (): JSX.Element => {
     chartPoint.height = 30;
     return chartPoint;
   });
+
   const start = async () => {
     if (isFirst === true) {
       await getData(index);
@@ -247,8 +205,10 @@ const PoliticianGraph = (): JSX.Element => {
   const ClickButton = async () => {
     await start();
   };
+
   useEffect(() => {
     if (isFirst === false) {
+      console.log(231);
       ClickButton();
     }
   }, [index]);
@@ -296,8 +256,6 @@ const PoliticianGraph = (): JSX.Element => {
       },
     },
   };
-  const string1 = '<';
-  const string2 = '>';
 
   return (
     <div
@@ -322,7 +280,7 @@ const PoliticianGraph = (): JSX.Element => {
             style={{ float: 'left', marginTop: '350px' }}
             onClick={getNextData}
           >
-            {string1}
+            {'<'}
           </GraphButton>
         )}
 
@@ -338,7 +296,6 @@ const PoliticianGraph = (): JSX.Element => {
               onClick={event => {
                 let point = ClickHander(
                   getElementAtEvent(chartRef.current, event),
-                  event,
                 );
                 setPoint(point);
               }}
@@ -351,7 +308,7 @@ const PoliticianGraph = (): JSX.Element => {
               style={{ marginTop: '-350px', marginRight: '-10px' }}
               onClick={getPreData}
             >
-              {string2}
+              {'>'}
             </GraphButton>
           )}
           <div>
@@ -444,7 +401,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       imageTribe.height = 80;
       imageTribe.width = 80;
       imageTh.appendChild(imageTribe);
-      imageTh.style.marginLeft = '50px';
+      imageTh.style.marginLeft = '70px';
       imageTh.style.fontSize = '25px';
       const img = [imageCircle, imageTriangle, imageX];
       for (let i = 0; i <= 2; i++) {
@@ -510,11 +467,10 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   tooltipEl.style.background = '#f5f5dc';
   tooltipEl.style.borderRadius = '5px';
   tooltipEl.style.width = '500px';
-  tooltipEl.style.height = '600px';
+  tooltipEl.style.height = '560px';
 }
 
-interface Props {}
-const GraphButton = styled.button<Props>`
+const GraphButton = styled.button`
   height: 3rem;
   width: 3rem;
   font-size: 30px;
