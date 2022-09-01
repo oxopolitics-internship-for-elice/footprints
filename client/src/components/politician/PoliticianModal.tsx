@@ -86,6 +86,16 @@ const Modal = ({
       return newPoll;
     });
   }
+
+  React.useEffect(() => {
+    const fetchPollInfo = async () => {
+      const target = resData.id[element.$context.dataIndex];
+      const res = await GraphAPI.getPollInfo(target);
+      console.log(res.data);
+      // 데이터 값으로 이미 이슈가 있는지 확인 후 newPoll['data'] = true
+    };
+    fetchPollInfo();
+  }, []);
   return (
     <>
       <Background>

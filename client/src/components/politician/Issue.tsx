@@ -21,23 +21,34 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         if (issue._id === targetElem.dataset.id) {
           if (targetElem.innerText === '반대') {
             issue.regi.con += 1;
+
             try {
-              await RegiAPI.patch(_id, {
+              const { data } = await RegiAPI.patch(_id, {
                 pro: false,
                 con: true,
-              });
+              })
+              if (data.hasVoted) {
+              errorAlert('이미 투표하셨습니다.');
+              issue.regi.con -= 1;
+              setToggle('');
+            }
             } catch (error) {
               errorHandler(error);
             }
           } else {
             issue.regi.pro += 1;
             try {
-              await RegiAPI.patch(_id, {
+              const { data } = await RegiAPI.patch(_id, {
                 pro: true,
                 con: false,
               });
+              if (data.hasVoted) {
+              errorAlert('이미 투표하셨습니다.');
+              issue.regi.pro -= 1;
+              setToggle('');
             } catch (error) {
               errorHandler(error);
+
             }
           }
         }
