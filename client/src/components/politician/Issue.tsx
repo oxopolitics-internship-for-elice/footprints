@@ -5,6 +5,7 @@ import dateFormatter from '@/utils/DateFormatter';
 import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import { useState } from 'react';
+import { errorAlert } from '../base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
@@ -20,16 +21,26 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         if (issue._id === targetElem.dataset.id) {
           if (targetElem.innerText === '반대') {
             issue.regi.con += 1;
-            await RegiAPI.patch(_id, {
+            const { data } = await RegiAPI.patch(_id, {
               pro: false,
               con: true,
             });
+            if (data.hasVoted) {
+              errorAlert('이미 투표하셨습니다.');
+              issue.regi.con -= 1;
+              setToggle('');
+            }
           } else {
             issue.regi.pro += 1;
-            await RegiAPI.patch(_id, {
+            const { data } = await RegiAPI.patch(_id, {
               pro: true,
               con: false,
             });
+            if (data.hasVoted) {
+              errorAlert('이미 투표하셨습니다.');
+              issue.regi.pro -= 1;
+              setToggle('');
+            }
           }
         }
       });
