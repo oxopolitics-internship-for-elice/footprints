@@ -1,15 +1,21 @@
 export type PoliticianIssueType = {
   _id: string;
-  poll: {
-    pro: number;
-    neu: number;
-    con: number;
-  };
   issueDate: string;
   totalPolls: number;
   score: number;
+  targetPolitician: string;
 };
-
+export type PoliticianInfo = {
+  name: string;
+};
 export interface PoliticiansTypes {
-  [key: string]: PoliticianIssueType[];
+  _id: string;
+  name: string;
+  image: string;
+  party: string;
+}
+export interface PoliticiansTypes {
+  politicianInfo: PoliticianInfo[];
+  _id: string;
+  issues: PoliticianIssueType[];
 }

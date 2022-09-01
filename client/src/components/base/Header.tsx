@@ -1,3 +1,5 @@
+import errorHandler from '@/api/ErrorHandler';
+import UserAPI from '@/api/UserAPI';
 import styled from '@emotion/styled';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +12,7 @@ const Header = () => {
 
   const handleScroll = () => {
     const scrollTop = window.scrollY;
-    if (scrollTop > 925 && location.pathname === '/') {
+    if (scrollTop > 900 && location.pathname === '/') {
       setIsMainFirstPage(false);
     } else {
       setIsMainFirstPage(true);
@@ -41,7 +43,7 @@ const Header = () => {
 
   return (
     <>
-      <HeaderBlock>
+      <HeaderBlock istransparent={isMainFirstPage}>
         <InnerHeader>
           <Title fontWhite={isMainFirstPage} onClick={() => navigate('/')}>
             정치 발자국
@@ -57,14 +59,17 @@ const Header = () => {
 
 export default Header;
 
-const HeaderBlock = styled.header`
+interface HeaderBlockProps {
+  istransparent: boolean;
+}
+
+const HeaderBlock = styled.header<HeaderBlockProps>`
   position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 300;
-  background-color:transparent
-  border-bottom: 1px solid rgb(230, 230, 230);
+  z-index: 2;
+  background-color: ${props => (props.istransparent ? 'transparent' : '#fff')};
   transition: all 0.5s ease 0s;
 `;
 
@@ -82,9 +87,9 @@ const InnerHeader = styled.section`
   justify-content: space-between;
 `;
 
-type TitleProps = {
+interface TitleProps {
   fontWhite: boolean;
-};
+}
 
 const Title = styled.h1<TitleProps>`
   display: block;

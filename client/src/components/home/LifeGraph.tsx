@@ -26,17 +26,14 @@ ChartJS.register(
 );
 
 interface lifeGraphProps {
-  issues: IssueTypes[];
+  issues: any[];
 }
 
 const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   // const issues: IssueTypes[] = useRecoilValue(issueState);
   // const issueDates: Date[] = useRecoilValue(issueDateState);
 
-  const graphData = issues.map(
-    (issue: { poll: { pro: number; con: number } }) =>
-      issue.poll.pro - issue.poll.con,
-  );
+  const graphData = issues.map((issue: any) => issue.totalPolls);
 
   const issueDates = issues.map(issue => dateFormatter(issue.issueDate));
 
@@ -104,4 +101,5 @@ export default LifeGraph;
 const GraphContainer = styled.div`
   width: 90vw;
   height: 400px;
+  padding-top: 40px;
 `;

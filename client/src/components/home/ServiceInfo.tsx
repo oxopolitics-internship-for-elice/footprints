@@ -8,26 +8,13 @@ const ServiceInfo = () => {
       <Overlay />
       <Video src={ChartVideo} autoPlay loop muted></Video>
       <Content>
-        <h2>정치 발자국에 오신 것을 환영합니다.</h2>
+        <h2>{'정치인의 발자취를 한눈에 볼 수 있는\n정치 참여 커뮤니티'}</h2>
       </Content>
     </>
   );
 };
 
 export default ServiceInfo;
-
-const Container = styled.div`
-  width: 810px;
-  height: 500px;
-  background-color: rgb(234, 238, 241);
-  position: absolute;
-  overflow: hidden;
-  border-radius: 15px;
-  margin-top: 20px;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid rgb(234, 238, 241);
-`;
 
 const Overlay = styled.div`
   position: absolute;
@@ -78,5 +65,6 @@ const Content = styled.div`
     color: #fff;
     font-weight: 800;
     text-align: center;
+    white-space: pre-line;
   }
 `;

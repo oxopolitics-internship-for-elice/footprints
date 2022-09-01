@@ -1,9 +1,12 @@
-import React, { LegacyRef, useEffect, useRef, useState } from 'react';
-import issueState from '@/store/IssueState';
-import { useRecoilValue } from 'recoil';
+import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { IssueTypes } from '@/types/IssueTypes';
-import * as Api from '@/api/Api';
 import Issue from './Issue';
+import styled from '@emotion/styled';
+import errorHandler from '@/api/ErrorHandler';
+import StandbyIssueAPI from '@/api/StandbyIssueAPI';
+import Loading from '@components/base/Loading';
+import { Alert } from '@components/base/Alert';
 
 export interface IssueProps {
   issue: IssueTypes;
@@ -12,12 +15,12 @@ export interface IssueProps {
 
 const StandbyIssue = (): JSX.Element => {
   const [issueList, setIssueList] = useState<IssueTypes[]>([]);
-  const targetPolitician = '6303bed2e9d44f884ed1d640';
-  const target = useRef<any>();
+  const targetRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
-  let maxPage: number;
+  const [maxPage, setMaxPage] = useState(null);
 
+  const id = useLocation().pathname.split('/')[2];
   const loadMore = () => {
     setPageNum(prev => prev + 1);
   };
@@ -25,40 +28,42 @@ const StandbyIssue = (): JSX.Element => {
   //데이터 fetch
   const getIssue = async () => {
     try {
-      const res = await Api.get(
-        `issues?targetPolitician=${targetPolitician}&perPage=10&pageNum=${pageNum}`,
-      );
-      setIssueList([...issueList, ...res.data.data]);
-      maxPage = res.data.meta.pageCount;
-    } catch (Error) {
-      console.log(`에러가 발생했습니다. 다시 시도해주세요: ${Error}`);
-    } finally {
       setIsLoading(true);
+      const res = await StandbyIssueAPI.getList(id, pageNum);
+      setIssueList([...issueList, ...res.data.data]);
+      setMaxPage(res.data.meta.pageCount);
+    } catch (error) {
+      errorHandler(error);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
     getIssue();
   }, [pageNum]);
-
   //infinite scroll
   useEffect(() => {
-    if (isLoading) {
-      const observer = new IntersectionObserver(entries => {
-        if (entries[0].isIntersecting) {
+    const observer: IntersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
           loadMore();
-          if (pageNum > maxPage) {
-            observer.unobserve(target.current);
-            alert('페이지의 마지막입니다.');
-          }
+          observer.disconnect();
         }
+      },
+    );
+    if (maxPage && pageNum > maxPage) {
+      Alert.fire({
+        icon: 'error',
+        title: '마지막 페이지입니다.',
       });
-      observer.observe(target.current);
+      return;
     }
-  }, []);
+    observer.observe(targetRef.current);
+  }, [pageNum]);
 
   return (
-    <div>
-      {isLoading ? (
+    <StandbyIssueContainer>
+      {!isLoading ? (
         <div>
           {issueList.map(issue => {
             return (
@@ -71,11 +76,15 @@ const StandbyIssue = (): JSX.Element => {
           })}
         </div>
       ) : (
-        ''
+        <Loading />
       )}
-      <div ref={target}>{''}</div>
-    </div>
+      <div ref={targetRef}>{''}</div>
+    </StandbyIssueContainer>
   );
 };
 
 export default StandbyIssue;
+
+const StandbyIssueContainer = styled.div`
+  padding: 40px 20px 20px 20px;
+`;
