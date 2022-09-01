@@ -5,7 +5,7 @@ import Circle from '@/assets/img/circle.png';
 import Triangle from '@/assets/img/triangle.png';
 import X from '@/assets/img/x.png';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { ResDataTypes, ResTypes } from './PoliticianGraph';
+import { ResDataTypes, ResTypes, pollDeep } from '@/types/GraphTypes';
 type Element = {
   $context: Object;
   x: number;
@@ -69,18 +69,6 @@ const Modal = ({
         }
         const res = await GraphAPI.updatePoll(target, newPoll);
         console.log(res.status);
-        if (res.status === 200) {
-          if (index === 0) {
-            resData.poll[element.$context.dataIndex].pro += 1;
-            newPoll['pro'] = true;
-          } else if (index === 1) {
-            resData.poll[element.$context.dataIndex].neu += 1;
-            newPoll['neu'] = true;
-          } else {
-            resData.poll[element.$context.dataIndex].con += 1;
-            newPoll['con'] = true;
-          }
-        }
       } catch (err) {}
 
       return newPoll;
@@ -170,9 +158,9 @@ const Container = styled.div<ContainerProps>`
 `;
 const Content = styled.div`
   text-align: center;
-  line-height: 300px;
+  margin-top: 30px;
   background-color: #fff;
-  font-size: 40px;
+  font-size: 30px;
   overflow: hidden;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;

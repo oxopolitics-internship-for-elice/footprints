@@ -4,7 +4,7 @@ export type pollDeep = {
   con: number;
 };
 
-export type poll = {
+export type Poll = {
   dinosaur: pollDeep;
   elephant: pollDeep;
   hippo: pollDeep;
@@ -21,7 +21,7 @@ export interface ResTypes {
   regiUser: string;
   regiStatus: string;
   regi: { pro: number; con: number };
-  poll: poll;
+  poll: Poll;
   issueDate: Date;
   pollDate: Date;
   content: string;
@@ -32,14 +32,14 @@ export interface ResTypes {
 }
 
 export interface ResDataTypes {
-  id: string;
+  id: string[];
   _id: string;
   targetPolitician: string;
   createdAt: Date;
   regiUser: string;
   regiStatus: string;
   regi: { pro: number; con: number };
-  poll: poll;
+  poll: Poll;
   issueDate: Date;
   pollDate: Date;
   content: string;

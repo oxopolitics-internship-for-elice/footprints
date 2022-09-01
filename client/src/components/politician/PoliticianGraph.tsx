@@ -23,17 +23,12 @@ import elephant from '@/assets/tribe/elephant.png';
 import hippo from '@/assets/tribe/hippo.png';
 import lion from '@/assets/tribe/lion.png';
 import tiger from '@/assets/tribe/tiger.png';
-
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import { useRecoilValue } from 'recoil';
-import PoliticiansState from '@/store/PoliticiansState';
 import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
-import { BsArrowRepeat } from 'react-icons/bs';
 import { useLocation } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { deflateRaw } from 'zlib';
 import PoliticianNameState from '@/store/PoliticianNameState';
 
 ChartJS.register(
@@ -93,12 +88,12 @@ const PoliticianGraph = (): JSX.Element => {
 
           return { issueDate, poll, content, score, id, title };
         } else {
-          const issueDate = [...current.issueDate, tempData];
-          const poll = [...current.poll, tempPoll];
-          const content = [...current.content, res.content];
-          const score = [...current.score, tempScore];
-          const id = [...current.id, res._id];
-          const title = [...current.title, res.title];
+          const issueDate = [tempData, ...current.issueDate];
+          const poll = [tempPoll, ...current.poll];
+          const content = [res.content, ...current.content];
+          const score = [tempScore, ...current.score];
+          const id = [res._id, ...current.id];
+          const title = [res.title, ...current.title];
 
           return { issueDate, poll, content, score, id, title };
         }
@@ -297,7 +292,7 @@ const PoliticianGraph = (): JSX.Element => {
             <Line
               ref={chartRef}
               onClick={event => {
-                let point = ClickHandler(
+                let point = ClickHander(
                   getElementAtEvent(chartRef.current, event),
                 );
                 setPoint(point);
@@ -376,75 +371,37 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     const br = document.createElement('br');
 
     function drow(div: Element, body: pollDeep, index: number) {
-      if (index === 0) {
-        const Title = document.createElement('div');
-        const TitleText = document.createTextNode(
-          resData.title[tooltipModel.dataPoints[0].dataIndex],
+      const Title = CreateTitle();
+      tableHead.appendChild(Title);
+      console.log(body);
+      if (index === 5) {
+        const total = true;
+        result[tooltipModel.dataPoints[0].dataIndex].forEach(
+          (body: any, index: number) => {
+            if (index === 5) {
+            } else {
+              const imageTh = CreateImg(body, total, index);
+              div.appendChild(imageTh);
+            }
+          },
         );
-        Title.style.whiteSpace = 'nowrap';
-        Title.style.overflow = 'hidden';
-        Title.style.textOverflow = 'ellipsis';
-        Title.style.width = '500px';
-        Title.style.height = '30px';
-        Title.style.textAlign = 'center';
-        Title.style.fontWeight = '700';
-        Title.style.fontSize = '23px';
-        Title.style.backgroundColor = '#f1f1f1';
-        Title.style.paddingBottom = '40px';
-        Title.appendChild(TitleText);
-        tableHead.appendChild(Title);
-        tableHead.appendChild(br);
+      } else {
+        const total = false;
+
+        const imageTh = CreateImg(body, total);
+        div.appendChild(imageTh);
       }
-
-      const imageTh = document.createElement('div');
-      const imageTribe = document.createElement('img');
-      const imageCircle = document.createElement('img');
-      const imageTriangle = document.createElement('img');
-      const imageX = document.createElement('img');
-      imageTribe.src = ImgTribe[index];
-      imageTribe.height = 80;
-      imageTribe.width = 80;
-      imageTh.appendChild(imageTribe);
-      imageTh.style.marginLeft = '70px';
-      imageTh.style.fontSize = '25px';
-      const img = [imageCircle, imageTriangle, imageX];
-
-      for (let i = 0; i <= 2; i++) {
-        const tempDiv = document.createElement('div');
-        img[i].src = ImgPoll[i];
-        img[i].height = 25;
-        img[i].width = 25;
-
-        const count =
-          i === 0
-            ? document.createTextNode(': ' + body.pro)
-            : i === 1
-            ? document.createTextNode(': ' + body.neu)
-            : document.createTextNode(': ' + body.con);
-        img[i].style.marginTop = '30px';
-        img[i].style.position = 'relative';
-        img[i].style.top = '5px';
-        tempDiv.style.display = 'inline';
-        tempDiv.style.flexDirection = 'row';
-        tempDiv.style.marginRight = '10px';
-        tempDiv.style.position = 'relative';
-        tempDiv.style.bottom = '20px';
-
-        tempDiv.appendChild(img[i]);
-        tempDiv.appendChild(count);
-        imageTh.appendChild(tempDiv);
-      }
-
-      div.appendChild(imageTh);
     }
 
-    result[tooltipModel.dataPoints[0].dataIndex].forEach(
-      (body: any, index: number) => {
-        const div = document.createElement('div');
-        index === 5 ? null : drow(div, body, index);
-        tableHead.appendChild(div);
-      },
-    );
+    const div = document.createElement('div');
+    dataIndex === 5
+      ? null
+      : drow(
+          div,
+          result[tooltipModel.dataPoints[0].dataIndex][dataIndex.datasetIndex],
+          dataIndex.datasetIndex,
+        );
+    tableHead.appendChild(div);
 
     const tableRoot = tooltipEl.querySelector('div');
 
@@ -471,8 +428,74 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = '#f5f5dc';
   tooltipEl.style.borderRadius = '5px';
-  tooltipEl.style.width = '500px';
-  tooltipEl.style.height = '560px';
+  if (dataIndex.datasetIndex === 5) {
+    tooltipEl.style.width = '500px';
+    tooltipEl.style.height = '560px';
+  } else {
+    tooltipEl.style.width = '500px';
+    tooltipEl.style.height = '150px';
+  }
+
+  function CreateTitle() {
+    const Title = document.createElement('div');
+    const TitleText = document.createTextNode(
+      resData.title[tooltipModel.dataPoints[0].dataIndex],
+    );
+    Title.style.whiteSpace = 'nowrap';
+    Title.style.overflow = 'hidden';
+    Title.style.textOverflow = 'ellipsis';
+    Title.style.width = '500px';
+    Title.style.height = '30px';
+    Title.style.textAlign = 'center';
+    Title.style.fontWeight = '700';
+    Title.style.fontSize = '23px';
+    Title.style.backgroundColor = '#f1f1f1';
+    Title.style.paddingBottom = '40px';
+    Title.appendChild(TitleText);
+    return Title;
+  }
+  function CreateImg(body: pollDeep, total: boolean, index = 0) {
+    const imageTh = document.createElement('div');
+    const imageTribe = document.createElement('img');
+    const imageCircle = document.createElement('img');
+    const imageTriangle = document.createElement('img');
+    const imageX = document.createElement('img');
+    if (total) {
+      imageTribe.src = ImgTribe[index];
+    } else {
+      imageTribe.src = ImgTribe[dataIndex.datasetIndex];
+    }
+    imageTribe.height = 80;
+    imageTribe.width = 80;
+    imageTh.appendChild(imageTribe);
+    imageTh.style.marginLeft = '70px';
+    imageTh.style.fontSize = '25px';
+    const img = [imageCircle, imageTriangle, imageX];
+    for (let i = 0; i <= 2; i++) {
+      const tempDiv = document.createElement('div');
+      img[i].src = ImgPoll[i];
+      img[i].height = 25;
+      img[i].width = 25;
+      const count =
+        i === 0
+          ? document.createTextNode(': ' + body.pro)
+          : i === 1
+          ? document.createTextNode(': ' + body.neu)
+          : document.createTextNode(': ' + body.con);
+      img[i].style.marginTop = '30px';
+      img[i].style.position = 'relative';
+      img[i].style.top = '5px';
+      tempDiv.style.display = 'inline';
+      tempDiv.style.flexDirection = 'row';
+      tempDiv.style.marginRight = '10px';
+      tempDiv.style.position = 'relative';
+      tempDiv.style.bottom = '20px';
+      tempDiv.appendChild(img[i]);
+      tempDiv.appendChild(count);
+      imageTh.appendChild(tempDiv);
+    }
+    return imageTh;
+  }
 }
 
 const GraphButton = styled.button`

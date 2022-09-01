@@ -1,6 +1,6 @@
-import { ResDataTypes } from '@/types/GraphTypes';
+import { ResDataTypes, ResTypes } from '@/types/GraphTypes';
 
-export const PollFormatter = (res: ResDataTypes) => {
+export const PollFormatter = (res: ResTypes) => {
   const poll = {
     dinosaur: {
       pro: res.poll.dinosaur.pro,
@@ -36,7 +36,7 @@ export const PollFormatter = (res: ResDataTypes) => {
   return poll;
 };
 
-export const ScoreFormatter = (res: ResDataTypes) => {
+export const ScoreFormatter = (res: ResTypes) => {
   const score = {
     dinosaur: {
       score: res.poll.dinosaur.pro - res.poll.dinosaur.con,
