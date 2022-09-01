@@ -95,7 +95,6 @@ const PoliticianGraph = (): JSX.Element => {
   const name = useRecoilValue(PoliticianNameState).find(
     (politician: any) => politician[id],
   )[id];
-  console.log(name);
 
   function ClickHandler(
     element: InteractionItem[],
