@@ -29,7 +29,6 @@ import Modal from './PoliticianModal';
 import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
-import { useParams } from 'react-router-dom';
 import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
 import { BsArrowRepeat } from 'react-icons/bs';
 import { useLocation } from 'react-router-dom';
@@ -64,14 +63,12 @@ const PoliticianGraph = (): JSX.Element => {
 
   const politicansName = fetchedPoliticans.filter(
     (politician: PoliticiansTypes) => {
-      if (politician._id === id) {
-        console.log(politician.politicianInfo[0].name);
+      if (politician._id !== id) {
         return politician.politicianInfo[0].name;
       }
     },
   );
 
-  console.log(politicansName[0].politicianInfo[0].name);
   function ClickHander(element: InteractionItem[]) {
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
@@ -85,6 +82,7 @@ const PoliticianGraph = (): JSX.Element => {
     console.log(id);
     const res = await GraphAPI.getGraph(id, index);
     res.data.data.map(async (res: ResTypes, index: number) => {
+      console.log(res);
       setResData((current: any) => {
         let tempData = DateFormatter(res.issueDate);
         let tempPoll = PollFormatter(res);
@@ -128,6 +126,7 @@ const PoliticianGraph = (): JSX.Element => {
       await getData(index);
       setIsFirst(false);
     } else {
+      console.log(resData);
       setData({
         labels: resData.issueDate,
         datasets: [
@@ -344,7 +343,7 @@ export default PoliticianGraph;
 function darwTooltip(context: any, resData: ResDataTypes) {
   const ImgTribe = [dinosaur, elephant, hippo, lion, tiger];
   const ImgPoll = [Circle, Triangle, X];
-
+  const dataIndex = context.chart.tooltip.dataPoints[0];
   let tooltipEl = document.getElementById('chartjs-tooltip');
   // Create element on first render
   if (!tooltipEl) {
@@ -414,6 +413,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       imageTh.style.marginLeft = '70px';
       imageTh.style.fontSize = '25px';
       const img = [imageCircle, imageTriangle, imageX];
+
       for (let i = 0; i <= 2; i++) {
         const tempDiv = document.createElement('div');
         img[i].src = ImgPoll[i];
