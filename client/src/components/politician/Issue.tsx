@@ -6,6 +6,7 @@ import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import { useState } from 'react';
 import errorHandler from '@/api/ErrorHandler';
+import { errorAlert } from '../Base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
@@ -26,12 +27,12 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
               const { data } = await RegiAPI.patch(_id, {
                 pro: false,
                 con: true,
-              })
+              });
               if (data.hasVoted) {
-              errorAlert('이미 투표하셨습니다.');
-              issue.regi.con -= 1;
-              setToggle('');
-            }
+                errorAlert('이미 투표하셨습니다.');
+                issue.regi.con -= 1;
+                setToggle('');
+              }
             } catch (error) {
               errorHandler(error);
             }
@@ -43,12 +44,12 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
                 con: false,
               });
               if (data.hasVoted) {
-              errorAlert('이미 투표하셨습니다.');
-              issue.regi.pro -= 1;
-              setToggle('');
+                errorAlert('이미 투표하셨습니다.');
+                issue.regi.pro -= 1;
+                setToggle('');
+              }
             } catch (error) {
               errorHandler(error);
-
             }
           }
         }

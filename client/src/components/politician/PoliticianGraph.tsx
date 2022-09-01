@@ -35,7 +35,6 @@ import { useLocation } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { deflateRaw } from 'zlib';
 import PoliticianNameState from '@/store/PoliticianNameState';
-import { useRecoilValue } from 'recoil';
 
 ChartJS.register(
   CategoryScale,
@@ -230,7 +229,6 @@ const PoliticianGraph = (): JSX.Element => {
           size: 30,
         },
         text: `${name}의 그래프`,
-
       },
       legend: {
         display: false,
