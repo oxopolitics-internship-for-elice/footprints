@@ -6,6 +6,7 @@ import IssueAddButton from '@/components/politician/IssueAddButton';
 import IssueAddModal from '@/components/politician/IssueAddModal';
 import Header from '@/components/Base/Header';
 import PoliticianGraph from '@/components/politician/PoliticianGraph';
+import Layout from '@/components/layout/Layout';
 
 const Politician = (): JSX.Element => {
   const [modalShow, setModalShow] = React.useState(false);
@@ -20,14 +21,22 @@ const Politician = (): JSX.Element => {
         <title>정치인 상세페이지</title>
       </Helmet>
       <Header />
-      <PoliticianGraph />
-      <IssueAddModal
-        modalShow={modalShow}
-        handleModalToggle={handleModalToggle}
+      <Layout
+        children={
+          <>
+            <PoliticianGraph />
+            <IssueAddModal
+              modalShow={modalShow}
+              handleModalToggle={handleModalToggle}
+            />
+            <Top3Issue />
+            <StandbyIssue />
+            {!modalShow && (
+              <IssueAddButton onClickToggleModal={handleModalToggle} />
+            )}
+          </>
+        }
       />
-      <Top3Issue />
-      <StandbyIssue />
-      {!modalShow && <IssueAddButton onClickToggleModal={handleModalToggle} />}
     </>
   );
 };
