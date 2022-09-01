@@ -19,7 +19,6 @@ interface ModalProps {
   setOpen: (boolean: boolean) => void;
   element: Element;
   content: [];
-  contentId: [];
   issueDate: [];
   resData: ResDataTypes;
 }

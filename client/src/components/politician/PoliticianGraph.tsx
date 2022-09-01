@@ -30,7 +30,7 @@ import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
 import { useLocation } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import PoliticianNameState from '@/store/PoliticianNameState';
-
+import MinMax from '@/utils/MinMax';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -52,8 +52,8 @@ const PoliticianGraph = (): JSX.Element => {
   const [isFirst, setIsFirst] = useState(true);
   const [index, setIndex] = useState<number>(1);
   const [NextPageable, isNextPageable] = useState<boolean>(true);
-  const [contentId, setContentId] = useState<any>([]);
   const [resData, setResData] = useState<any>([]);
+  const [minmax, setMinmax] = useState<any>([]);
   const id = useLocation().pathname.split('/')[2];
   const name = useRecoilValue(PoliticianNameState).find(
     (politician: any) => politician[id],
@@ -116,7 +116,8 @@ const PoliticianGraph = (): JSX.Element => {
       await getData(index);
       setIsFirst(false);
     } else {
-      console.log(resData);
+      const temp = MinMax(resData);
+      setMinmax(temp);
       setData({
         labels: resData.issueDate,
         datasets: [
@@ -194,13 +195,14 @@ const PoliticianGraph = (): JSX.Element => {
 
   useEffect(() => {
     if (isFirst === false) {
-      console.log(231);
       ClickButton();
     }
   }, [index]);
 
   useEffect(() => {
     start();
+    console.log(resData);
+
     if (!isFirst) {
       start();
     }
@@ -208,7 +210,6 @@ const PoliticianGraph = (): JSX.Element => {
 
   const options = {
     maintainAspectRatio: false,
-
     plugins: {
       tooltip: {
         enabled: false,
@@ -243,15 +244,9 @@ const PoliticianGraph = (): JSX.Element => {
       },
     },
     scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
       y: {
-        grid: {
-          display: false,
-        },
+        min: minmax[1] - 30,
+        max: minmax[0] + 30,
       },
     },
   };
@@ -275,7 +270,7 @@ const PoliticianGraph = (): JSX.Element => {
       >
         {NextPageable === false ? null : (
           <GraphButton
-            style={{ float: 'left', marginTop: '350px' }}
+            style={{ float: 'left', marginTop: '230px' }}
             onClick={getNextData}
           >
             {'<'}
@@ -304,7 +299,7 @@ const PoliticianGraph = (): JSX.Element => {
           )}
           {index === 1 ? null : (
             <GraphButton
-              style={{ marginTop: '-350px', marginRight: '-10px' }}
+              style={{ marginTop: '-350px', marginRight: '-25px' }}
               onClick={getPreData}
             >
               {'>'}
@@ -316,7 +311,6 @@ const PoliticianGraph = (): JSX.Element => {
                 setOpen={setOpen}
                 element={point}
                 content={content}
-                contentId={contentId}
                 issueDate={issueDate}
                 resData={resData}
               />
