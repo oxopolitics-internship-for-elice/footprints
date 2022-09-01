@@ -6,7 +6,7 @@ import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import { useState } from 'react';
 import errorHandler from '@/api/ErrorHandler';
-import { errorAlert } from '../Base/Alert';
+import { Alert, errorAlert } from '../Base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
@@ -15,7 +15,6 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
-    setToggle(targetElem.innerText);
     setIssueList((prev: any): IssueTypes[] => {
       const prevIssueList: IssueTypes[] = JSON.parse(JSON.stringify(prev));
       prevIssueList.forEach(async issue => {
@@ -32,6 +31,11 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
                 errorAlert('이미 투표하셨습니다.');
                 issue.regi.con -= 1;
                 setToggle('');
+              } else {
+                Alert.fire({
+                  icon: 'success',
+                  title: '투표되었습니다.',
+                });
               }
             } catch (error) {
               errorHandler(error);
@@ -47,6 +51,11 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
                 errorAlert('이미 투표하셨습니다.');
                 issue.regi.pro -= 1;
                 setToggle('');
+              } else {
+                Alert.fire({
+                  icon: 'success',
+                  title: '투표되었습니다.',
+                });
               }
             } catch (error) {
               errorHandler(error);
@@ -58,6 +67,16 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
     });
   };
 
+  const mouseDownHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const targetElem = event.target as HTMLButtonElement;
+    setToggle(targetElem.innerText);
+  };
+
+  const mouseUpHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setToggle('');
+  };
   return (
     <IssueContainer>
       <SubContainer>
@@ -81,6 +100,8 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         data-id={_id}
         toggle={toggle === '찬성' ? true : false}
         onClick={regiHandler}
+        onMouseDown={mouseDownHandler}
+        onMouseUp={mouseUpHandler}
       >
         찬성
       </RegiProButton>
@@ -88,6 +109,8 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         data-id={_id}
         toggle={toggle === '반대' ? true : false}
         onClick={regiHandler}
+        onMouseDown={mouseDownHandler}
+        onMouseUp={mouseUpHandler}
       >
         반대
       </RegiConButton>
