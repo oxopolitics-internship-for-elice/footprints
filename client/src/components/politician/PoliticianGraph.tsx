@@ -23,6 +23,8 @@ import elephant from '@/assets/tribe/elephant.png';
 import hippo from '@/assets/tribe/hippo.png';
 import lion from '@/assets/tribe/lion.png';
 import tiger from '@/assets/tribe/tiger.png';
+import oxo from '@/assets/tribe/oxo.png';
+
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
 import { useRecoilValue } from 'recoil';
@@ -72,7 +74,6 @@ const PoliticianGraph = (): JSX.Element => {
     console.log(id);
     const res = await GraphAPI.getGraph(id, index);
     res.data.data.map(async (res: ResTypes, index: number) => {
-      console.log(res);
       setResData((current: any) => {
         let tempData = DateFormatter(res.issueDate);
         let tempPoll = PollFormatter(res);
@@ -102,7 +103,7 @@ const PoliticianGraph = (): JSX.Element => {
 
     isNextPageable(res.data.meta.hasNextPage);
   };
-  const Img = [dinosaur, elephant, hippo, lion, tiger];
+  const Img = [dinosaur, elephant, hippo, lion, tiger, oxo];
   const chartPoint = Img.map(img => {
     const chartPoint = new Image();
     chartPoint.src = img;
@@ -122,6 +123,7 @@ const PoliticianGraph = (): JSX.Element => {
         labels: resData.issueDate,
         datasets: [
           {
+            label: '공룡',
             data: resData.score.map((score: any) => {
               return score.dinosaur.score;
             }),
@@ -132,6 +134,8 @@ const PoliticianGraph = (): JSX.Element => {
             pointRadius: 5,
           },
           {
+            label: '코끼리',
+
             data: resData.score.map((score: any) => {
               return score.elephant.score;
             }),
@@ -142,6 +146,8 @@ const PoliticianGraph = (): JSX.Element => {
             pointRadius: 5,
           },
           {
+            label: '하마',
+
             data: resData.score.map((score: any) => {
               return score.hippo.score;
             }),
@@ -152,6 +158,8 @@ const PoliticianGraph = (): JSX.Element => {
             pointRadius: 5,
           },
           {
+            label: '사자',
+
             data: resData.score.map((score: any) => {
               return score.lion.score;
             }),
@@ -162,6 +170,8 @@ const PoliticianGraph = (): JSX.Element => {
             pointRadius: 5,
           },
           {
+            label: '호랑이',
+
             data: resData.score.map((score: any) => {
               return score.tiger.score;
             }),
@@ -172,9 +182,12 @@ const PoliticianGraph = (): JSX.Element => {
             pointRadius: 5,
           },
           {
+            label: '합계',
+
             data: resData.score.map((score: any) => {
               return score.total.score;
             }),
+            pointStyle: chartPoint[5],
             tension: 0.3,
           },
         ],
@@ -201,14 +214,16 @@ const PoliticianGraph = (): JSX.Element => {
 
   useEffect(() => {
     start();
-    console.log(resData);
-
     if (!isFirst) {
       start();
     }
   }, [isFirst]);
 
+  let count = 1;
   const options = {
+    animation: {
+      duration: 0,
+    },
     maintainAspectRatio: false,
     plugins: {
       tooltip: {
@@ -227,7 +242,40 @@ const PoliticianGraph = (): JSX.Element => {
         text: `${name}의 그래프`,
       },
       legend: {
-        display: false,
+        labels: {
+          usePointStyle: true,
+          font: {
+            size: 30,
+          },
+        },
+        onClick: (evt: any, legendItem: any, legend: any) => {
+          const index = legendItem.datasetIndex;
+          const chart = legend.chart;
+          console.log(legendItem.text);
+          console.log(data);
+
+          if (count === 1) {
+            legend.chart.data.datasets.forEach((data: any, index: number) => {
+              if (legendItem.text === data.label) {
+                chart.show(index);
+              } else {
+                chart.hide(index);
+                data.hidden = true;
+              }
+              console.log(data);
+            });
+          } else {
+            if (legendItem.hidden === true) {
+              chart.show(index);
+              legendItem.hidden = false;
+            } else {
+              chart.hide(index);
+              legendItem.hidden = true;
+            }
+          }
+
+          count += 1;
+        },
       },
       datalabels: {
         font: {
@@ -367,7 +415,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     function drow(div: Element, body: pollDeep, index: number) {
       const Title = CreateTitle();
       tableHead.appendChild(Title);
-      console.log(body);
       if (index === 5) {
         const total = true;
         result[tooltipModel.dataPoints[0].dataIndex].forEach(
