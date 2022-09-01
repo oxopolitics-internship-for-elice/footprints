@@ -6,7 +6,7 @@ import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import { useState } from 'react';
 import errorHandler from '@/api/ErrorHandler';
-import { errorAlert } from '../Base/Alert';
+import { errorAlert } from '../base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
