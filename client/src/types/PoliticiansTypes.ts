@@ -5,13 +5,17 @@ export type PoliticianIssueType = {
   score: number;
   targetPolitician: string;
 };
-type politicianInfo = {
+export type PoliticianInfo = {
+  name: string;
+};
+export interface PoliticiansTypes {
+  _id: string;
   name: string;
   image: string;
   party: string;
-};
+}
 export interface PoliticiansTypes {
-  politicianInfo: politicianInfo[];
+  politicianInfo: PoliticianInfo[];
   _id: string;
   issues: PoliticianIssueType[];
 }
