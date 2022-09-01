@@ -7,7 +7,7 @@ import PoliticianAPI, { postIssueBody } from '@/api/PoliticianAPI';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import errorHandler from '@/api/ErrorHandler';
-import { Alert } from '@components/Base/Alert';
+import { Alert } from '@components/base/Alert';
 import { useParams } from 'react-router-dom';
 
 interface IssueAddModalProps {
@@ -56,7 +56,6 @@ const IssueAddModal = ({
     try {
       const body: postIssueBody = {
         targetPolitician: politicianID, // 이후 params(정치인 아이디) 으로 변경
-        regiUser: '62fe59d9d7b43bbae856d8da', // 이후 user정보에서 가져온 아이디로 변경
         issueDate,
         title: issueTitle,
         content: issueContent,

@@ -3,7 +3,6 @@ import * as Api from './Api';
 
 export type postIssueBody = {
   targetPolitician: string;
-  regiUser: string;
   issueDate: Date;
   title: string;
   content: string;
