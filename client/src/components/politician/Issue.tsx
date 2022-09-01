@@ -5,7 +5,7 @@ import dateFormatter from '@/utils/DateFormatter';
 import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import { useState } from 'react';
-import { errorAlert } from '../base/Alert';
+import errorHandler from '@/api/ErrorHandler';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
@@ -21,25 +21,34 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         if (issue._id === targetElem.dataset.id) {
           if (targetElem.innerText === '반대') {
             issue.regi.con += 1;
-            const { data } = await RegiAPI.patch(_id, {
-              pro: false,
-              con: true,
-            });
-            if (data.hasVoted) {
+
+            try {
+              const { data } = await RegiAPI.patch(_id, {
+                pro: false,
+                con: true,
+              })
+              if (data.hasVoted) {
               errorAlert('이미 투표하셨습니다.');
               issue.regi.con -= 1;
               setToggle('');
             }
+            } catch (error) {
+              errorHandler(error);
+            }
           } else {
             issue.regi.pro += 1;
-            const { data } = await RegiAPI.patch(_id, {
-              pro: true,
-              con: false,
-            });
-            if (data.hasVoted) {
+            try {
+              const { data } = await RegiAPI.patch(_id, {
+                pro: true,
+                con: false,
+              });
+              if (data.hasVoted) {
               errorAlert('이미 투표하셨습니다.');
               issue.regi.pro -= 1;
               setToggle('');
+            } catch (error) {
+              errorHandler(error);
+
             }
           }
         }
@@ -100,7 +109,7 @@ const SubContainer = styled.div`
 `;
 const Date = styled.div`
   color: ${theme.colors.thirdColor};
-  font-size: 12px;
+  font-size: 14px;
 `;
 const BolderSpan = styled.span`
   font-weight: bolder;
@@ -113,7 +122,7 @@ const LighterDiv = styled.div`
 const Title = styled.div`
   font-size: 16px;
   font-weight: 800;
-  padding-top: 10px;
+  padding-top: 5px;
 `;
 const Content = styled.div`
   font-size: 16px;

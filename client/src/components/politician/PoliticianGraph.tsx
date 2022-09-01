@@ -33,6 +33,9 @@ import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
 import { BsArrowRepeat } from 'react-icons/bs';
 import { useLocation } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { deflateRaw } from 'zlib';
+import PoliticianNameState from '@/store/PoliticianNameState';
+import { useRecoilValue } from 'recoil';
 
 ChartJS.register(
   CategoryScale,
@@ -58,16 +61,9 @@ const PoliticianGraph = (): JSX.Element => {
   const [contentId, setContentId] = useState<any>([]);
   const [resData, setResData] = useState<any>([]);
   const id = useLocation().pathname.split('/')[2];
-
-  const fetchedPoliticans = useRecoilValue(PoliticiansState);
-
-  const politicansName = fetchedPoliticans.filter(
-    (politician: PoliticiansTypes) => {
-      if (politician._id !== id) {
-        return politician.politicianInfo[0].name;
-      }
-    },
-  );
+  const name = useRecoilValue(PoliticianNameState).find(
+    (politician: any) => politician[id],
+  )[id];
 
   function ClickHander(element: InteractionItem[]) {
     if (element.length !== 0) {
@@ -233,7 +229,8 @@ const PoliticianGraph = (): JSX.Element => {
         font: {
           size: 30,
         },
-        text: `${politicansName[0].politicianInfo[0].name} 인생 그래프`,
+        text: `${name}의 그래프`,
+
       },
       legend: {
         display: false,
@@ -302,7 +299,7 @@ const PoliticianGraph = (): JSX.Element => {
             <Line
               ref={chartRef}
               onClick={event => {
-                let point = ClickHander(
+                let point = ClickHandler(
                   getElementAtEvent(chartRef.current, event),
                 );
                 setPoint(point);
