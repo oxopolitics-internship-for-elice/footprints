@@ -1,8 +1,5 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-kakao';
-import { InjectModel } from '@nestjs/mongoose';
-import { UserDocument } from '../../schemas/user.schema';
-import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { AuthService } from '../auth.service';
 
@@ -19,12 +16,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
     });
   }
 
-  async validate(
-    accessToken: string,
-    refreshToken: string,
-    profile: Profile,
-    done: any,
-  ) {
+  async validate(accessToken: string, refreshToken: string, profile: Profile, done: any) {
     try {
       // console.log(profile);
       const kakaoEmail = profile._json && profile._json.kakao_account.email;
@@ -36,11 +28,11 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
         password: kakaoPassword,
       };
       const user = await this.authService.validateUser(kakaoEmail);
-      console.log('user from strategy: ', user);
+      // console.log('user from strategy: ', user);
       if (!user) {
         const onceToken = this.authService.onceToken(userProfile);
         const result = await this.authService.addUser(userProfile);
-        console.log(result);
+        // console.log(result);
         return { onceToken, message: result, type: 'onceToken' };
       }
 

@@ -1,20 +1,20 @@
 import React from 'react';
-import ServiceInfo from '@/components/Home/ServiceInfo';
+import ServiceInfo from '@/components/home/ServiceInfo';
 import { FullPage, Slide } from 'react-full-page';
-import HomePolitician from '@/components/Home/HomePolitician';
+import HomePolitician from '@/components/home/HomePolitician';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
-import Loading from '@components/Base/Loading';
+import Loading from '@components/base/Loading';
 import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 
 const SlideFullPage = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
   const politicansName = fetchedPoliticans.map(
     (politician: PoliticiansTypes) => {
-      if (!politician?.name) {
+      if (!politician?.politicianInfo[0].name) {
         return 'null';
       }
-      return politician.name;
+      return politician?.politicianInfo[0].name;
     },
   );
   const politicansID = fetchedPoliticans.map(

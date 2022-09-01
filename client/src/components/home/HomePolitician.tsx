@@ -4,9 +4,7 @@ import React from 'react';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/leejaemyung.webp';
 import yoonseokyeol from '@/assets/yoonseokyeol.webp';
-import LifeGraph from './LifeGraph';
-import issueState from '@/store/IssueState';
-import { IssueTypes } from '@/types/IssueTypes';
+import LifeGraph from '@components/home/LifeGraph';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
 import { useNavigate } from 'react-router-dom';
@@ -106,6 +104,7 @@ const Image = styled.img`
   height: 75px;
   width: 75px;
   margin-left: 20px;
+  cursor: pointer;
 `;
 
 const Name = styled.div`
@@ -114,6 +113,7 @@ const Name = styled.div`
   margin-left: 20px;
   width: 100%;
   font-align: center;
+  cursor: pointer;
 `;
 
 const NavigateButton = styled.button`

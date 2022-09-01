@@ -6,10 +6,7 @@ import * as CryptoJS from 'crypto-js';
 import { CreateUserDto } from 'src/user/dto/add.user.dto';
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userService: UserService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
 
   async validateUser(email: string): Promise<any> {
     const user = await this.userService.getOne(email);
@@ -35,10 +32,7 @@ export class AuthService {
       expiresIn: '1m',
     });
 
-    const refreshToken = CryptoJS.AES.encrypt(
-      JSON.stringify(token),
-      process.env.AES_KEY,
-    ).toString();
+    const refreshToken = CryptoJS.AES.encrypt(JSON.stringify(token), process.env.AES_KEY).toString();
 
     await this.userService.updateRefreshToken(user.email, refreshToken);
 
@@ -67,10 +61,12 @@ export class AuthService {
   }
 
   async validateToken(token: string) {
-    console.log('token form validateToken() auth.service: ', token);
+    // console.log('token form validateToken() auth.service: ', token);
+    // 여기까지 token이 넘어오지 않음! jwt.auth.guard의 validate에서 토큰 타입검사까지하고 string 인걸 확인했지만 auth.service의 validateToken으로 넘어오지 않았음
     const result = await this.jwtService.verify(token, {
       secret: process.env.JWT_SECRET_KEY,
     });
+    // console.log('result from token', result);
     if (!result) {
       return { message: 'failed to verify token' };
     }
