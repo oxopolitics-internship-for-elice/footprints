@@ -87,4 +87,6 @@ export default StandbyIssue;
 
 const StandbyIssueContainer = styled.div`
   padding: 40px 20px 20px 20px;
+  width: 1200px;
+  margin: auto;
 `;
