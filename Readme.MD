@@ -126,6 +126,8 @@
 ![아키텍쳐](https://user-images.githubusercontent.com/73901433/187951285-bb3d5ce7-16e6-4d01-9fb5-523e06632596.png)
 
  4. 백엔드 데이터처리 구조
+ <img width="3529" alt="백엔드 데이터 처리 구조 (1)" src="https://user-images.githubusercontent.com/73901433/188047964-8f069faa-7c2a-4e71-8f1d-27fc12ed72d3.png">
+
     
     
 2. 팀원 소개 및 역할 
