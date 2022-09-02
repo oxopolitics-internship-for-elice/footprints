@@ -84,4 +84,6 @@ const PaginationButton = styled.button`
   border-radius: 10px;
   cursor: pointer;
   padding: 5px;
+  padding: 10px;
+  margin-left: 35vw;
 `;
