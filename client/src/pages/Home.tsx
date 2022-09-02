@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
-import Header from '@/components/Base/Header';
-import SlideFullPage from '@/components/Home/SlideFullPage';
+import Header from '@/components/base/Header';
+import SlideFullPage from '@/components/home/SlideFullPage';
 
 const Home = () => {
   const location = useLocation();
