@@ -2,41 +2,80 @@ import styled from '@emotion/styled';
 import { IssueProps } from '@components/politician/StandbyIssue';
 import { IssueTypes } from '@/types/IssueTypes';
 import dateFormatter from '@/utils/DateFormatter';
-import * as Api from '@/api/Api';
+import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import { useState } from 'react';
+import errorHandler from '@/api/ErrorHandler';
+import { Alert, errorAlert } from '../base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
-  const { _id, issueDate, content, regi } = issue;
+  const { _id, issueDate, title, content, regi } = issue;
   const issuedDate = dateFormatter(issueDate);
   const [toggle, setToggle] = useState('');
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
-    setToggle(targetElem.innerText);
-    setIssueList((prev: any): IssueTypes[] => {
-      const prevIssueList: IssueTypes[] = JSON.parse(JSON.stringify(prev));
-      prevIssueList.forEach(async issue => {
-        if (issue._id === targetElem.dataset.id) {
-          if (targetElem.innerText === '반대') {
-            issue.regi.con += 1;
-            const res = await Api.patch(`issues/${_id}/regi`, {
-              pro: false,
-              con: true,
-            });
-          } else {
-            issue.regi.pro += 1;
-            const res = await Api.patch(`issues/${_id}/regi`, {
-              pro: true,
-              con: false,
-            });
-          }
+    try {
+      if (targetElem.innerText === '반대') {
+        const { data } = await RegiAPI.patch(_id, {
+          pro: false,
+          con: true,
+        });
+        if (data.hasVoted) {
+          errorAlert('이미 투표하셨습니다.');
+          setToggle('');
+        } else {
+          Alert.fire({
+            icon: 'success',
+            title: '투표되었습니다.',
+          });
+          setIssueList(prev =>
+            prev.map(item => {
+              if (item._id === _id) {
+                item.regi.con++;
+              }
+              return item;
+            }),
+          );
         }
-      });
-      return prevIssueList;
-    });
+      } else {
+        const { data } = await RegiAPI.patch(_id, {
+          pro: true,
+          con: false,
+        });
+        if (data.hasVoted) {
+          errorAlert('이미 투표하셨습니다.');
+          setToggle('');
+        } else {
+          Alert.fire({
+            icon: 'success',
+            title: '투표되었습니다.',
+          });
+          setIssueList(prev =>
+            prev.map(item => {
+              if (item._id === _id) {
+                item.regi.pro++;
+              }
+              return item;
+            }),
+          );
+        }
+      }
+    } catch (e) {
+      errorHandler(e);
+    }
   };
 
+  const mouseDownHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const targetElem = event.target as HTMLButtonElement;
+    setToggle(targetElem.innerText);
+  };
+
+  const mouseUpHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setToggle('');
+  };
   return (
     <IssueContainer>
       <SubContainer>
@@ -44,14 +83,24 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         <div>
           <BolderSpan>찬성</BolderSpan> {`${regi.pro} ∙ `}
           <BolderSpan>반대</BolderSpan> {`${regi.con}`}
+          <LighterDiv>
+            {`등록까지 찬성 ${Math.max(
+              75 - regi.pro,
+              regi.con * 3 - regi.pro,
+            )}표`}
+          </LighterDiv>
         </div>
       </SubContainer>
+
+      <Title>{title}</Title>
       <Content>{content}</Content>
 
       <RegiProButton
         data-id={_id}
         toggle={toggle === '찬성' ? true : false}
         onClick={regiHandler}
+        onMouseDown={mouseDownHandler}
+        onMouseUp={mouseUpHandler}
       >
         찬성
       </RegiProButton>
@@ -59,6 +108,8 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         data-id={_id}
         toggle={toggle === '반대' ? true : false}
         onClick={regiHandler}
+        onMouseDown={mouseDownHandler}
+        onMouseUp={mouseUpHandler}
       >
         반대
       </RegiConButton>
@@ -81,16 +132,24 @@ const SubContainer = styled.div`
 `;
 const Date = styled.div`
   color: ${theme.colors.thirdColor};
-  font-size: 12px;
+  font-size: 14px;
 `;
 const BolderSpan = styled.span`
   font-weight: bolder;
 `;
+const LighterDiv = styled.div`
+  font-size: 12px;
+  color: ${theme.colors.mainColor};
+  text-align: right;
+`;
+const Title = styled.div`
+  font-size: 16px;
+  font-weight: 800;
+  padding-top: 5px;
+`;
 const Content = styled.div`
   font-size: 16px;
-  font-weight: 600;
-  line-height: 27.2px;
-  padding: 20px 0 20px 0;
+  padding: 5px 0 30px 0;
 `;
 type ButtonProps = {
   toggle: boolean;

@@ -5,7 +5,8 @@ import Circle from '@/assets/img/circle.png';
 import Triangle from '@/assets/img/triangle.png';
 import X from '@/assets/img/x.png';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { ResDataTypes, ResTypes } from './PoliticianGraph';
+import { ResDataTypes } from '@/types/GraphTypes';
+import errorHandler from '@/api/ErrorHandler';
 type Element = {
   $context: Object;
   x: number;
@@ -19,7 +20,6 @@ interface ModalProps {
   setOpen: (boolean: boolean) => void;
   element: Element;
   content: [];
-  contentId: [];
   issueDate: [];
   resData: ResDataTypes;
 }
@@ -50,42 +50,68 @@ const Modal = ({
   }
   async function ClickHandler(index: number) {
     let target = resData.id[element.$context.dataIndex];
-
-    setPoll(async () => {
-      let newPoll: { pro: boolean; neu: boolean; con: boolean } = {
-        pro: false,
-        neu: false,
-        con: false,
-      };
-      try {
-        if (index === 0) {
-          newPoll = { pro: true, neu: false, con: false };
-        }
-        if (index === 1) {
-          newPoll = { pro: false, neu: true, con: false };
-        }
-        if (index === 2) {
-          newPoll = { pro: false, neu: false, con: true };
-        }
-        const res = await GraphAPI.updatePoll(target, newPoll);
-        console.log(res.status);
-        if (res.status === 200) {
-          if (index === 0) {
-            resData.poll[element.$context.dataIndex].pro += 1;
-            newPoll['pro'] = true;
-          } else if (index === 1) {
-            resData.poll[element.$context.dataIndex].neu += 1;
-            newPoll['neu'] = true;
-          } else {
-            resData.poll[element.$context.dataIndex].con += 1;
-            newPoll['con'] = true;
-          }
-        }
-      } catch (err) {}
-
-      return newPoll;
-    });
+    let newPoll = {};
+    switch (index) {
+      case 0:
+        newPoll = { pro: true, neu: false, con: false };
+        break;
+      case 1:
+        newPoll = { pro: false, neu: true, con: false };
+        break;
+      case 2:
+        newPoll = { pro: false, neu: false, con: true };
+        break;
+    }
+    try {
+      const { data } = await GraphAPI.updatePoll(target, newPoll);
+      if (data.before) {
+        setPoll((prev: any) => {
+          return {
+            ...prev,
+            [data.before]: false,
+          };
+        });
+      }
+      if (data.now) {
+        setPoll((prev: any) => {
+          return {
+            ...prev,
+            [data.now]: true,
+          };
+        });
+      }
+    } catch (error) {
+      errorHandler(error);
+    }
   }
+
+  const pollHandler = (index: number) => {
+    const { pro, neu, con } = poll;
+    if (index === 0) {
+      return pro;
+    }
+    if (index === 1) {
+      return neu;
+    }
+    if (index === 2) {
+      return con;
+    }
+  };
+
+  useEffect(() => {
+    const fetchPollInfo = async () => {
+      const target = resData.id[element.$context.dataIndex];
+      const { data } = await GraphAPI.getPollInfo(target);
+      const pollResult = data.pollResult;
+      if (pollResult) {
+        setPoll((prev: any) => {
+          return { ...prev, [pollResult]: true };
+        });
+      }
+    };
+    fetchPollInfo();
+  }, []);
+
   return (
     <>
       <Background>
@@ -113,6 +139,7 @@ const Modal = ({
                   onClick={() => {
                     ClickHandler(index);
                   }}
+                  clicked={pollHandler(index)}
                 >
                   <img src={src} width="30px" />
                 </ChooseItem>
@@ -160,9 +187,9 @@ const Container = styled.div<ContainerProps>`
 `;
 const Content = styled.div`
   text-align: center;
-  line-height: 300px;
+  margin-top: 30px;
   background-color: #fff;
-  font-size: 40px;
+  font-size: 30px;
   overflow: hidden;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
@@ -202,10 +229,16 @@ const ChooseBox = styled.div`
   height: 80px;
 `;
 
-const ChooseItem = styled.button`
+interface ChooseItemProps {
+  clicked: boolean;
+}
+
+const ChooseItem = styled.button<ChooseItemProps>`
   border: none;
   height: 100%;
   flex-grow: 1;
+  background-color: ${props =>
+    props.clicked ? props.theme.colors.mainColor : '#fff'};
   &:hover {
     color: white;
     background-color: #868387;

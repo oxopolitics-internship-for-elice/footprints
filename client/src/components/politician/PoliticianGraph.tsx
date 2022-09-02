@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,14 +14,25 @@ import {
 import Circle from '@/assets/img/circle.png';
 import Triangle from '@/assets/img/triangle.png';
 import X from '@/assets/img/x.png';
-
-import dateFormatter from '@/utils/DateFormatter';
+import { PollFormatter, ScoreFormatter } from '@/utils/Formatter';
+import DateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
 import { getElementAtEvent, Line } from 'react-chartjs-2';
+import dinosaur from '@/assets/tribe/dinosaur.png';
+import elephant from '@/assets/tribe/elephant.png';
+import hippo from '@/assets/tribe/hippo.png';
+import lion from '@/assets/tribe/lion.png';
+import tiger from '@/assets/tribe/tiger.png';
+import oxo from '@/assets/tribe/oxo.png';
+
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import { BsArrowRepeat } from 'react-icons/bs';
-import { deflateRaw } from 'zlib';
+import { useRecoilValue } from 'recoil';
+import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
+import { useLocation } from 'react-router-dom';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import PoliticianNameState from '@/store/PoliticianNameState';
+import MinMax from '@/utils/MinMax';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,47 +43,6 @@ ChartJS.register(
   Legend,
   Filler,
 );
-type poll = {
-  pro: number;
-  neu: number;
-  con: number;
-};
-
-export interface ResTypes {
-  id: string;
-  _id: string;
-  targetPolitician: string;
-  createdAt: Date;
-  regiUser: string;
-  regiStatus: string;
-  regi: { pro: number; con: number };
-  poll: poll;
-  issueDate: Date;
-  pollDate: Date;
-  content: string;
-  isPollActive: boolean;
-  updatedAt: Date;
-  score: number;
-  title: string;
-}
-
-export interface ResDataTypes {
-  id: string;
-  _id: string;
-  targetPolitician: string;
-  createdAt: Date;
-  regiUser: string;
-  regiStatus: string;
-  regi: { pro: number; con: number };
-  poll: poll[];
-  issueDate: Date;
-  pollDate: Date;
-  content: string;
-  isPollActive: boolean;
-  updatedAt: Date;
-  score: number;
-  title: string;
-}
 
 const PoliticianGraph = (): JSX.Element => {
   const chartRef = useRef<any>(null);
@@ -84,46 +54,47 @@ const PoliticianGraph = (): JSX.Element => {
   const [isFirst, setIsFirst] = useState(true);
   const [index, setIndex] = useState<number>(1);
   const [NextPageable, isNextPageable] = useState<boolean>(true);
-  const [contentId, setContentId] = useState<any>([]);
   const [resData, setResData] = useState<any>([]);
-  function ClickHander(
-    element: InteractionItem[],
-    event: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
-  ) {
+  const [minmax, setMinmax] = useState<any>([]);
+  const id = useLocation().pathname.split('/')[2];
+  const name = useRecoilValue(PoliticianNameState).find(
+    (politician: any) => politician[id],
+  )[id];
+
+  function ClickHander(element: InteractionItem[]) {
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
       setOpen(!open);
       document.body.style.overflow = 'hidden';
-
       return element[0].element;
     }
   }
 
   const getData = async (index: number | Number) => {
-    let target = '6303bed2e9d44f884ed1d640';
-    const res = await GraphAPI.getGraph(target, index);
-
+    console.log(id);
+    const res = await GraphAPI.getGraph(id, index);
     res.data.data.map(async (res: ResTypes, index: number) => {
       setResData((current: any) => {
-        let tempdata = dateFormatter(res.issueDate);
+        let tempData = DateFormatter(res.issueDate);
+        let tempPoll = PollFormatter(res);
+        let tempScore = ScoreFormatter(res);
 
         if (index === 0) {
-          const issueDate = [tempdata];
-          const poll = [res.poll];
+          const issueDate = [tempData];
+          const poll = [tempPoll];
           const content = [res.content];
-          const score = [res.poll.pro - res.poll.con];
+          const score = [tempScore];
           const id = [res._id];
           const title = [res.title];
 
           return { issueDate, poll, content, score, id, title };
         } else {
-          const issueDate = [...current.issueDate, tempdata];
-          const poll = [...current.poll, res.poll];
-          const content = [...current.content, res.content];
-
-          const score = [...current.score, res.poll.pro - res.poll.con];
-          const id = [...current.id, res._id];
-          const title = [...current.title, res.title];
+          const issueDate = [tempData, ...current.issueDate];
+          const poll = [tempPoll, ...current.poll];
+          const content = [res.content, ...current.content];
+          const score = [tempScore, ...current.score];
+          const id = [res._id, ...current.id];
+          const title = [res.title, ...current.title];
 
           return { issueDate, poll, content, score, id, title };
         }
@@ -132,28 +103,97 @@ const PoliticianGraph = (): JSX.Element => {
 
     isNextPageable(res.data.meta.hasNextPage);
   };
+  const Img = [dinosaur, elephant, hippo, lion, tiger, oxo];
+  const chartPoint = Img.map(img => {
+    const chartPoint = new Image();
+    chartPoint.src = img;
+    chartPoint.width = 30;
+    chartPoint.height = 30;
+    return chartPoint;
+  });
 
   const start = async () => {
     if (isFirst === true) {
       await getData(index);
       setIsFirst(false);
-    }
-    setData({
-      labels: resData.issueDate,
-      datasets: [
-        {
-          data: resData.score,
-          tension: 0.3,
-          fill: {
-            target: { value: 0 },
-            below: 'rgba(255, 26, 104, 0.2)',
-            above: 'rgba(75, 192, 192,0.2)',
+    } else {
+      const temp = MinMax(resData);
+      setMinmax(temp);
+      setData({
+        labels: resData.issueDate,
+        datasets: [
+          {
+            label: '공룡',
+            data: resData.score.map((score: any) => {
+              return score.dinosaur.score;
+            }),
+            tension: 0.3,
+            borderColor: 'yellow',
+            pointStyle: chartPoint[0],
+            pointBorderColor: 'black',
+            pointRadius: 5,
           },
-        },
-      ],
-    });
-  };
+          {
+            label: '코끼리',
 
+            data: resData.score.map((score: any) => {
+              return score.elephant.score;
+            }),
+            tension: 0.3,
+            borderColor: 'skyblue',
+            pointStyle: chartPoint[1],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            label: '하마',
+
+            data: resData.score.map((score: any) => {
+              return score.hippo.score;
+            }),
+            tension: 0.3,
+            borderColor: 'gray',
+            pointStyle: chartPoint[2],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            label: '사자',
+
+            data: resData.score.map((score: any) => {
+              return score.lion.score;
+            }),
+            tension: 0.3,
+            borderColor: '#ff3f9f',
+            pointStyle: chartPoint[3],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            label: '호랑이',
+
+            data: resData.score.map((score: any) => {
+              return score.tiger.score;
+            }),
+            tension: 0.3,
+            borderColor: '#964b00',
+            pointStyle: chartPoint[4],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            label: '합계',
+
+            data: resData.score.map((score: any) => {
+              return score.total.score;
+            }),
+            pointStyle: chartPoint[5],
+            tension: 0.3,
+          },
+        ],
+      });
+    }
+  };
   const getNextData = async () => {
     await getData(index + 1);
     setIndex(index + 1);
@@ -165,6 +205,7 @@ const PoliticianGraph = (): JSX.Element => {
   const ClickButton = async () => {
     await start();
   };
+
   useEffect(() => {
     if (isFirst === false) {
       ClickButton();
@@ -178,9 +219,12 @@ const PoliticianGraph = (): JSX.Element => {
     }
   }, [isFirst]);
 
+  let count = 1;
   const options = {
+    animation: {
+      duration: 0,
+    },
     maintainAspectRatio: false,
-
     plugins: {
       tooltip: {
         enabled: false,
@@ -195,27 +239,65 @@ const PoliticianGraph = (): JSX.Element => {
         font: {
           size: 30,
         },
-        text: '윤석열 인생 그래프',
+        text: `${name}의 그래프`,
       },
       legend: {
-        display: false,
+        labels: {
+          usePointStyle: true,
+          font: {
+            size: 30,
+          },
+        },
+        onClick: (evt: any, legendItem: any, legend: any) => {
+          const index = legendItem.datasetIndex;
+          const chart = legend.chart;
+          console.log(legendItem.text);
+          console.log(data);
+
+          if (count === 1) {
+            legend.chart.data.datasets.forEach((data: any, index: number) => {
+              if (legendItem.text === data.label) {
+                chart.show(index);
+              } else {
+                chart.hide(index);
+                data.hidden = true;
+              }
+              console.log(data);
+            });
+          } else {
+            if (legendItem.hidden === true) {
+              chart.show(index);
+              legendItem.hidden = false;
+            } else {
+              chart.hide(index);
+              legendItem.hidden = true;
+            }
+          }
+
+          count += 1;
+        },
+      },
+      datalabels: {
+        font: {
+          size: 15,
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 15,
+        hoverRadius: 15,
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
       },
     },
     scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
       y: {
-        grid: {
-          display: false,
-        },
+        min: minmax[1] - 30,
+        max: minmax[0] + 30,
       },
     },
   };
-  const string1 = '<';
-  const string2 = '>';
 
   return (
     <div
@@ -230,17 +312,16 @@ const PoliticianGraph = (): JSX.Element => {
         style={{
           display: 'flex',
           justifyContent: 'center',
-          width: '1500px',
-          height: '700px',
-          margin: '100px 0 100px 0px',
+          width: '100%',
+          margin: '100px 0 30px 0px',
         }}
       >
         {NextPageable === false ? null : (
           <GraphButton
-            style={{ float: 'left', marginTop: '350px' }}
+            style={{ float: 'left', marginTop: '230px' }}
             onClick={getNextData}
           >
-            {string1}
+            {'<'}
           </GraphButton>
         )}
 
@@ -256,20 +337,20 @@ const PoliticianGraph = (): JSX.Element => {
               onClick={event => {
                 let point = ClickHander(
                   getElementAtEvent(chartRef.current, event),
-                  event,
                 );
                 setPoint(point);
               }}
               options={options}
               data={data}
+              plugins={[ChartDataLabels]}
             />
           )}
           {index === 1 ? null : (
             <GraphButton
-              style={{ marginTop: '-350px', marginRight: '-10px' }}
+              style={{ marginTop: '-350px', marginRight: '-25px' }}
               onClick={getPreData}
             >
-              {string2}
+              {'>'}
             </GraphButton>
           )}
           <div>
@@ -278,7 +359,6 @@ const PoliticianGraph = (): JSX.Element => {
                 setOpen={setOpen}
                 element={point}
                 content={content}
-                contentId={contentId}
                 issueDate={issueDate}
                 resData={resData}
               />
@@ -293,8 +373,10 @@ const PoliticianGraph = (): JSX.Element => {
 export default PoliticianGraph;
 
 function darwTooltip(context: any, resData: ResDataTypes) {
+  const ImgTribe = [dinosaur, elephant, hippo, lion, tiger];
+  const ImgPoll = [Circle, Triangle, X];
+  const dataIndex = context.chart.tooltip.dataPoints[0];
   let tooltipEl = document.getElementById('chartjs-tooltip');
-  console.log(context);
   // Create element on first render
   if (!tooltipEl) {
     tooltipEl = document.createElement('div');
@@ -330,55 +412,37 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     const tableHead = document.createElement('div');
     const br = document.createElement('br');
 
-    function drow(div: Element, body: Element, index: number) {
-      const imgSrc = [Circle, Triangle, X];
-      const imageTh = document.createElement('div');
-      const image = document.createElement('img');
-      if (index === 0) {
-        const Title = document.createElement('div');
-        const TitleText = document.createTextNode(
-          resData.title[tooltipModel.dataPoints[0].dataIndex],
+    function drow(div: Element, body: pollDeep, index: number) {
+      const Title = CreateTitle();
+      tableHead.appendChild(Title);
+      if (index === 5) {
+        const total = true;
+        result[tooltipModel.dataPoints[0].dataIndex].forEach(
+          (body: any, index: number) => {
+            if (index === 5) {
+            } else {
+              const imageTh = CreateImg(body, total, index);
+              div.appendChild(imageTh);
+            }
+          },
         );
-        Title.style.whiteSpace = 'nowrap';
-        Title.style.overflow = 'hidden';
-        Title.style.textOverflow = 'ellipsis';
-        Title.style.width = '330px';
-        Title.style.height = '30px';
-        Title.style.textAlign = 'center';
-        Title.style.fontWeight = '700';
-        Title.style.fontSize = '23px';
-        Title.style.backgroundColor = '#f1f1f1';
-        Title.style.paddingBottom = '40px';
-        Title.appendChild(TitleText);
-        tableHead.appendChild(Title);
-        tableHead.appendChild(br);
+      } else {
+        const total = false;
+
+        const imageTh = CreateImg(body, total);
+        div.appendChild(imageTh);
       }
-
-      image.src = imgSrc[index];
-      image.height = 20;
-      image.width = 20;
-      image.style.position = 'relative';
-      image.style.top = '3px';
-      imageTh.style.padding = '10px';
-      image.style.display = 'inline-block';
-      imageTh.appendChild(image);
-
-      const num = document.createTextNode(': ' + body);
-      imageTh.style.marginLeft = '120px';
-
-      imageTh.appendChild(num);
-
-      div.appendChild(imageTh);
-      div.appendChild(br);
     }
 
-    result[tooltipModel.dataPoints[0].dataIndex].forEach(
-      (body: any, index: number) => {
-        const div = document.createElement('div');
-        drow(div, body, index);
-        tableHead.appendChild(div);
-      },
-    );
+    const div = document.createElement('div');
+    dataIndex === 5
+      ? null
+      : drow(
+          div,
+          result[tooltipModel.dataPoints[0].dataIndex][dataIndex.datasetIndex],
+          dataIndex.datasetIndex,
+        );
+    tableHead.appendChild(div);
 
     const tableRoot = tooltipEl.querySelector('div');
 
@@ -405,12 +469,77 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = '#f5f5dc';
   tooltipEl.style.borderRadius = '5px';
-  tooltipEl.style.width = '330px';
-  tooltipEl.style.height = '225px';
+  if (dataIndex.datasetIndex === 5) {
+    tooltipEl.style.width = '500px';
+    tooltipEl.style.height = '560px';
+  } else {
+    tooltipEl.style.width = '500px';
+    tooltipEl.style.height = '150px';
+  }
+
+  function CreateTitle() {
+    const Title = document.createElement('div');
+    const TitleText = document.createTextNode(
+      resData.title[tooltipModel.dataPoints[0].dataIndex],
+    );
+    Title.style.whiteSpace = 'nowrap';
+    Title.style.overflow = 'hidden';
+    Title.style.textOverflow = 'ellipsis';
+    Title.style.width = '500px';
+    Title.style.height = '30px';
+    Title.style.textAlign = 'center';
+    Title.style.fontWeight = '700';
+    Title.style.fontSize = '23px';
+    Title.style.backgroundColor = '#f1f1f1';
+    Title.style.paddingBottom = '40px';
+    Title.appendChild(TitleText);
+    return Title;
+  }
+  function CreateImg(body: pollDeep, total: boolean, index = 0) {
+    const imageTh = document.createElement('div');
+    const imageTribe = document.createElement('img');
+    const imageCircle = document.createElement('img');
+    const imageTriangle = document.createElement('img');
+    const imageX = document.createElement('img');
+    if (total) {
+      imageTribe.src = ImgTribe[index];
+    } else {
+      imageTribe.src = ImgTribe[dataIndex.datasetIndex];
+    }
+    imageTribe.height = 80;
+    imageTribe.width = 80;
+    imageTh.appendChild(imageTribe);
+    imageTh.style.marginLeft = '70px';
+    imageTh.style.fontSize = '25px';
+    const img = [imageCircle, imageTriangle, imageX];
+    for (let i = 0; i <= 2; i++) {
+      const tempDiv = document.createElement('div');
+      img[i].src = ImgPoll[i];
+      img[i].height = 25;
+      img[i].width = 25;
+      const count =
+        i === 0
+          ? document.createTextNode(': ' + body.pro)
+          : i === 1
+          ? document.createTextNode(': ' + body.neu)
+          : document.createTextNode(': ' + body.con);
+      img[i].style.marginTop = '30px';
+      img[i].style.position = 'relative';
+      img[i].style.top = '5px';
+      tempDiv.style.display = 'inline';
+      tempDiv.style.flexDirection = 'row';
+      tempDiv.style.marginRight = '10px';
+      tempDiv.style.position = 'relative';
+      tempDiv.style.bottom = '20px';
+      tempDiv.appendChild(img[i]);
+      tempDiv.appendChild(count);
+      imageTh.appendChild(tempDiv);
+    }
+    return imageTh;
+  }
 }
 
-interface Props {}
-const GraphButton = styled.button<Props>`
+const GraphButton = styled.button`
   height: 3rem;
   width: 3rem;
   font-size: 30px;

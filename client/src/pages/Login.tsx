@@ -3,12 +3,13 @@ import styled from '@emotion/styled';
 import React from 'react';
 import kakaoSymbol from '@/assets/kakaoSymbol.png';
 import { Helmet } from 'react-helmet-async';
+import AuthAPI from '@/api/AuthAPI';
 
 const Login = () => {
-  const KakaoID = import.meta.env.VITE_KAKAO_ID;
-  const RedirectURI = import.meta.env.VITE_RedirectURI;
-  const kakaoRequestURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KakaoID}&redirect_uri=${RedirectURI}`;
-
+  const serverURL =
+    import.meta.env.MODE === 'development'
+      ? 'http://localhost:5000'
+      : window.location.origin;
   return (
     <>
       <Helmet>
@@ -19,7 +20,7 @@ const Login = () => {
           <Title>로그인</Title>
           <ButtonWrap>
             <KaKaoLogin>
-              <a id="kakaoSignInDiv" href={'http://localhost:5000/auth/kakao'}>
+              <a id="kakaoSignInDiv" href={`${serverURL}/auth/kakao`}>
                 <img width="25px" src={kakaoSymbol} alt="kakaoSymbol" />
                 <div>Kakao로 시작하기</div>
               </a>

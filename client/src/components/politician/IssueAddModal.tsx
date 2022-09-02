@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '@/components/Base/Modal';
+import Modal from '@/components/base/Modal';
 import styled from '@emotion/styled';
 import DatePicker, { registerLocale } from 'react-datepicker';
 import ko from 'date-fns/locale/ko';
@@ -7,7 +7,7 @@ import PoliticianAPI, { postIssueBody } from '@/api/PoliticianAPI';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import errorHandler from '@/api/ErrorHandler';
-import { Alert } from '@components/Base/Alert';
+import { Alert } from '@components/base/Alert';
 import { useParams } from 'react-router-dom';
 
 interface IssueAddModalProps {
@@ -22,6 +22,7 @@ const IssueAddModal = ({
   const [issueTitle, setIssueTitle] = React.useState('');
   const [issueContent, setIssueContent] = React.useState('');
   const { politicianID } = useParams();
+
   registerLocale('ko', ko);
 
   const handleChangeDate = (date: Date) => {
@@ -45,6 +46,7 @@ const IssueAddModal = ({
         title: '날짜를 선택해주세요.',
       });
     }
+
     if (!politicianID) {
       return Alert.fire({
         icon: 'error',
@@ -54,11 +56,11 @@ const IssueAddModal = ({
     try {
       const body: postIssueBody = {
         targetPolitician: politicianID, // 이후 params(정치인 아이디) 으로 변경
-        regiUser: '62fe59d9d7b43bbae856d8da', // 이후 user정보에서 가져온 아이디로 변경
         issueDate,
         title: issueTitle,
         content: issueContent,
       };
+
       const { data } = await PoliticianAPI.postIssue(body);
       if (data) {
         Alert.fire({
@@ -111,8 +113,8 @@ const IssueAddModal = ({
                   <FormTextArea
                     name="content"
                     rows={1}
-                    placeholder="이슈 내용을 100자 내로 입력해주세요."
-                    maxLength={100}
+                    placeholder="이슈 내용을 200자 내로 입력해주세요."
+                    maxLength={200}
                     value={issueContent}
                     onChange={event => setIssueContent(event.target.value)}
                   />

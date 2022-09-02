@@ -3,7 +3,6 @@ import * as Api from './Api';
 
 export type postIssueBody = {
   targetPolitician: string;
-  regiUser: string;
   issueDate: Date;
   title: string;
   content: string;
@@ -20,7 +19,7 @@ const PoliticianAPI: IPoliticianAPI = (() => {
     getList: () => {
       // somethingCommon();
 
-      return Api.get(`politicians`);
+      return Api.get(`issues`);
     },
     postIssue: (body: postIssueBody) => {
       return Api.post(`issues`, body);

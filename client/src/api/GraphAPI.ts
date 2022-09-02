@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import * as Api from './api';
+import * as Api from './Api';
 
 interface GraphAPI {
   getGraph(
@@ -7,6 +7,7 @@ interface GraphAPI {
     index: Number,
   ): Promise<AxiosResponse<any>>;
   updatePoll(target: String, newPoll: Object): Promise<AxiosResponse<any>>;
+  getPollInfo(target: String): Promise<AxiosResponse<any>>;
 }
 
 const GraphAPI: GraphAPI = (() => {
@@ -18,6 +19,9 @@ const GraphAPI: GraphAPI = (() => {
     },
     updatePoll: (target, newPoll) => {
       return Api.patch(`issues/${target}/poll`, newPoll);
+    },
+    getPollInfo: target => {
+      return Api.get(`issues/${target}/poll`);
     },
   };
 })();
