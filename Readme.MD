@@ -1,13 +1,11 @@
-# Readme
+# 정치발자국 서비스를 소개합니다🙌
 
-## 1. 기획 의도 (작성자 : @장한 배)
-
+## 1. 기획 의도
 ### 문제 인식
 
 <aside>
 🧐 정치계는 매일 새로운 이슈와 함께 빠르게 변화하고 있습니다. 정치인을 평가함에 있어서 여론은 시시각각 뒤집히며, 과거의 사건에 대한 재평가가 종종 이루어집니다. 
 정치발자국은 우리가 정치인을 제대로 평가하고 있을까라는 문제 의식에서 시작했습니다. 정치인의 과거부터 현재까지의 이슈들을 돌이켜보며 정치인의 스토리, 잠재력, 가치를 깊게 이해할 수 있는 프로덕트를 제공하고자 합니다.
-
 </aside>
 
 ---
@@ -33,34 +31,32 @@
 
 ---
 
-- 사용자의 편의성을 고려하여 소셜 로그인으로 회원가입과 동시에 로그인 되는 로직
-- 쿠키로 access-token 을 보관해 브라우저를 닫은 뒤에도 로그인이 되어있도록 하였음
-- 토큰으로 백엔드에서 db와 비교해 중복투표 방지 구현
+- 사용자의 편의성을 고려하여 소셜 로그인으로 회원가입과 동시에 로그인이 됩니다.
+- 쿠키로 access-token을 보관해 브라우저를 닫은 뒤에도 로그인이 되어있도록 했습니다.
+- 토큰으로 백엔드에서 db와 비교해 중복투표 방지를 구현했습니다.
 
 ### ⚛ 메인 페이지
 
 ---
 
-- 정치인의 전체 이슈를 가져와 대략적인 전체 그래프를 구현 하였음
+- 정치인의 전체 이슈를 가져와 인생 전체에 대한 그래프를 볼 수 있습니다.
 
-### ⚛ 대기 이슈
+### ⚛ 대기 중 이슈
 
 ---
 
-- 모달을 통해 날짜와 이슈 내용을 입력하고 대기 중 이슈로 등록
-- 무한스크롤을 구현해 대기 중 이슈를 가져오도록 구현 하였음
-- 마감이 임박한 top3 이슈를 가져와 상위로 노출
-- 그래프에 등록 가능한 이슈인지 유저에게 찬성과 반대를 받아 계산해 조건을 만족하면 그래프 이슈로 등록
+- 모달을 통해 날짜와 이슈 내용을 입력하고 대기 중 이슈로 등록 가능합니다.
+- 무한스크롤으로 대기 중 이슈를 가져오도록 구현했습니다.
+- 마감이 임박한 top3 이슈가 상위에 고정되어 보여집니다.
 
 ### ⚛ 정치인 그래프
 
 ---
 
-- 페이지네이션으로 등록된 이슈를 가져와 날짜를 x축으로, O에서 X를 뺀값을 Y로 나타내 선 그래프로 구현 하였음
-- 부족 별 그래프로 나타내 한눈에 같은 이슈, 정치인 이더라도 부족 간 반응의 차이를 확인 할 수 있음
-- 체크박스를 통해 원하는 부족만 선택 해 그래프로 보여지도록 하였음
-- 그래프의 점에 마우스를 올리면 O△X 값과 이슈제목을 나타내는 툴팁을 보여줌
-- 그래프의 점에 클릭 시 해당 이슈에 투표를 할 수 있는 모달창을 띄워 이슈에 대한 평가를 수집함
+- 페이지네이션으로 등록된 이슈를 가져와 날짜를 x축에 여론 투표 결과를 Y축에 나타내 선 그래프로 나타내었습니다.
+- 부족 별 그래프를 체크박스로 선택할 수 있어 나타내 같은 이슈, 정치인이더라도 부족 간 반응의 차이를 확인 할 수 있습니다.
+- 포인트에 마우스를 올리면 O△X 값과 이슈 제목을 나타내는 툴팁을 보여줍니다.
+- 포인트 클릭 시 해당 이슈에 투표를 할 수 있는 모달을 띄워 이슈에 대한 평가를 수집합니다.
 
 ---
 
@@ -73,7 +69,7 @@
 
 ---
 
-![Untitled](Readme%209dc7bc9b92224fcab3c4e54d4b54d91c/Untitled.png)
+![리액트](https://user-images.githubusercontent.com/73901433/187951266-0c401322-cd81-4b98-8f1d-56a9b0484296.png)
 
 ## Recoil
 
@@ -82,6 +78,8 @@
 
 ---
 
+![리코일](https://user-images.githubusercontent.com/73901433/187951273-01040c1d-4c9c-48e4-8fa1-1b82bc0be35c.png)
+
 ## TypeScript
 
 - 정적타입 언어로 코드에 대한 타입제어가 가능하여 개발자에게 가독성을 높여주어서 사용하였습니다.
@@ -89,11 +87,15 @@
 
 ---
 
+![TS](https://user-images.githubusercontent.com/73901433/187951242-0b3cf935-ec5d-4fa8-9107-638ff36ad9af.png)
+
 ## MongoDB
 
 - node.js와의 궁합(JS 객체 자체를 넣고 쿼리 가능, json구조로 직관적으로 데이터를 이해하기 용이함 등)이 좋아 선택하게 되었습니다.
 
 ---
+
+![몽고디비](https://user-images.githubusercontent.com/73901433/187951279-be874459-be13-4635-8463-7b9026284593.png)
 
 ## Docker
 
@@ -101,67 +103,39 @@
 
 ---
 
+![도커](https://user-images.githubusercontent.com/73901433/187951257-528cc372-c9e8-4df9-b472-d2c0caf6920d.png)
+
+
 ### Nest
 
 - typescript 기반으로 코드 안정성이 뛰어나고, 고정된 소프트웨어 아키텍쳐가 있기에 빠른 협업 프로젝트에 적합한 라이브러리라 선택
 
 ---
 
-![Untitled](Readme%209dc7bc9b92224fcab3c4e54d4b54d91c/Untitled%201.png)
+![네스트](https://user-images.githubusercontent.com/73901433/187951250-b4c3bd74-a64c-4eff-b610-617f4edd97d0.png)
 
-![Untitled](Readme%209dc7bc9b92224fcab3c4e54d4b54d91c/Untitled%202.png)
 
-![Untitled](Readme%209dc7bc9b92224fcab3c4e54d4b54d91c/Untitled%203.png)
+## 4. 프로젝트 구성도
 
-![Untitled](Readme%209dc7bc9b92224fcab3c4e54d4b54d91c/Untitled%204.png)
+---
+ 1. [와이어프레임](https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FhxRdK7tAlhO9maj57ZVcTf%2F%25EC%2599%2580%25EC%259D%25B4%25EC%2596%25B4%25ED%2594%2584%25EB%25A0%2588%25EC%259E%2584%3Fnode-id%3D33%253A9)
+    
+ 2. [API 문서](https://documenter.getpostman.com/view/20906923/VUqrMwaw)
+    
+ 3. 아키텍쳐
+![아키텍쳐](https://user-images.githubusercontent.com/73901433/187951285-bb3d5ce7-16e6-4d01-9fb5-523e06632596.png)
 
-![Untitled](Readme%209dc7bc9b92224fcab3c4e54d4b54d91c/Untitled%205.png)
+ 4. 백엔드 데이터처리 구조
+    
+    
+2. 팀원 소개 및 역할 
 
-1. 프로젝트 구성도
+| 이름 | 역할 | 담당 부분 |
+| --- | --- | --- |
+| 배장한 | BE | 1. Issue API 설계 및 작성 <br> 2. 이슈 목록 pagination 로직 구현 <br> 3. 이슈 등록 상태 변경하는 cronjob 적용 <br> 4. 이슈 투표 수 집계 후 정렬 구현  |
+| 장소영 | BE | 1. Issue API 설계 및 작성 <br> 2. 이슈 부족별 투표 로직 구현 <br> 3. 이슈 등록 투표 로직 구현 <br> 4. 정치인 목록 로직 구현 |
+| 권필주 | BE | 1. 카카오 소셜로그인 <br> 2. 토큰 인증 <br> 3. 로그인한 유저의 이슈에 대한 투표 결과 반영 로직 구현 <br> 4. 유저의 투표 중복 방지 로직 구현 |
+| 황채림 | FE | 1. chartjs를 통한 메인페이지 정치인 그래프 작성 <br> 2. 정치인 페이지 이슈 구현 <br> 3. intersection observer를 이용한 무한스크롤 적용 <br> 4. css 및 디자인 |
+| 홍주완 | FE | 1.chartjs를 통한 정치인 상세페이지 구현 <br> 2.chartjs tooltip 직접 구현 <br> 3.chartjs로 페이지네이션 적용 <br> 4.모달 팝업 구현 |
+| 김하영 | FE | 1. vite와 prettier, tsconfig 등 프론트엔드 개발환경 셋팅 <br> 2. 메인페이지 및 헤더 등 레이아웃 구현 <br> 3. 로그인 구현 <br> 4. 이슈 등록 구현 |
 
-   1. 와이어프레임
-
-   [https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FhxRdK7tAlhO9maj57ZVcTf%2F%25EC%2599%2580%25EC%259D%25B4%25EC%2596%25B4%25ED%2594%2584%25EB%25A0%2588%25EC%259E%2584%3Fnode-id%3D33%253A9](https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FhxRdK7tAlhO9maj57ZVcTf%2F%25EC%2599%2580%25EC%259D%25B4%25EC%2596%25B4%25ED%2594%2584%25EB%25A0%2588%25EC%259E%2584%3Fnode-id%3D33%253A9)
-
-   1. API 문서 링크
-
-   [FOOTPRINTS](https://documenter.getpostman.com/view/20906923/VUqrMwaw)
-
-   1. 아키텍쳐
-
-      ![슬라이드1.PNG](Readme%209dc7bc9b92224fcab3c4e54d4b54d91c/%25EC%258A%25AC%25EB%259D%25BC%25EC%259D%25B4%25EB%2593%259C1.png)
-
-   1. 백엔드 데이터처리 구조
-
-   ![Figma 백엔드 데이터 처리 구조](Readme%209dc7bc9b92224fcab3c4e54d4b54d91c/Untitled%206.png)
-
-   Figma 백엔드 데이터 처리 구조
-
-2. 팀원 소개 및 역할
-
-| 이름   | 역할 | 담당 부분                 |
-| ------ | ---- | ------------------------- |
-| 배장한 | BE   | 1. Issue API 설계 및 작성 |
-
-2. 이슈 목록 pagination 로직 구현
-3. 이슈 등록 상태 변경하는 cronjob 적용
-4. 이슈 투표 수 집계 후 정렬 구현 |
-   | 장소영 | BE | 1. Issue API 설계 및 작성
-5. 이슈 부족별 투표 로직 구현
-6. 이슈 등록 투표 로직 구현
-7. 정치인 목록 로직 구현 |
-   | 권필주 | BE | 1. 카카오 소셜로그인
-8. 토큰 인증
-9. 로그인한 유저의 이슈에 대한 투표 결과 반영 로직 구현
-10. 유저의 투표 중복 방지 로직 구현 |
-    | 황채림 | FE | 1. chartjs를 통한 메인페이지 정치인 그래프 작성
-11. 정치인 페이지 이슈 구현
-12. intersection observer를 이용한 무한스크롤 적용
-13. css 및 디자인 |
-    | 홍주완 | FE | 1.chartjs를 통한 정치인 상세페이지 구현
-    2.chartjs tooltip 직접 구현
-    3.chartjs로 페이지네이션 적용 4.모달 팝업 구현 |
-    | 김하영 | FE | 1. vite와 prettier, tsconfig 등 프론트엔드 개발환경 셋팅
-14. 메인페이지 및 헤더 등 레이아웃 구현
-15. 로그인 구현
-16. 이슈 등록 구현 |

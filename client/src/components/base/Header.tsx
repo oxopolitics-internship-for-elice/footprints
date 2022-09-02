@@ -3,7 +3,7 @@ import UserAPI from '@/api/UserAPI';
 import styled from '@emotion/styled';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthButton from './AuthButton';
+import AuthButton from '@components/base/AuthButton';
 
 const Header = () => {
   const navigate = useNavigate();
