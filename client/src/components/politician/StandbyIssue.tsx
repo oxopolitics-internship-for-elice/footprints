@@ -22,12 +22,12 @@ const StandbyIssue = (): JSX.Element => {
 
   const id = useLocation().pathname.split('/')[2];
   const loadMore = () => {
-    if (pageNum + 1 === maxPage) {
+    if (pageNum === maxPage) {
       Alert.fire({
         icon: 'error',
         title: '마지막 페이지입니다.',
       });
-      return;
+      // return;
     }
     setPageNum(prev => prev + 1);
   };
