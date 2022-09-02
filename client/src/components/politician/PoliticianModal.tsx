@@ -171,13 +171,13 @@ const Background = styled.div`
   animation-fill-mode: forwards;
 `;
 const Container = styled.div<ContainerProps>`
-  width: 1000px;
-  height: 700px;
+  width: 600px;
+  height: 400px;
   position: relative;
   top: 550px;
   right: 0px;
   bottom: 0px;
-  left: 1100px;
+  left: 50%;
   background-color: #fff;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
