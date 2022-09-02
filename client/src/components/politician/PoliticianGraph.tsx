@@ -293,8 +293,16 @@ const PoliticianGraph = (): JSX.Element => {
     },
     scales: {
       y: {
+        grid: {
+          display: false,
+        },
         min: minmax[1] - 30,
         max: minmax[0] + 30,
+      },
+      x: {
+        grid: {
+          display: false,
+        },
       },
     },
   };
