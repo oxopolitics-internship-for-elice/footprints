@@ -45,6 +45,6 @@ export interface ResDataTypes {
   content: string;
   isPollActive: boolean;
   updatedAt: Date;
-  score: number;
+  score: any;
   title: string;
 }

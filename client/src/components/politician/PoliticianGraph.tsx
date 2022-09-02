@@ -23,6 +23,8 @@ import elephant from '@/assets/tribe/elephant.png';
 import hippo from '@/assets/tribe/hippo.png';
 import lion from '@/assets/tribe/lion.png';
 import tiger from '@/assets/tribe/tiger.png';
+import oxo from '@/assets/tribe/oxo.png';
+
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
 import { useRecoilValue } from 'recoil';
@@ -30,7 +32,7 @@ import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
 import { useLocation } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import PoliticianNameState from '@/store/PoliticianNameState';
-
+import MinMax from '@/utils/MinMax';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -52,8 +54,8 @@ const PoliticianGraph = (): JSX.Element => {
   const [isFirst, setIsFirst] = useState(true);
   const [index, setIndex] = useState<number>(1);
   const [NextPageable, isNextPageable] = useState<boolean>(true);
-  const [contentId, setContentId] = useState<any>([]);
   const [resData, setResData] = useState<any>([]);
+  const [minmax, setMinmax] = useState<any>([]);
   const id = useLocation().pathname.split('/')[2];
   const name = useRecoilValue(PoliticianNameState).find(
     (politician: any) => politician[id],
@@ -72,7 +74,6 @@ const PoliticianGraph = (): JSX.Element => {
     console.log(id);
     const res = await GraphAPI.getGraph(id, index);
     res.data.data.map(async (res: ResTypes, index: number) => {
-      console.log(res);
       setResData((current: any) => {
         let tempData = DateFormatter(res.issueDate);
         let tempPoll = PollFormatter(res);
@@ -102,7 +103,7 @@ const PoliticianGraph = (): JSX.Element => {
 
     isNextPageable(res.data.meta.hasNextPage);
   };
-  const Img = [dinosaur, elephant, hippo, lion, tiger];
+  const Img = [dinosaur, elephant, hippo, lion, tiger, oxo];
   const chartPoint = Img.map(img => {
     const chartPoint = new Image();
     chartPoint.src = img;
@@ -116,11 +117,13 @@ const PoliticianGraph = (): JSX.Element => {
       await getData(index);
       setIsFirst(false);
     } else {
-      console.log(resData);
+      const temp = MinMax(resData);
+      setMinmax(temp);
       setData({
         labels: resData.issueDate,
         datasets: [
           {
+            label: '공룡',
             data: resData.score.map((score: any) => {
               return score.dinosaur.score;
             }),
@@ -131,6 +134,8 @@ const PoliticianGraph = (): JSX.Element => {
             pointRadius: 5,
           },
           {
+            label: '코끼리',
+
             data: resData.score.map((score: any) => {
               return score.elephant.score;
             }),
@@ -141,6 +146,8 @@ const PoliticianGraph = (): JSX.Element => {
             pointRadius: 5,
           },
           {
+            label: '하마',
+
             data: resData.score.map((score: any) => {
               return score.hippo.score;
             }),
@@ -151,29 +158,36 @@ const PoliticianGraph = (): JSX.Element => {
             pointRadius: 5,
           },
           {
+            label: '사자',
+
             data: resData.score.map((score: any) => {
               return score.lion.score;
             }),
             tension: 0.3,
-            borderColor: 'red',
+            borderColor: '#ff3f9f',
             pointStyle: chartPoint[3],
             pointBorderColor: 'black',
             pointRadius: 5,
           },
           {
+            label: '호랑이',
+
             data: resData.score.map((score: any) => {
               return score.tiger.score;
             }),
             tension: 0.3,
-            borderColor: 'pink',
+            borderColor: '#964b00',
             pointStyle: chartPoint[4],
             pointBorderColor: 'black',
             pointRadius: 5,
           },
           {
+            label: '합계',
+
             data: resData.score.map((score: any) => {
               return score.total.score;
             }),
+            pointStyle: chartPoint[5],
             tension: 0.3,
           },
         ],
@@ -194,7 +208,6 @@ const PoliticianGraph = (): JSX.Element => {
 
   useEffect(() => {
     if (isFirst === false) {
-      console.log(231);
       ClickButton();
     }
   }, [index]);
@@ -206,9 +219,12 @@ const PoliticianGraph = (): JSX.Element => {
     }
   }, [isFirst]);
 
+  let count = 1;
   const options = {
+    animation: {
+      duration: 0,
+    },
     maintainAspectRatio: false,
-
     plugins: {
       tooltip: {
         enabled: false,
@@ -226,7 +242,40 @@ const PoliticianGraph = (): JSX.Element => {
         text: `${name}의 그래프`,
       },
       legend: {
-        display: false,
+        labels: {
+          usePointStyle: true,
+          font: {
+            size: 30,
+          },
+        },
+        onClick: (evt: any, legendItem: any, legend: any) => {
+          const index = legendItem.datasetIndex;
+          const chart = legend.chart;
+          console.log(legendItem.text);
+          console.log(data);
+
+          if (count === 1) {
+            legend.chart.data.datasets.forEach((data: any, index: number) => {
+              if (legendItem.text === data.label) {
+                chart.show(index);
+              } else {
+                chart.hide(index);
+                data.hidden = true;
+              }
+              console.log(data);
+            });
+          } else {
+            if (legendItem.hidden === true) {
+              chart.show(index);
+              legendItem.hidden = false;
+            } else {
+              chart.hide(index);
+              legendItem.hidden = true;
+            }
+          }
+
+          count += 1;
+        },
       },
       datalabels: {
         font: {
@@ -243,15 +292,9 @@ const PoliticianGraph = (): JSX.Element => {
       },
     },
     scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
       y: {
-        grid: {
-          display: false,
-        },
+        min: minmax[1] - 30,
+        max: minmax[0] + 30,
       },
     },
   };
@@ -275,7 +318,7 @@ const PoliticianGraph = (): JSX.Element => {
       >
         {NextPageable === false ? null : (
           <GraphButton
-            style={{ float: 'left', marginTop: '350px' }}
+            style={{ float: 'left', marginTop: '230px' }}
             onClick={getNextData}
           >
             {'<'}
@@ -304,7 +347,7 @@ const PoliticianGraph = (): JSX.Element => {
           )}
           {index === 1 ? null : (
             <GraphButton
-              style={{ marginTop: '-350px', marginRight: '-10px' }}
+              style={{ marginTop: '-350px', marginRight: '-25px' }}
               onClick={getPreData}
             >
               {'>'}
@@ -316,7 +359,6 @@ const PoliticianGraph = (): JSX.Element => {
                 setOpen={setOpen}
                 element={point}
                 content={content}
-                contentId={contentId}
                 issueDate={issueDate}
                 resData={resData}
               />
@@ -373,7 +415,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     function drow(div: Element, body: pollDeep, index: number) {
       const Title = CreateTitle();
       tableHead.appendChild(Title);
-      console.log(body);
       if (index === 5) {
         const total = true;
         result[tooltipModel.dataPoints[0].dataIndex].forEach(

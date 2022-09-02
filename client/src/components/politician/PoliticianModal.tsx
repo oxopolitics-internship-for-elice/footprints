@@ -5,7 +5,8 @@ import Circle from '@/assets/img/circle.png';
 import Triangle from '@/assets/img/triangle.png';
 import X from '@/assets/img/x.png';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { ResDataTypes, ResTypes, pollDeep } from '@/types/GraphTypes';
+import { ResDataTypes } from '@/types/GraphTypes';
+import errorHandler from '@/api/ErrorHandler';
 type Element = {
   $context: Object;
   x: number;
@@ -19,7 +20,6 @@ interface ModalProps {
   setOpen: (boolean: boolean) => void;
   element: Element;
   content: [];
-  contentId: [];
   issueDate: [];
   resData: ResDataTypes;
 }
@@ -50,40 +50,68 @@ const Modal = ({
   }
   async function ClickHandler(index: number) {
     let target = resData.id[element.$context.dataIndex];
-
-    setPoll(async () => {
-      let newPoll: { pro: boolean; neu: boolean; con: boolean } = {
-        pro: false,
-        neu: false,
-        con: false,
-      };
-      try {
-        if (index === 0) {
-          newPoll = { pro: true, neu: false, con: false };
-        }
-        if (index === 1) {
-          newPoll = { pro: false, neu: true, con: false };
-        }
-        if (index === 2) {
-          newPoll = { pro: false, neu: false, con: true };
-        }
-        const res = await GraphAPI.updatePoll(target, newPoll);
-        console.log(res.status);
-      } catch (err) {}
-
-      return newPoll;
-    });
+    let newPoll = {};
+    switch (index) {
+      case 0:
+        newPoll = { pro: true, neu: false, con: false };
+        break;
+      case 1:
+        newPoll = { pro: false, neu: true, con: false };
+        break;
+      case 2:
+        newPoll = { pro: false, neu: false, con: true };
+        break;
+    }
+    try {
+      const { data } = await GraphAPI.updatePoll(target, newPoll);
+      if (data.before) {
+        setPoll((prev: any) => {
+          return {
+            ...prev,
+            [data.before]: false,
+          };
+        });
+      }
+      if (data.now) {
+        setPoll((prev: any) => {
+          return {
+            ...prev,
+            [data.now]: true,
+          };
+        });
+      }
+    } catch (error) {
+      errorHandler(error);
+    }
   }
 
-  React.useEffect(() => {
+  const pollHandler = (index: number) => {
+    const { pro, neu, con } = poll;
+    if (index === 0) {
+      return pro;
+    }
+    if (index === 1) {
+      return neu;
+    }
+    if (index === 2) {
+      return con;
+    }
+  };
+
+  useEffect(() => {
     const fetchPollInfo = async () => {
       const target = resData.id[element.$context.dataIndex];
-      const res = await GraphAPI.getPollInfo(target);
-      console.log(res.data);
-      // 데이터 값으로 이미 이슈가 있는지 확인 후 newPoll['data'] = true
+      const { data } = await GraphAPI.getPollInfo(target);
+      const pollResult = data.pollResult;
+      if (pollResult) {
+        setPoll((prev: any) => {
+          return { ...prev, [pollResult]: true };
+        });
+      }
     };
     fetchPollInfo();
   }, []);
+
   return (
     <>
       <Background>
@@ -111,6 +139,7 @@ const Modal = ({
                   onClick={() => {
                     ClickHandler(index);
                   }}
+                  clicked={pollHandler(index)}
                 >
                   <img src={src} width="30px" />
                 </ChooseItem>
@@ -200,10 +229,16 @@ const ChooseBox = styled.div`
   height: 80px;
 `;
 
-const ChooseItem = styled.button`
+interface ChooseItemProps {
+  clicked: boolean;
+}
+
+const ChooseItem = styled.button<ChooseItemProps>`
   border: none;
   height: 100%;
   flex-grow: 1;
+  background-color: ${props =>
+    props.clicked ? props.theme.colors.mainColor : '#fff'};
   &:hover {
     color: white;
     background-color: #868387;

@@ -1,4 +1,4 @@
-import { Alert } from '@/components/Base/Alert';
+import { Alert } from '@/components/base/Alert';
 import axios, { AxiosError } from 'axios';
 
 const errorHandler = (error: unknown) => {
