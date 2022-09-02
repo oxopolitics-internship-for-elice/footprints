@@ -4,14 +4,12 @@ import { IssueTypes } from '@/types/IssueTypes';
 import dateFormatter from '@/utils/DateFormatter';
 import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
-import { useState } from 'react';
 import errorHandler from '@/api/ErrorHandler';
 import { Alert, errorAlert } from '../base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
   const issuedDate = dateFormatter(issueDate);
-  const [toggle, setToggle] = useState('');
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
@@ -23,7 +21,6 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         });
         if (data.hasVoted) {
           errorAlert('이미 투표하셨습니다.');
-          setToggle('');
         } else {
           Alert.fire({
             icon: 'success',
@@ -45,7 +42,6 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         });
         if (data.hasVoted) {
           errorAlert('이미 투표하셨습니다.');
-          setToggle('');
         } else {
           Alert.fire({
             icon: 'success',
@@ -61,20 +57,23 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
           );
         }
       }
-    } catch (e) {
-      errorHandler(e);
+    } catch (e: any) {
+      console.log(e.response.status);
+      if (e.response.status == 401) {
+        errorHandler(' 로그인이 필요합니다.');
+      } else {
+        errorHandler(e);
+      }
     }
   };
 
   const mouseDownHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const targetElem = event.target as HTMLButtonElement;
-    setToggle(targetElem.innerText);
   };
 
   const mouseUpHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setToggle('');
   };
   return (
     <IssueContainer>
@@ -97,7 +96,6 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
 
       <RegiProButton
         data-id={_id}
-        toggle={toggle === '찬성' ? true : false}
         onClick={regiHandler}
         onMouseDown={mouseDownHandler}
         onMouseUp={mouseUpHandler}
@@ -106,7 +104,6 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
       </RegiProButton>
       <RegiConButton
         data-id={_id}
-        toggle={toggle === '반대' ? true : false}
         onClick={regiHandler}
         onMouseDown={mouseDownHandler}
         onMouseUp={mouseUpHandler}
@@ -151,22 +148,30 @@ const Content = styled.div`
   font-size: 16px;
   padding: 5px 0 30px 0;
 `;
-type ButtonProps = {
-  toggle: boolean;
-};
-const RegiProButton = styled.button<ButtonProps>`
-  background-color: ${props =>
-    props.toggle ? `${theme.colors.subColor}` : `${theme.colors.mainColor}`};
-  color: ${props => (props.toggle ? 'white' : 'black')};
+
+const RegiProButton = styled.button`
+  background-color: ${theme.colors.mainColor};
+  color: 'black';
   border-radius: 10px 0 0 10px;
   cursor: pointer;
   padding: 10px 30px 10px 30px;
+  box-shadow: 1px 4px 0 rgb(0, 0, 0, 0.5);
+  &: active {
+    box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.5);
+    position: relative;
+    top: 2px;
+  }
 `;
-const RegiConButton = styled.button<ButtonProps>`
-  background-color: ${props =>
-    props.toggle ? `${theme.colors.subColor}` : `${theme.colors.mainColor}`};
-  color: ${props => (props.toggle ? 'white' : 'black')};
+const RegiConButton = styled.button`
+  background-color: ${theme.colors.mainColor};
+  color: 'black';
   border-radius: 0 10px 10px 0;
   cursor: pointer;
   padding: 10px 30px 10px 30px;
+  box-shadow: 1px 4px 0 rgb(0, 0, 0, 0.5);
+  &: active {
+    box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.5);
+    position: relative;
+    top: 2px;
+  }
 `;

@@ -18,8 +18,8 @@ class PollResults {
 const PollResultsSchema = SchemaFactory.createForClass(PollResults);
 @Schema({ timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class User {
-  @Prop()
-  _id: mongoose.Schema.Types.ObjectId;
+  // @Prop()
+  // _id: mongoose.Schema.Types.ObjectId;
 
   @Prop()
   userName: string;
