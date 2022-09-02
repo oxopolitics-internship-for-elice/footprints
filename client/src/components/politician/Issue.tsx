@@ -155,6 +155,12 @@ const RegiProButton = styled.button`
   border-radius: 10px 0 0 10px;
   cursor: pointer;
   padding: 10px 30px 10px 30px;
+  box-shadow: 1px 4px 0 rgb(0, 0, 0, 0.5);
+  &: active {
+    box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.5);
+    position: relative;
+    top: 2px;
+  }
 `;
 const RegiConButton = styled.button`
   background-color: ${theme.colors.mainColor};
@@ -162,4 +168,10 @@ const RegiConButton = styled.button`
   border-radius: 0 10px 10px 0;
   cursor: pointer;
   padding: 10px 30px 10px 30px;
+  box-shadow: 1px 4px 0 rgb(0, 0, 0, 0.5);
+  &: active {
+    box-shadow: 1px 1px 0 rgb(0, 0, 0, 0.5);
+    position: relative;
+    top: 2px;
+  }
 `;
