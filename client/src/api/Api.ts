@@ -32,6 +32,7 @@ async function post(endpoint: any, data: any) {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${getCookie('access_token')}`,
     },
+    withCredentials: true,
   });
 }
 
