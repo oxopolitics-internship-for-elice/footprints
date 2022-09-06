@@ -19,7 +19,7 @@ const PoliticianAPI: IPoliticianAPI = (() => {
     getList: () => {
       // somethingCommon();
 
-      return Api.get(`issues`);
+      return Api.get(`politicians`);
     },
     postIssue: (body: postIssueBody) => {
       return Api.post(`issues`, body);

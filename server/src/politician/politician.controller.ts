@@ -7,7 +7,7 @@ export class PoliticianController {
   constructor(private politicianService: PoliticianService) {}
 
   // 메인페이지(모든 정치인 인생 전체 그래프)
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get()
   async getAllPoliticians(@Res() response) {
     try {
