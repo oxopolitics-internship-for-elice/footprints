@@ -19,6 +19,20 @@ export class PoliticianService {
           image: 1,
           party: 1,
           issues: 1,
+          counts: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: 'issues',
+          localField: '_id',
+          foreignField: 'targetPolitician',
+          as: 'count',
+          pipeline: [
+            {
+              $count: 'count',
+            },
+          ],
         },
       },
       {
@@ -35,6 +49,11 @@ export class PoliticianService {
                 score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
               },
             },
+            // {
+            //   $facet: {
+            //     counts: [{ $count: 'counts' }],
+            //   },
+            // },
             { $sort: { totalPolls: -1 } },
             { $limit: 40 },
             { $sort: { issueDate: 1 } },
@@ -42,6 +61,14 @@ export class PoliticianService {
         },
       },
     ]);
+
+    politicians.sort((a, b) => {
+      return b.count[0].count - a.count[0].count;
+    });
+
+    for (const politician of politicians) {
+      delete politician.count;
+    }
 
     return politicians;
   }
