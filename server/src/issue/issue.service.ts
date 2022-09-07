@@ -115,7 +115,7 @@ export class IssueService {
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'inactive' })
-      .sort({ issueDate: 'asc' })
+      .sort({ createdAt: -1 })
       .skip(pageOptions.skip)
       .limit(pageOptions.perPage);
     return { data: issues, meta: pageMeta };

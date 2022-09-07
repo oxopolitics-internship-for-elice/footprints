@@ -262,7 +262,6 @@ const PoliticianGraph = (): JSX.Element => {
                 chart.hide(index);
                 data.hidden = true;
               }
-              console.log(data);
             });
           } else {
             if (legendItem.hidden === true) {

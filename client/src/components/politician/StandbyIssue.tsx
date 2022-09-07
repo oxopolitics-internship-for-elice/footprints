@@ -7,6 +7,7 @@ import errorHandler from '@/api/ErrorHandler';
 import StandbyIssueAPI from '@/api/StandbyIssueAPI';
 import Loading from '@components/base/Loading';
 import { Alert } from '@components/base/Alert';
+import theme from '@/styles/theme';
 
 export interface IssueProps {
   issue: IssueTypes;
@@ -15,13 +16,19 @@ export interface IssueProps {
 
 const StandbyIssue = (): JSX.Element => {
   const [issueList, setIssueList] = useState<IssueTypes[]>([]);
-  const targetRef = useRef<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [maxPage, setMaxPage] = useState(null);
 
   const id = useLocation().pathname.split('/')[2];
   const loadMore = () => {
+    if (pageNum === maxPage) {
+      Alert.fire({
+        icon: 'error',
+        title: '마지막 페이지입니다.',
+      });
+      // return;
+    }
     setPageNum(prev => prev + 1);
   };
 
@@ -41,25 +48,6 @@ const StandbyIssue = (): JSX.Element => {
   useEffect(() => {
     getIssue();
   }, [pageNum]);
-  //infinite scroll
-  useEffect(() => {
-    const observer: IntersectionObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          loadMore();
-          observer.disconnect();
-        }
-      },
-    );
-    if (maxPage && pageNum > maxPage) {
-      Alert.fire({
-        icon: 'error',
-        title: '마지막 페이지입니다.',
-      });
-      return;
-    }
-    observer.observe(targetRef.current);
-  }, [pageNum]);
 
   return (
     <StandbyIssueContainer>
@@ -78,7 +66,7 @@ const StandbyIssue = (): JSX.Element => {
       ) : (
         <Loading />
       )}
-      <div ref={targetRef}>{''}</div>
+      <PaginationButton onClick={loadMore}>더 보기</PaginationButton>
     </StandbyIssueContainer>
   );
 };
@@ -89,4 +77,13 @@ const StandbyIssueContainer = styled.div`
   padding: 40px 20px 20px 20px;
   width: 1200px;
   margin: auto;
+`;
+const PaginationButton = styled.button`
+  background-color: ${theme.colors.lighterColor};
+  color: 'black';
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 5px;
+  padding: 10px;
+  margin-left: 35vw;
 `;

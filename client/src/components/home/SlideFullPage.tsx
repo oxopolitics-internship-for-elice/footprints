@@ -11,10 +11,7 @@ const SlideFullPage = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
   const politicansName = fetchedPoliticans.map(
     (politician: PoliticiansTypes) => {
-      if (!politician?.politicianInfo[0].name) {
-        return 'null';
-      }
-      return politician?.politicianInfo[0].name;
+      return politician.name;
     },
   );
   const politicansID = fetchedPoliticans.map(
