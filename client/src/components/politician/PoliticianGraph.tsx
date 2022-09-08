@@ -61,7 +61,7 @@ const PoliticianGraph = (): JSX.Element => {
     (politician: any) => politician[id],
   )[id];
 
-  function ClickHander(element: InteractionItem[]) {
+  function ClickHandler(element: InteractionItem[]) {
     if (element.length !== 0) {
       const { datasetIndex, index } = element[0];
       setOpen(!open);
@@ -71,11 +71,10 @@ const PoliticianGraph = (): JSX.Element => {
   }
 
   const getData = async (index: number | Number) => {
-    console.log(id);
     const res = await GraphAPI.getGraph(id, index);
     res.data.data.map(async (res: ResTypes, index: number) => {
       setResData((current: any) => {
-        let tempData = DateFormatter(res.issueDate);
+        let tempData = DateFormatter(res.issueDate, '.');
         let tempPoll = PollFormatter(res);
         let tempScore = ScoreFormatter(res);
 
@@ -123,25 +122,23 @@ const PoliticianGraph = (): JSX.Element => {
         labels: resData.issueDate,
         datasets: [
           {
-            label: '공룡',
-            data: resData.score.map((score: any) => {
-              return score.dinosaur.score;
-            }),
-            tension: 0.3,
-            borderColor: 'yellow',
-            pointStyle: chartPoint[0],
-            pointBorderColor: 'black',
-            pointRadius: 5,
-          },
-          {
-            label: '코끼리',
+            label: '합계',
 
             data: resData.score.map((score: any) => {
-              return score.elephant.score;
+              return score.total.score;
+            }),
+            pointStyle: chartPoint[5],
+            tension: 0.3,
+          },
+          {
+            label: '호랑이',
+
+            data: resData.score.map((score: any) => {
+              return score.tiger.score;
             }),
             tension: 0.3,
-            borderColor: 'skyblue',
-            pointStyle: chartPoint[1],
+            borderColor: '#E48F05',
+            pointStyle: chartPoint[4],
             pointBorderColor: 'black',
             pointRadius: 5,
           },
@@ -152,8 +149,31 @@ const PoliticianGraph = (): JSX.Element => {
               return score.hippo.score;
             }),
             tension: 0.3,
-            borderColor: 'gray',
+            borderColor: '#8D39A8',
             pointStyle: chartPoint[2],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            label: '코끼리',
+
+            data: resData.score.map((score: any) => {
+              return score.elephant.score;
+            }),
+            tension: 0.3,
+            borderColor: '#2d8bb2',
+            pointStyle: chartPoint[1],
+            pointBorderColor: 'black',
+            pointRadius: 5,
+          },
+          {
+            label: '공룡',
+            data: resData.score.map((score: any) => {
+              return score.dinosaur.score;
+            }),
+            tension: 0.3,
+            borderColor: '#91A401',
+            pointStyle: chartPoint[0],
             pointBorderColor: 'black',
             pointRadius: 5,
           },
@@ -164,31 +184,10 @@ const PoliticianGraph = (): JSX.Element => {
               return score.lion.score;
             }),
             tension: 0.3,
-            borderColor: '#ff3f9f',
+            borderColor: '#C2403D',
             pointStyle: chartPoint[3],
             pointBorderColor: 'black',
             pointRadius: 5,
-          },
-          {
-            label: '호랑이',
-
-            data: resData.score.map((score: any) => {
-              return score.tiger.score;
-            }),
-            tension: 0.3,
-            borderColor: '#964b00',
-            pointStyle: chartPoint[4],
-            pointBorderColor: 'black',
-            pointRadius: 5,
-          },
-          {
-            label: '합계',
-
-            data: resData.score.map((score: any) => {
-              return score.total.score;
-            }),
-            pointStyle: chartPoint[5],
-            tension: 0.3,
           },
         ],
       });
@@ -235,11 +234,7 @@ const PoliticianGraph = (): JSX.Element => {
       },
 
       title: {
-        display: true,
-        font: {
-          size: 30,
-        },
-        text: `${name}의 그래프`,
+        display: false,
       },
       legend: {
         labels: {
@@ -251,8 +246,6 @@ const PoliticianGraph = (): JSX.Element => {
         onClick: (evt: any, legendItem: any, legend: any) => {
           const index = legendItem.datasetIndex;
           const chart = legend.chart;
-          console.log(legendItem.text);
-          console.log(data);
 
           if (count === 1) {
             legend.chart.data.datasets.forEach((data: any, index: number) => {
@@ -304,13 +297,17 @@ const PoliticianGraph = (): JSX.Element => {
         },
       },
     },
+    onHover: (event: any, chartElement: any) => {
+      const target = event.native ? event.native.target : event.target;
+      target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+    },
   };
 
   return (
     <GraphContainer>
       {NextPageable === false ? null : (
         <GraphButton
-          style={{ float: 'left', marginTop: '230px' }}
+          style={{ float: 'left', marginTop: '350px' }}
           onClick={getNextData}
         >
           {'<'}
@@ -322,7 +319,7 @@ const PoliticianGraph = (): JSX.Element => {
           <Line
             ref={chartRef}
             onClick={event => {
-              let point = ClickHander(
+              let point = ClickHandler(
                 getElementAtEvent(chartRef.current, event),
               );
               setPoint(point);
@@ -334,7 +331,7 @@ const PoliticianGraph = (): JSX.Element => {
         )}
         {index === 1 ? null : (
           <GraphButton
-            style={{ marginTop: '-350px', marginRight: '-25px' }}
+            style={{ marginTop: '-350px', marginRight: '-95px' }}
             onClick={getPreData}
           >
             {'>'}
@@ -450,7 +447,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     position.left + window.pageXOffset + tooltipModel.caretX + 'px';
   tooltipEl.style.top =
     position.top + window.pageYOffset + tooltipModel.caretY + 'px';
-  // tooltipEl.style.font = bodyFont.string;
 
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = '#f5f5dc';
