@@ -58,9 +58,6 @@ const PoliticianGraph = (): JSX.Element => {
   const [resData, setResData] = useState<any>([]);
   const [minmax, setMinmax] = useState<any>([]);
   const id = useLocation().pathname.split('/')[2];
-  const name = useRecoilValue(PoliticianNameState).find(
-    (politician: any) => politician[id],
-  )[id];
 
   function ClickHandler(element: InteractionItem[]) {
     if (element.length !== 0) {
@@ -220,6 +217,7 @@ const PoliticianGraph = (): JSX.Element => {
       tooltip: {
         enabled: false,
         maintainAspectRatio: true,
+        position: 'customPositioner' as 'customPositioner',
         external: function (context: any) {
           darwTooltip(context, resData);
         },
@@ -292,6 +290,34 @@ const PoliticianGraph = (): JSX.Element => {
       const target = event.native ? event.native.target : event.target;
       target.style.cursor = chartElement[0] ? 'pointer' : 'default';
     },
+  };
+
+  Tooltip.positioners.customPositioner = function (
+    this,
+    elements: any,
+    position: any,
+  ) {
+    if (!elements.length) {
+      return false;
+    }
+    var offset = 0;
+    const tooltip = document.body.querySelector('#chartjs-tooltip');
+    console.log(tooltip);
+    console.log(
+      window.innerWidth,
+      tooltip.offsetWidth,
+      window.innerWidth - tooltip.offsetWidth,
+      position.x,
+    );
+    if (((window.innerWidth - tooltip.offsetWidth) / 3) * 2 > position.x) {
+      offset = 10;
+    } else {
+      offset = -340;
+    }
+    return {
+      x: position.x + offset,
+      y: position.y,
+    };
   };
 
   return (
@@ -384,7 +410,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       return Object.values(body);
     });
     const tableHead = document.createElement('div');
-    const br = document.createElement('br');
 
     function drow(div: Element, body: pollDeep, index: number) {
       const Title = CreateTitle();
@@ -435,7 +460,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   tooltipEl.style.opacity = '1';
   tooltipEl.style.position = 'absolute';
   tooltipEl.style.left =
-    position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+    position.left + window.pageXOffset + tooltipModel.caretX + 15 + 'px';
   tooltipEl.style.top =
     position.top + window.pageYOffset + tooltipModel.caretY + 'px';
 
@@ -445,10 +470,10 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
     tooltipEl.style.width = '300px';
-    tooltipEl.style.height = '320px';
+    tooltipEl.style.height = 'auto';
   } else {
     tooltipEl.style.width = '300px';
-    tooltipEl.style.height = '100px';
+    tooltipEl.style.height = 'auto';
   }
 
   function CreateTitle() {
