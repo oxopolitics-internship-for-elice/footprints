@@ -11,9 +11,9 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import Circle from '@/assets/img/circle.png';
-import Triangle from '@/assets/img/triangle.png';
-import X from '@/assets/img/x.png';
+import Circle from '@/assets/poll-img/Circle.svg';
+import Triangle from '@/assets/poll-img/Triangle.svg';
+import X from '@/assets/poll-img/X.svg';
 import { PollFormatter, ScoreFormatter } from '@/utils/Formatter';
 import DateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
@@ -33,6 +33,7 @@ import { useLocation } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import PoliticianNameState from '@/store/PoliticianNameState';
 import MinMax from '@/utils/MinMax';
+import theme from '@/styles/theme';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -122,37 +123,13 @@ const PoliticianGraph = (): JSX.Element => {
         labels: resData.issueDate,
         datasets: [
           {
-            label: '합계',
-
+            label: '공룡',
             data: resData.score.map((score: any) => {
-              return score.total.score;
-            }),
-            pointStyle: chartPoint[5],
-            tension: 0.3,
-          },
-          {
-            label: '호랑이',
-
-            data: resData.score.map((score: any) => {
-              return score.tiger.score;
+              return score.dinosaur.score;
             }),
             tension: 0.3,
-            borderColor: '#E48F05',
-            pointStyle: chartPoint[4],
-            pointBorderColor: 'black',
-            pointRadius: 5,
-          },
-          {
-            label: '하마',
-
-            data: resData.score.map((score: any) => {
-              return score.hippo.score;
-            }),
-            tension: 0.3,
-            borderColor: '#8D39A8',
-            pointStyle: chartPoint[2],
-            pointBorderColor: 'black',
-            pointRadius: 5,
+            borderColor: '#91A401',
+            pointStyle: chartPoint[0],
           },
           {
             label: '코끼리',
@@ -163,19 +140,16 @@ const PoliticianGraph = (): JSX.Element => {
             tension: 0.3,
             borderColor: '#2d8bb2',
             pointStyle: chartPoint[1],
-            pointBorderColor: 'black',
-            pointRadius: 5,
           },
           {
-            label: '공룡',
+            label: '하마',
+
             data: resData.score.map((score: any) => {
-              return score.dinosaur.score;
+              return score.hippo.score;
             }),
             tension: 0.3,
-            borderColor: '#91A401',
-            pointStyle: chartPoint[0],
-            pointBorderColor: 'black',
-            pointRadius: 5,
+            borderColor: '#8D39A8',
+            pointStyle: chartPoint[2],
           },
           {
             label: '사자',
@@ -186,8 +160,26 @@ const PoliticianGraph = (): JSX.Element => {
             tension: 0.3,
             borderColor: '#C2403D',
             pointStyle: chartPoint[3],
-            pointBorderColor: 'black',
-            pointRadius: 5,
+          },
+
+          {
+            label: '호랑이',
+
+            data: resData.score.map((score: any) => {
+              return score.tiger.score;
+            }),
+            tension: 0.3,
+            borderColor: '#E48F05',
+            pointStyle: chartPoint[4],
+          },
+          {
+            label: '합계',
+
+            data: resData.score.map((score: any) => {
+              return score.total.score;
+            }),
+            pointStyle: chartPoint[5],
+            tension: 0.3,
           },
         ],
       });
@@ -278,7 +270,6 @@ const PoliticianGraph = (): JSX.Element => {
     elements: {
       point: {
         radius: 15,
-        hoverRadius: 15,
         borderColor: 'transparent',
         backgroundColor: 'transparent',
       },
@@ -449,14 +440,15 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     position.top + window.pageYOffset + tooltipModel.caretY + 'px';
 
   tooltipEl.style.pointerEvents = 'none';
-  tooltipEl.style.background = '#f5f5dc';
-  tooltipEl.style.borderRadius = '5px';
+  tooltipEl.style.background = `${theme.colors.lighterColor}`;
+  tooltipEl.style.borderRadius = '10px';
+  tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
-    tooltipEl.style.width = '500px';
-    tooltipEl.style.height = '560px';
+    tooltipEl.style.width = '300px';
+    tooltipEl.style.height = '320px';
   } else {
-    tooltipEl.style.width = '500px';
-    tooltipEl.style.height = '150px';
+    tooltipEl.style.width = '300px';
+    tooltipEl.style.height = '100px';
   }
 
   function CreateTitle() {
@@ -464,16 +456,15 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     const TitleText = document.createTextNode(
       resData.title[tooltipModel.dataPoints[0].dataIndex],
     );
-    Title.style.whiteSpace = 'nowrap';
-    Title.style.overflow = 'hidden';
-    Title.style.textOverflow = 'ellipsis';
-    Title.style.width = '500px';
-    Title.style.height = '30px';
+    Title.style.whiteSpace = 'wrap';
+    Title.style.width = '300px';
     Title.style.textAlign = 'center';
     Title.style.fontWeight = '700';
-    Title.style.fontSize = '23px';
-    Title.style.backgroundColor = '#f1f1f1';
-    Title.style.paddingBottom = '40px';
+    Title.style.fontSize = '20px';
+    Title.style.backgroundColor = `${theme.colors.mainColor}`;
+    Title.style.padding = '5px';
+    Title.style.borderTopLeftRadius = '10px';
+    Title.style.borderTopRightRadius = '10px';
     Title.appendChild(TitleText);
     return Title;
   }
@@ -488,11 +479,12 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     } else {
       imageTribe.src = ImgTribe[dataIndex.datasetIndex];
     }
-    imageTribe.height = 80;
-    imageTribe.width = 80;
+    imageTribe.height = 40;
+    imageTribe.width = 40;
     imageTh.appendChild(imageTribe);
-    imageTh.style.marginLeft = '70px';
-    imageTh.style.fontSize = '25px';
+    imageTh.style.fontSize = '17px';
+    imageTh.style.padding = '5px';
+    imageTh.style.textAlign = 'center';
     const img = [imageCircle, imageTriangle, imageX];
     for (let i = 0; i <= 2; i++) {
       const tempDiv = document.createElement('div');
@@ -501,18 +493,16 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       img[i].width = 25;
       const count =
         i === 0
-          ? document.createTextNode(': ' + body.pro)
+          ? document.createTextNode(' ' + body.pro)
           : i === 1
-          ? document.createTextNode(': ' + body.neu)
-          : document.createTextNode(': ' + body.con);
-      img[i].style.marginTop = '30px';
+          ? document.createTextNode(' ' + body.neu)
+          : document.createTextNode(' ' + body.con);
       img[i].style.position = 'relative';
       img[i].style.top = '5px';
       tempDiv.style.display = 'inline';
-      tempDiv.style.flexDirection = 'row';
-      tempDiv.style.marginRight = '10px';
+      tempDiv.style.marginLeft = '10px';
       tempDiv.style.position = 'relative';
-      tempDiv.style.bottom = '20px';
+      tempDiv.style.top = '-10px';
       tempDiv.appendChild(img[i]);
       tempDiv.appendChild(count);
       imageTh.appendChild(tempDiv);
