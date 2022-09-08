@@ -307,73 +307,52 @@ const PoliticianGraph = (): JSX.Element => {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        height: '700px',
-        marginBottom: '50px',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          width: '100%',
-          margin: '100px 0 30px 0px',
-        }}
-      >
-        {NextPageable === false ? null : (
+    <GraphContainer>
+      {NextPageable === false ? null : (
+        <GraphButton
+          style={{ float: 'left', marginTop: '230px' }}
+          onClick={getNextData}
+        >
+          {'<'}
+        </GraphButton>
+      )}
+
+      <Graph>
+        {data && (
+          <Line
+            ref={chartRef}
+            onClick={event => {
+              let point = ClickHander(
+                getElementAtEvent(chartRef.current, event),
+              );
+              setPoint(point);
+            }}
+            options={options}
+            data={data}
+            plugins={[ChartDataLabels]}
+          />
+        )}
+        {index === 1 ? null : (
           <GraphButton
-            style={{ float: 'left', marginTop: '230px' }}
-            onClick={getNextData}
+            style={{ marginTop: '-350px', marginRight: '-25px' }}
+            onClick={getPreData}
           >
-            {'<'}
+            {'>'}
           </GraphButton>
         )}
-
-        <div
-          style={{
-            height: '100%',
-            width: '80%',
-          }}
-        >
-          {data && (
-            <Line
-              ref={chartRef}
-              onClick={event => {
-                let point = ClickHander(
-                  getElementAtEvent(chartRef.current, event),
-                );
-                setPoint(point);
-              }}
-              options={options}
-              data={data}
-              plugins={[ChartDataLabels]}
+        <div>
+          {open && (
+            <Modal
+              setOpen={setOpen}
+              element={point}
+              content={content}
+              issueDate={issueDate}
+              resData={resData}
             />
           )}
-          {index === 1 ? null : (
-            <GraphButton
-              style={{ marginTop: '-350px', marginRight: '-25px' }}
-              onClick={getPreData}
-            >
-              {'>'}
-            </GraphButton>
-          )}
-          <div>
-            {open && (
-              <Modal
-                setOpen={setOpen}
-                element={point}
-                content={content}
-                issueDate={issueDate}
-                resData={resData}
-              />
-            )}
-          </div>
         </div>
-      </div>
-    </div>
+      </Graph>
+    </GraphContainer>
   );
 };
 
@@ -546,6 +525,16 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   }
 }
 
+const GraphContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 700px;
+  margin: 100px 0 70px 0;
+`;
+const Graph = styled.div`
+  height: 100%;
+  width: 80%;
+`;
 const GraphButton = styled.button`
   height: 3rem;
   width: 3rem;
