@@ -24,7 +24,6 @@ import hippo from '@/assets/tribe/hippo.png';
 import lion from '@/assets/tribe/lion.png';
 import tiger from '@/assets/tribe/tiger.png';
 import oxo from '@/assets/tribe/oxo.png';
-
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
 import { useRecoilValue } from 'recoil';
@@ -34,6 +33,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import PoliticianNameState from '@/store/PoliticianNameState';
 import MinMax from '@/utils/MinMax';
 import theme from '@/styles/theme';
+import AuthButton from '../base/AuthButton';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -166,6 +166,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#E48F05',
+            backgroundColor: 'transparent',
             pointStyle: chartPoint[4],
           },
           {
@@ -229,7 +230,7 @@ const PoliticianGraph = (): JSX.Element => {
         labels: {
           usePointStyle: true,
           font: {
-            size: 30,
+            size: 18,
           },
         },
         onClick: (evt: any, legendItem: any, legend: any) => {
@@ -262,13 +263,18 @@ const PoliticianGraph = (): JSX.Element => {
         font: {
           size: 15,
         },
+        anchor: 'end',
+        clamp: true,
+        align: 'top',
+        offset: 0,
+        display: 'auto',
       },
     },
     elements: {
       point: {
-        radius: 15,
-        borderColor: 'transparent',
-        backgroundColor: 'transparent',
+        radius: 0,
+        hitRadius: 15,
+        hoverRadius: 0,
       },
     },
     scales: {
@@ -457,7 +463,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = `${theme.colors.lighterColor}`;
-  tooltipEl.style.borderRadius = '10px';
   tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
     tooltipEl.style.width = '300px';
