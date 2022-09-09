@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { IssueProps } from '@components/politician/StandbyIssue';
+import { IssueTypes } from '@/types/IssueTypes';
 import dateFormatter from '@/utils/DateFormatter';
 import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
@@ -8,7 +9,7 @@ import { Alert, errorAlert } from '../base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
-  const issuedDate = dateFormatter(issueDate, '년월일');
+  const issuedDate = dateFormatter(issueDate);
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
