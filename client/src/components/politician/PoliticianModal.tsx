@@ -173,11 +173,12 @@ const Background = styled.div`
 const Container = styled.div<ContainerProps>`
   width: 600px;
   height: 400px;
-  border-radius: 50px;
+  border-radius: 20px;
   position: absolute;
   top: 50%;
   left: 50%;
   background-color: #fff;
+  box-shadow: rgba(100, 100, 111, 0.5) 0px 7px 29px 0px;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-name: fadeIn;
