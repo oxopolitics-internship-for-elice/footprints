@@ -463,6 +463,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = `${theme.colors.lighterColor}`;
+  tooltipEl.style.borderRadius = '0 0 10px 10px';
   tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
     tooltipEl.style.width = '300px';
