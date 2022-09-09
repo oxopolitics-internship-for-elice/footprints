@@ -11,9 +11,9 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import Circle from '@/assets/poll-img/Circle.svg';
-import Triangle from '@/assets/poll-img/Triangle.svg';
-import X from '@/assets/poll-img/X.svg';
+import ColoredCircle from '@/assets/selection/ColoredCircle.svg';
+import ColoredTriangle from '@/assets/selection/ColoredTriangle.svg';
+import ColoredX from '@/assets/selection/ColoredX.svg';
 import { PollFormatter, ScoreFormatter } from '@/utils/Formatter';
 import DateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
@@ -61,7 +61,6 @@ const PoliticianGraph = (): JSX.Element => {
 
   function ClickHandler(element: InteractionItem[]) {
     if (element.length !== 0) {
-      const { datasetIndex, index } = element[0];
       setOpen(!open);
       document.body.style.overflow = 'hidden';
       return element[0].element;
@@ -301,15 +300,7 @@ const PoliticianGraph = (): JSX.Element => {
       return false;
     }
     var offset = 0;
-    const tooltip = document.body.querySelector('#chartjs-tooltip');
-    console.log(tooltip);
-    console.log(
-      window.innerWidth,
-      tooltip.offsetWidth,
-      window.innerWidth - tooltip.offsetWidth,
-      position.x,
-    );
-    if (((window.innerWidth - tooltip.offsetWidth) / 3) * 2 > position.x) {
+    if (((window.innerWidth - 300) / 5) * 3 > position.x) {
       offset = 10;
     } else {
       offset = -340;
@@ -374,7 +365,7 @@ export default PoliticianGraph;
 
 function darwTooltip(context: any, resData: ResDataTypes) {
   const ImgTribe = [dinosaur, elephant, hippo, lion, tiger];
-  const ImgPoll = [Circle, Triangle, X];
+  const ImgPoll = [ColoredCircle, ColoredTriangle, ColoredX];
   const dataIndex = context.chart.tooltip.dataPoints[0];
   let tooltipEl = document.getElementById('chartjs-tooltip');
   // Create element on first render
