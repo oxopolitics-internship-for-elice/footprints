@@ -454,7 +454,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
   const position = context.chart.canvas.getBoundingClientRect();
 
-  tooltipEl.style.opacity = '1';
   tooltipEl.style.position = 'absolute';
   tooltipEl.style.left =
     position.left + window.pageXOffset + tooltipModel.caretX + 15 + 'px';
@@ -464,6 +463,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = `${theme.colors.lighterColor}`;
   tooltipEl.style.borderRadius = '0 0 10px 10px';
+  tooltipEl.style.boxShadow = 'rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;';
   tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
     tooltipEl.style.width = '300px';
