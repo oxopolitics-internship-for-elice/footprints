@@ -233,6 +233,9 @@ const PoliticianGraph = (): JSX.Element => {
             size: 18,
           },
         },
+        onHover: function (event: any) {
+          event.native.target.style.cursor = 'pointer';
+        },
         onClick: (evt: any, legendItem: any, legend: any) => {
           const index = legendItem.datasetIndex;
           const chart = legend.chart;
