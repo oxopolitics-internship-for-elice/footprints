@@ -1,70 +1,83 @@
-import styled from '@emotion/styled';
 import React from 'react';
-import ChartVideo from '@/assets/ChartVideo.mp4';
+import styled from '@emotion/styled';
 
-const ServiceInfo = () => {
+interface ServiceInfoProps {
+  imageSrc: string;
+  imagePosition: 'left' | 'right';
+  title: string;
+  description: string;
+  backgroundColor?: string;
+}
+
+const ServiceInfo = ({
+  imageSrc,
+  imagePosition,
+  title,
+  description,
+  backgroundColor,
+}: ServiceInfoProps) => {
   return (
     <>
-      <Overlay />
-      <Video src={ChartVideo} autoPlay loop muted></Video>
-      <Content>
-        <h2>{'정치인의 발자취를 한눈에 볼 수 있는\n정치 참여 커뮤니티'}</h2>
-      </Content>
+      <Container backgroundColor={backgroundColor}>
+        <ImageContainer imagePosition={imagePosition}>
+          {imageSrc === 'ready' ? (
+            <div>준비중입니다.</div>
+          ) : (
+            <Image src={imageSrc} />
+          )}
+        </ImageContainer>
+        <TextContainer>
+          <Title>{title}</Title>
+          <Description>{description}</Description>
+        </TextContainer>
+      </Container>
     </>
   );
 };
 
 export default ServiceInfo;
 
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
+const Container = styled.div<{ backgroundColor?: string }>`
+  display: flex;
+  flex-direction: row;
   width: 100%;
   height: 100%;
-  background-color: #000000cc;
+  background-color: ${({ backgroundColor }) => backgroundColor || '#fff'};
 `;
 
-const Video = styled.video`
-  width: 100%;
+const ImageContainer = styled.div<{ imagePosition: 'left' | 'right' }>`
+  display: flex;
+  flex-direction: row;
+  width: 50%;
   height: 100%;
-  object-fit: cover;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: -1;
+  justify-content: ${({ imagePosition }) =>
+    imagePosition === 'left' ? 'flex-start' : 'flex-end'};
+  align-items: center;
 `;
 
-const Content = styled.div`
-  width: 100%;
-  height: 100%;
+const Image = styled.img`
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+`;
+
+const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 50%;
+  height: 100%;
   justify-content: center;
   align-items: center;
-  color: #fff;
-  font-size: 1.5em;
-  font-weight: bold;
-  text-align: center;
-  padding: 1rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
+`;
 
-  h2 {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    transform: translate(-50%, -50%);
-    font-size: 3rem;
-    line-height: 8.4rem;
-    letter-spacing: -1.5px;
-    color: #fff;
-    font-weight: 800;
-    text-align: center;
-    white-space: pre-line;
-  }
+const Title = styled.h2`
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 1rem;
+`;
+
+const Description = styled.p`
+  font-size: 1.2em;
+  font-weight: 300;
+  text-align: center;
 `;

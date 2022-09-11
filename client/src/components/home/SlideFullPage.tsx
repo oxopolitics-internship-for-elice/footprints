@@ -1,5 +1,6 @@
 import React from 'react';
-import ServiceInfo from '@/components/home/ServiceInfo';
+import ServiceIntro from '@/components/home/ServiceIntro';
+import ServiceInfo from './ServiceInfo';
 import { FullPage, Slide } from 'react-full-page';
 import HomePolitician from '@/components/home/HomePolitician';
 import { useRecoilValue } from 'recoil';
@@ -24,7 +25,24 @@ const SlideFullPage = () => {
   return (
     <FullPage>
       <Slide>
-        <ServiceInfo />
+        <ServiceIntro />
+      </Slide>
+      <Slide>
+        <ServiceInfo
+          imageSrc="ready"
+          title="정치인의 이슈를 한눈에"
+          description="정치인의 이슈를 한눈에 볼 수 있습니다."
+          backgroundColor="#F5F5F5"
+          imagePosition="right"
+        />
+      </Slide>
+      <Slide>
+        <ServiceInfo
+          imageSrc="ready"
+          title="정치인의 이슈를 한눈에"
+          description="정치인의 이슈를 한눈에 볼 수 있습니다."
+          imagePosition="left"
+        />
       </Slide>
       {politicansName.length > 0 ? (
         politicansName.map((politicanName: string, index: number) => (
