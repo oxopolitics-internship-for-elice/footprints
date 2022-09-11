@@ -1,7 +1,7 @@
 import { flexCenter } from '@/styles/Flex';
 import styled from '@emotion/styled';
 import React from 'react';
-import kakaoSymbol from '@/assets/kakaoSymbol.png';
+import kakaoSymbol from '@/assets/KakaoSymbol.png';
 import { Helmet } from 'react-helmet-async';
 import AuthAPI from '@/api/AuthAPI';
 

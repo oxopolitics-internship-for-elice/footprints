@@ -70,7 +70,7 @@ const HeaderBlock = styled.header<HeaderBlockProps>`
   right: 0;
   top: 0;
   z-index: 2;
-  background-color: ${props => (props.istransparent ? 'transparent' : '#fff')};
+  background-color: ${props => (props.istransparent ? '#fff' : '#fff')};
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
   transition: all 0.5s ease 0s;
 `;

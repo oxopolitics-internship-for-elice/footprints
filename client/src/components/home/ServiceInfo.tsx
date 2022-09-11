@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 interface ServiceInfoProps {
   imageSrc: string;
-  imagePosition: 'left' | 'right';
+  imagePosition: string;
   title: string;
   description: string;
   backgroundColor?: string;
@@ -51,7 +51,7 @@ const Container = styled.div<ContainerProps>`
 `;
 
 interface ImageContainerProps {
-  imagePosition: 'left' | 'right';
+  imagePosition: string;
 }
 
 const ImageContainer = styled.div<ImageContainerProps>`
