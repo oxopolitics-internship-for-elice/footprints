@@ -20,7 +20,7 @@ const ServiceInfo = ({
     <>
       <Container backgroundColor={backgroundColor}>
         <ImageContainer imagePosition={imagePosition}>
-          {imageSrc === 'ready' ? (
+          {imageSrc === '' ? (
             <div>준비중입니다.</div>
           ) : (
             <Image src={imageSrc} />
@@ -37,22 +37,31 @@ const ServiceInfo = ({
 
 export default ServiceInfo;
 
-const Container = styled.div<{ backgroundColor?: string }>`
+interface ContainerProps {
+  backgroundColor?: string;
+}
+
+const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: row;
   width: 100%;
   height: 100%;
   background-color: ${({ backgroundColor }) => backgroundColor || '#fff'};
+  padding: 1rem;
 `;
 
-const ImageContainer = styled.div<{ imagePosition: 'left' | 'right' }>`
+interface ImageContainerProps {
+  imagePosition: 'left' | 'right';
+}
+
+const ImageContainer = styled.div<ImageContainerProps>`
   display: flex;
   flex-direction: row;
   width: 50%;
   height: 100%;
-  justify-content: ${({ imagePosition }) =>
-    imagePosition === 'left' ? 'flex-start' : 'flex-end'};
+  justify-content: center;
   align-items: center;
+  order: ${({ imagePosition }) => (imagePosition === 'left' ? 0 : 1)};
 `;
 
 const Image = styled.img`
