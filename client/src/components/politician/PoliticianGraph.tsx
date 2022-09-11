@@ -11,9 +11,9 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import Circle from '@/assets/img/circle.png';
-import Triangle from '@/assets/img/triangle.png';
-import X from '@/assets/img/x.png';
+import ColoredCircle from '@/assets/selection/ColoredCircle.svg';
+import ColoredTriangle from '@/assets/selection/ColoredTriangle.svg';
+import ColoredX from '@/assets/selection/ColoredX.svg';
 import { PollFormatter, ScoreFormatter } from '@/utils/Formatter';
 import DateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
@@ -24,7 +24,6 @@ import hippo from '@/assets/tribe/hippo.png';
 import lion from '@/assets/tribe/lion.png';
 import tiger from '@/assets/tribe/tiger.png';
 import oxo from '@/assets/tribe/oxo.png';
-
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
 import { useRecoilValue } from 'recoil';
@@ -33,6 +32,8 @@ import { useLocation } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import PoliticianNameState from '@/store/PoliticianNameState';
 import MinMax from '@/utils/MinMax';
+import theme from '@/styles/theme';
+import AuthButton from '../base/AuthButton';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -57,13 +58,9 @@ const PoliticianGraph = (): JSX.Element => {
   const [resData, setResData] = useState<any>([]);
   const [minmax, setMinmax] = useState<any>([]);
   const id = useLocation().pathname.split('/')[2];
-  const name = useRecoilValue(PoliticianNameState).find(
-    (politician: any) => politician[id],
-  )[id];
 
-  function ClickHander(element: InteractionItem[]) {
+  function ClickHandler(element: InteractionItem[]) {
     if (element.length !== 0) {
-      const { datasetIndex, index } = element[0];
       setOpen(!open);
       document.body.style.overflow = 'hidden';
       return element[0].element;
@@ -71,11 +68,10 @@ const PoliticianGraph = (): JSX.Element => {
   }
 
   const getData = async (index: number | Number) => {
-    console.log(id);
     const res = await GraphAPI.getGraph(id, index);
     res.data.data.map(async (res: ResTypes, index: number) => {
       setResData((current: any) => {
-        let tempData = DateFormatter(res.issueDate);
+        let tempData = DateFormatter(res.issueDate, '.');
         let tempPoll = PollFormatter(res);
         let tempScore = ScoreFormatter(res);
 
@@ -128,10 +124,8 @@ const PoliticianGraph = (): JSX.Element => {
               return score.dinosaur.score;
             }),
             tension: 0.3,
-            borderColor: 'yellow',
+            borderColor: '#91A401',
             pointStyle: chartPoint[0],
-            pointBorderColor: 'black',
-            pointRadius: 5,
           },
           {
             label: '코끼리',
@@ -140,10 +134,8 @@ const PoliticianGraph = (): JSX.Element => {
               return score.elephant.score;
             }),
             tension: 0.3,
-            borderColor: 'skyblue',
+            borderColor: '#2d8bb2',
             pointStyle: chartPoint[1],
-            pointBorderColor: 'black',
-            pointRadius: 5,
           },
           {
             label: '하마',
@@ -152,10 +144,8 @@ const PoliticianGraph = (): JSX.Element => {
               return score.hippo.score;
             }),
             tension: 0.3,
-            borderColor: 'gray',
+            borderColor: '#8D39A8',
             pointStyle: chartPoint[2],
-            pointBorderColor: 'black',
-            pointRadius: 5,
           },
           {
             label: '사자',
@@ -164,11 +154,10 @@ const PoliticianGraph = (): JSX.Element => {
               return score.lion.score;
             }),
             tension: 0.3,
-            borderColor: '#ff3f9f',
+            borderColor: '#C2403D',
             pointStyle: chartPoint[3],
-            pointBorderColor: 'black',
-            pointRadius: 5,
           },
+
           {
             label: '호랑이',
 
@@ -176,10 +165,9 @@ const PoliticianGraph = (): JSX.Element => {
               return score.tiger.score;
             }),
             tension: 0.3,
-            borderColor: '#964b00',
+            borderColor: '#E48F05',
+            backgroundColor: 'transparent',
             pointStyle: chartPoint[4],
-            pointBorderColor: 'black',
-            pointRadius: 5,
           },
           {
             label: '합계',
@@ -229,30 +217,25 @@ const PoliticianGraph = (): JSX.Element => {
       tooltip: {
         enabled: false,
         maintainAspectRatio: true,
+        position: 'customPositioner' as 'customPositioner',
         external: function (context: any) {
           darwTooltip(context, resData);
         },
       },
 
       title: {
-        display: true,
-        font: {
-          size: 30,
-        },
-        text: `${name}의 그래프`,
+        display: false,
       },
       legend: {
         labels: {
           usePointStyle: true,
           font: {
-            size: 30,
+            size: 18,
           },
         },
         onClick: (evt: any, legendItem: any, legend: any) => {
           const index = legendItem.datasetIndex;
           const chart = legend.chart;
-          console.log(legendItem.text);
-          console.log(data);
 
           if (count === 1) {
             legend.chart.data.datasets.forEach((data: any, index: number) => {
@@ -280,14 +263,18 @@ const PoliticianGraph = (): JSX.Element => {
         font: {
           size: 15,
         },
+        anchor: 'end',
+        clamp: true,
+        align: 'top',
+        offset: 0,
+        display: 'auto',
       },
     },
     elements: {
       point: {
-        radius: 15,
-        hoverRadius: 15,
-        borderColor: 'transparent',
-        backgroundColor: 'transparent',
+        radius: 0,
+        hitRadius: 15,
+        hoverRadius: 0,
       },
     },
     scales: {
@@ -304,76 +291,79 @@ const PoliticianGraph = (): JSX.Element => {
         },
       },
     },
+    onHover: (event: any, chartElement: any) => {
+      const target = event.native ? event.native.target : event.target;
+      target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+    },
+  };
+
+  Tooltip.positioners.customPositioner = function (
+    this,
+    elements: any,
+    position: any,
+  ) {
+    if (!elements.length) {
+      return false;
+    }
+    var offset = 0;
+    if (((window.innerWidth - 300) / 5) * 3 > position.x) {
+      offset = 10;
+    } else {
+      offset = -340;
+    }
+    return {
+      x: position.x + offset,
+      y: position.y,
+    };
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        height: '700px',
-        marginBottom: '50px',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          width: '100%',
-          margin: '100px 0 30px 0px',
-        }}
-      >
-        {NextPageable === false ? null : (
+    <GraphContainer>
+      {NextPageable === false ? null : (
+        <GraphButton
+          style={{ float: 'left', marginTop: '350px' }}
+          onClick={getNextData}
+        >
+          {'<'}
+        </GraphButton>
+      )}
+
+      <Graph>
+        {data && (
+          <Line
+            ref={chartRef}
+            onClick={event => {
+              let point = ClickHandler(
+                getElementAtEvent(chartRef.current, event),
+              );
+              setPoint(point);
+            }}
+            options={options}
+            data={data}
+            plugins={[ChartDataLabels]}
+          />
+        )}
+        {index === 1 ? null : (
           <GraphButton
-            style={{ float: 'left', marginTop: '230px' }}
-            onClick={getNextData}
+            style={{ marginTop: '-350px', marginRight: '-95px' }}
+            onClick={getPreData}
           >
-            {'<'}
+            {'>'}
           </GraphButton>
         )}
-
-        <div
-          style={{
-            height: '100%',
-            width: '80%',
-          }}
-        >
-          {data && (
-            <Line
-              ref={chartRef}
-              onClick={event => {
-                let point = ClickHander(
-                  getElementAtEvent(chartRef.current, event),
-                );
-                setPoint(point);
-              }}
-              options={options}
-              data={data}
-              plugins={[ChartDataLabels]}
+        <div>
+          {open && (
+            <Modal
+              setOpen={setOpen}
+              element={point}
+              content={content}
+              issueDate={issueDate}
+              resData={resData}
             />
           )}
-          {index === 1 ? null : (
-            <GraphButton
-              style={{ marginTop: '-350px', marginRight: '-25px' }}
-              onClick={getPreData}
-            >
-              {'>'}
-            </GraphButton>
-          )}
-          <div>
-            {open && (
-              <Modal
-                setOpen={setOpen}
-                element={point}
-                content={content}
-                issueDate={issueDate}
-                resData={resData}
-              />
-            )}
-          </div>
         </div>
-      </div>
-    </div>
+      </Graph>
+    </GraphContainer>
   );
 };
 
@@ -381,7 +371,7 @@ export default PoliticianGraph;
 
 function darwTooltip(context: any, resData: ResDataTypes) {
   const ImgTribe = [dinosaur, elephant, hippo, lion, tiger];
-  const ImgPoll = [Circle, Triangle, X];
+  const ImgPoll = [ColoredCircle, ColoredTriangle, ColoredX];
   const dataIndex = context.chart.tooltip.dataPoints[0];
   let tooltipEl = document.getElementById('chartjs-tooltip');
   // Create element on first render
@@ -417,7 +407,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       return Object.values(body);
     });
     const tableHead = document.createElement('div');
-    const br = document.createElement('br');
 
     function drow(div: Element, body: pollDeep, index: number) {
       const Title = CreateTitle();
@@ -465,23 +454,23 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
   const position = context.chart.canvas.getBoundingClientRect();
 
-  tooltipEl.style.opacity = '1';
   tooltipEl.style.position = 'absolute';
   tooltipEl.style.left =
-    position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+    position.left + window.pageXOffset + tooltipModel.caretX + 15 + 'px';
   tooltipEl.style.top =
     position.top + window.pageYOffset + tooltipModel.caretY + 'px';
-  // tooltipEl.style.font = bodyFont.string;
 
   tooltipEl.style.pointerEvents = 'none';
-  tooltipEl.style.background = '#f5f5dc';
-  tooltipEl.style.borderRadius = '5px';
+  tooltipEl.style.background = `${theme.colors.lighterColor}`;
+  tooltipEl.style.borderRadius = '0 0 10px 10px';
+  tooltipEl.style.boxShadow = 'rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;';
+  tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
-    tooltipEl.style.width = '500px';
-    tooltipEl.style.height = '560px';
+    tooltipEl.style.width = '300px';
+    tooltipEl.style.height = 'auto';
   } else {
-    tooltipEl.style.width = '500px';
-    tooltipEl.style.height = '150px';
+    tooltipEl.style.width = '300px';
+    tooltipEl.style.height = 'auto';
   }
 
   function CreateTitle() {
@@ -489,16 +478,15 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     const TitleText = document.createTextNode(
       resData.title[tooltipModel.dataPoints[0].dataIndex],
     );
-    Title.style.whiteSpace = 'nowrap';
-    Title.style.overflow = 'hidden';
-    Title.style.textOverflow = 'ellipsis';
-    Title.style.width = '500px';
-    Title.style.height = '30px';
+    Title.style.whiteSpace = 'wrap';
+    Title.style.width = '300px';
     Title.style.textAlign = 'center';
     Title.style.fontWeight = '700';
-    Title.style.fontSize = '23px';
-    Title.style.backgroundColor = '#f1f1f1';
-    Title.style.paddingBottom = '40px';
+    Title.style.fontSize = '20px';
+    Title.style.backgroundColor = `${theme.colors.mainColor}`;
+    Title.style.padding = '5px';
+    Title.style.borderTopLeftRadius = '10px';
+    Title.style.borderTopRightRadius = '10px';
     Title.appendChild(TitleText);
     return Title;
   }
@@ -513,11 +501,12 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     } else {
       imageTribe.src = ImgTribe[dataIndex.datasetIndex];
     }
-    imageTribe.height = 80;
-    imageTribe.width = 80;
+    imageTribe.height = 40;
+    imageTribe.width = 40;
     imageTh.appendChild(imageTribe);
-    imageTh.style.marginLeft = '70px';
-    imageTh.style.fontSize = '25px';
+    imageTh.style.fontSize = '17px';
+    imageTh.style.padding = '5px';
+    imageTh.style.textAlign = 'center';
     const img = [imageCircle, imageTriangle, imageX];
     for (let i = 0; i <= 2; i++) {
       const tempDiv = document.createElement('div');
@@ -526,18 +515,16 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       img[i].width = 25;
       const count =
         i === 0
-          ? document.createTextNode(': ' + body.pro)
+          ? document.createTextNode(' ' + body.pro)
           : i === 1
-          ? document.createTextNode(': ' + body.neu)
-          : document.createTextNode(': ' + body.con);
-      img[i].style.marginTop = '30px';
+          ? document.createTextNode(' ' + body.neu)
+          : document.createTextNode(' ' + body.con);
       img[i].style.position = 'relative';
       img[i].style.top = '5px';
       tempDiv.style.display = 'inline';
-      tempDiv.style.flexDirection = 'row';
-      tempDiv.style.marginRight = '10px';
+      tempDiv.style.marginLeft = '10px';
       tempDiv.style.position = 'relative';
-      tempDiv.style.bottom = '20px';
+      tempDiv.style.top = '-10px';
       tempDiv.appendChild(img[i]);
       tempDiv.appendChild(count);
       imageTh.appendChild(tempDiv);
@@ -546,6 +533,16 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   }
 }
 
+const GraphContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  height: 700px;
+  margin: 100px 0 70px 0;
+`;
+const Graph = styled.div`
+  height: 100%;
+  width: 80%;
+`;
 const GraphButton = styled.button`
   height: 3rem;
   width: 3rem;
