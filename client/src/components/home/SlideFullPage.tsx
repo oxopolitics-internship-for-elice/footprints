@@ -29,7 +29,7 @@ const SlideFullPage = () => {
       </Slide>
       <Slide>
         <ServiceInfo
-          imageSrc="ready"
+          imageSrc=""
           title="정치인의 이슈를 한눈에"
           description="정치인의 이슈를 한눈에 볼 수 있습니다."
           backgroundColor="#F5F5F5"
@@ -38,7 +38,7 @@ const SlideFullPage = () => {
       </Slide>
       <Slide>
         <ServiceInfo
-          imageSrc="ready"
+          imageSrc=""
           title="정치인의 이슈를 한눈에"
           description="정치인의 이슈를 한눈에 볼 수 있습니다."
           imagePosition="left"
