@@ -4,15 +4,10 @@ import React, { PropsWithChildren } from 'react';
 
 interface CarouselProps {
   children: React.ReactNode;
-  width?: string;
-  height?: string;
+  style?: React.CSSProperties;
 }
 
-const Carousel = ({
-  children,
-  width,
-  height,
-}: PropsWithChildren<CarouselProps>) => {
+const Carousel = ({ children, style }: PropsWithChildren<CarouselProps>) => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const handleClickPrev = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -35,17 +30,11 @@ const Carousel = ({
 
   return (
     <>
-      <Container width={width} height={height}>
+      <Container style={style}>
         <SlideContainer>
           {React.Children.map(children, (child, index) => {
             return (
-              <Slide
-                key={index * 10}
-                currentSlide={currentSlide}
-                index={index}
-                width={width}
-                height={height}
-              >
+              <Slide currentSlide={currentSlide} index={index} key={index}>
                 {child}
               </Slide>
             );
@@ -63,8 +52,7 @@ const Carousel = ({
 export default Carousel;
 
 interface ContainerProps {
-  width?: string;
-  height?: string;
+  style?: React.CSSProperties;
 }
 
 const Container = styled.div<ContainerProps>`
@@ -72,14 +60,13 @@ const Container = styled.div<ContainerProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: ${props => props.width || '100%'};
-  height: ${props => props.height || '100%'};
+  width: ${props => props.style?.width || '100%'};
+  height: ${props => props.style?.height || '100%'};
 `;
 
 const SlideContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
@@ -89,8 +76,6 @@ const SlideContainer = styled.div`
 interface SlideProps {
   currentSlide: number;
   index: number;
-  width?: string;
-  height?: string;
 }
 
 const Slide = styled.div<SlideProps>`
@@ -98,11 +83,8 @@ const Slide = styled.div<SlideProps>`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: ${props => props.width || '100%'};
-  height: ${props => props.height || '100%'};
-  transform: translateX(
-    ${props => props.index * 100 - props.currentSlide * 100}%
-  );
+  height: 100%;
+  transform: translateX(${props => 0 - props.currentSlide * 100}%);
   transition: transform ease-out 0.45s;
 `;
 
@@ -112,7 +94,7 @@ const ButtonContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
+  height: auto;
 `;
 
 const Button = styled.button`

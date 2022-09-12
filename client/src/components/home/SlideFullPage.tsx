@@ -10,7 +10,7 @@ import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import PoliticianGraph from '@/assets/PoliticianGraph.png';
 import PoliticianGraphModal from '@/assets/PoliticianGraphModal.png';
 import StandbyIssue from '@/assets/StandbyIssue.png';
-import Carousel from '../base/Carousel';
+import Carousel from '@components/base/Carousel';
 
 const SlideFullPage = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
@@ -53,7 +53,7 @@ const SlideFullPage = () => {
   return (
     <FullPage>
       <Slide>
-        <Carousel width="2200px" height="400px">
+        <Carousel>
           {politicansName.length > 0 ? (
             politicansName.map((politicanName: string, index: number) => {
               return (

@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@emotion/react": "^11.10.0",
-    "@types/faker": "^6.6.9",
     "@types/node": "^18.7.4",
     "@types/react": "^18.0.18",
     "@types/react-datepicker": "^4.4.2",
