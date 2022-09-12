@@ -94,13 +94,16 @@ const TextContainer = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 2em;
-  font-weight: bold;
-  margin-bottom: 1rem;
+  font-size: 44px;
+  line-height: 1.36;
+  font-weight: 400;
 `;
 
 const Description = styled.p`
-  font-size: 1.2em;
-  font-weight: 300;
+  word-break: keep-all;
+  padding-top: 1em;
+  font-size: 1.2rem;
+  line-height: 1.55;
   text-align: center;
+}
 `;

@@ -10,6 +10,7 @@ import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import PoliticianGraph from '@/assets/PoliticianGraph.png';
 import PoliticianGraphModal from '@/assets/PoliticianGraphModal.png';
 import StandbyIssue from '@/assets/StandbyIssue.png';
+import Carousel from '../base/Carousel';
 
 const SlideFullPage = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
@@ -52,7 +53,21 @@ const SlideFullPage = () => {
   return (
     <FullPage>
       <Slide>
-        <ServiceIntro />
+        <Carousel width="2200px" height="400px">
+          {politicansName.length > 0 ? (
+            politicansName.map((politicanName: string, index: number) => {
+              return (
+                <HomePolitician
+                  politicanName={politicanName}
+                  politicansID={politicansID[index]}
+                  key={index}
+                />
+              );
+            })
+          ) : (
+            <Loading />
+          )}
+        </Carousel>
       </Slide>
       {InfoContent.map((content, index) => (
         <Slide key={content.title}>
@@ -65,7 +80,7 @@ const SlideFullPage = () => {
           />
         </Slide>
       ))}
-      {politicansName.length > 0 ? (
+      {/* {politicansName.length > 0 ? (
         politicansName.map((politicanName: string, index: number) => (
           <Slide key={politicansID[index]}>
             <HomePolitician
@@ -76,7 +91,7 @@ const SlideFullPage = () => {
         ))
       ) : (
         <Loading />
-      )}
+      )} */}
     </FullPage>
   );
 };
