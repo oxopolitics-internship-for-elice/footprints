@@ -31,6 +31,7 @@ const Carousel = ({ children, style }: PropsWithChildren<CarouselProps>) => {
   return (
     <>
       <Container style={style}>
+        <Button onClick={handleClickPrev}>{'<'}</Button>
         <SlideContainer>
           {React.Children.map(children, (child, index) => {
             return (
@@ -40,10 +41,7 @@ const Carousel = ({ children, style }: PropsWithChildren<CarouselProps>) => {
             );
           })}
         </SlideContainer>
-        <ButtonContainer>
-          <Button onClick={handleClickPrev}>{'<'}</Button>
-          <Button onClick={handleClickNext}>{'>'}</Button>
-        </ButtonContainer>
+        <Button onClick={handleClickNext}>{'>'}</Button>
       </Container>
     </>
   );
@@ -57,7 +55,7 @@ interface ContainerProps {
 
 const Container = styled.div<ContainerProps>`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   width: ${props => props.style?.width || '100%'};

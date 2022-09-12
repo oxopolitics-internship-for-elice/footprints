@@ -8,6 +8,7 @@ import { IoCloseCircleOutline } from 'react-icons/io5';
 import { ResDataTypes } from '@/types/GraphTypes';
 import errorHandler from '@/api/ErrorHandler';
 import theme from '@/styles/theme';
+import { getCookie } from '@/utils/Cookie';
 type Element = {
   $context: Object;
   x: number;
@@ -32,6 +33,7 @@ const Modal = ({
   resData,
 }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
+  const accessToken = getCookie('access_token');
 
   const ref = useRef<null | HTMLDivElement>(null);
   const Imgsrc = [BasicCircle, BasicTriangle, BasicX];
@@ -81,7 +83,7 @@ const Modal = ({
           };
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error);
     }
   }
@@ -110,7 +112,9 @@ const Modal = ({
         });
       }
     };
-    fetchPollInfo();
+    if (accessToken) {
+      fetchPollInfo();
+    }
   }, []);
 
   return (
