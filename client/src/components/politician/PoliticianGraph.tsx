@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,14 +26,11 @@ import tiger from '@/assets/tribe/tiger.png';
 import oxo from '@/assets/tribe/oxo.png';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import { useRecoilValue } from 'recoil';
 import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import PoliticianNameState from '@/store/PoliticianNameState';
 import MinMax from '@/utils/MinMax';
 import theme from '@/styles/theme';
-import AuthButton from '../base/AuthButton';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -44,6 +41,9 @@ ChartJS.register(
   Legend,
   Filler,
 );
+interface Params {
+  politicianID: string;
+}
 
 const PoliticianGraph = (): JSX.Element => {
   const chartRef = useRef<any>(null);
@@ -57,7 +57,7 @@ const PoliticianGraph = (): JSX.Element => {
   const [NextPageable, isNextPageable] = useState<boolean>(true);
   const [resData, setResData] = useState<any>([]);
   const [minmax, setMinmax] = useState<any>([]);
-  const id = useLocation().pathname.split('/')[2];
+  const { politicianID } = useParams<keyof Params>() as Params;
 
   function ClickHandler(element: InteractionItem[]) {
     if (element.length !== 0) {
@@ -68,7 +68,7 @@ const PoliticianGraph = (): JSX.Element => {
   }
 
   const getData = async (index: number | Number) => {
-    const res = await GraphAPI.getGraph(id, index);
+    const res = await GraphAPI.getGraph(politicianID, index);
     res.data.data.map(async (res: ResTypes, index: number) => {
       setResData((current: any) => {
         let tempData = DateFormatter(res.issueDate, '.');
@@ -227,11 +227,13 @@ const PoliticianGraph = (): JSX.Element => {
         display: false,
       },
       legend: {
+        align: 'center',
         labels: {
           usePointStyle: true,
           font: {
             size: 18,
           },
+          padding: 20,
         },
         onHover: function (event: any) {
           event.native.target.style.cursor = 'pointer';
@@ -539,12 +541,12 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 const GraphContainer = styled.div`
   display: flex;
   justify-content: center;
-  height: 700px;
-  margin: 100px 0 70px 0;
+  height: 80vh;
+  margin: 30px 0 70px 0;
 `;
 const Graph = styled.div`
   height: 100%;
-  width: 80%;
+  width: 80vw;
 `;
 const GraphButton = styled.button`
   height: 3rem;

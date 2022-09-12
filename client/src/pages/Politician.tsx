@@ -7,6 +7,7 @@ import IssueAddModal from '@/components/politician/IssueAddModal';
 import Header from '@/components/base/Header';
 import PoliticianGraph from '@/components/politician/PoliticianGraph';
 import Layout from '@/components/layout/Layout';
+import PoliticianInfo from '@/components/politician/PoliticianInfo';
 
 const Politician = (): JSX.Element => {
   const [modalShow, setModalShow] = React.useState(false);
@@ -24,6 +25,7 @@ const Politician = (): JSX.Element => {
       <Layout
         children={
           <>
+            <PoliticianInfo />
             <PoliticianGraph />
             <IssueAddModal
               modalShow={modalShow}
