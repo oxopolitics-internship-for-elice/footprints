@@ -345,8 +345,8 @@ const PoliticianGraph = (): JSX.Element => {
         ></HiQuestionMarkCircle>
         {isHovering && (
           <Manual>
-            그래프 상단의 라벨을 클릭하면 각 그래프를 켜거나 끌 수 있습니다.
-            그래프의 숫자에 마우스를 올리면 통계를 볼 수 있으며 클릭하여 투표를
+            - 부족 이름을 클릭하여 각 그래프를 켜거나 끌 수 있습니다.
+            <br />- 스코어에 마우스를 올리면 통계를 볼 수 있으며 클릭하여 투표를
             진행할 수 있습니다.
           </Manual>
         )}
@@ -570,6 +570,7 @@ const GraphContainer = styled.div`
   height: 80vh;
   margin: 30px 0 70px 0;
   position: relative;
+  max-height: 500px;
 `;
 const Graph = styled.div`
   height: 100%;
@@ -577,25 +578,29 @@ const Graph = styled.div`
 `;
 const ManualContainer = styled.div`
   position: absolute;
-  right: 10vw;
-  top: -1%;
-  width: 25px;
+  right: 3vw;
+  top: -2%;
+  width: 5px;
   overflow: visible;
 `;
 const Manual = styled.div`
   background-color: ${theme.colors.lighterColor};
   border-radius: 10px;
   padding: 10px;
-  width: 200px;
+  width: 250px;
+  position: absolute;
+  right: -30px;
+  top: -135px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   &:before {
     content: '';
     position: absolute;
-    top: 15%;
-    left: 5px;
+    top: 100%;
+    right: 10px;
     width: 0;
-    border-bottom: 10px solid ${theme.colors.lighterColor};
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
+    border-top: 10px solid ${theme.colors.lighterColor};
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
   }
 `;
 const GraphButton = styled.button`
