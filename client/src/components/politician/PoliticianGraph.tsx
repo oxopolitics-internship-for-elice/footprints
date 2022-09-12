@@ -31,6 +31,7 @@ import { useParams } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import MinMax from '@/utils/MinMax';
 import theme from '@/styles/theme';
+import { HiQuestionMarkCircle } from 'react-icons/hi';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -57,6 +58,7 @@ const PoliticianGraph = (): JSX.Element => {
   const [NextPageable, isNextPageable] = useState<boolean>(true);
   const [resData, setResData] = useState<any>([]);
   const [minmax, setMinmax] = useState<any>([]);
+  const [isHovering, setIsHovering] = useState(false);
   const { politicianID } = useParams<keyof Params>() as Params;
 
   function ClickHandler(element: InteractionItem[]) {
@@ -322,8 +324,33 @@ const PoliticianGraph = (): JSX.Element => {
     };
   };
 
+  const handleMouseOver = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseOut = () => {
+    setIsHovering(false);
+  };
+
   return (
     <GraphContainer>
+      <ManualContainer>
+        <HiQuestionMarkCircle
+          size="25"
+          color={theme.colors.mainColor}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
+          overflow="visible"
+          cursor="pointer"
+        ></HiQuestionMarkCircle>
+        {isHovering && (
+          <Manual>
+            그래프 상단의 라벨을 클릭하면 각 그래프를 켜거나 끌 수 있습니다.
+            그래프의 숫자에 마우스를 올리면 통계를 볼 수 있으며 클릭하여 투표를
+            진행할 수 있습니다.
+          </Manual>
+        )}
+      </ManualContainer>
       {NextPageable === false ? null : (
         <GraphButton
           style={{ float: 'left', marginTop: '350px' }}
@@ -540,13 +567,36 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
 const GraphContainer = styled.div`
   display: flex;
-  justify-content: center;
   height: 80vh;
   margin: 30px 0 70px 0;
+  position: relative;
 `;
 const Graph = styled.div`
   height: 100%;
   width: 80vw;
+`;
+const ManualContainer = styled.div`
+  position: absolute;
+  right: 10vw;
+  top: -1%;
+  width: 25px;
+  overflow: visible;
+`;
+const Manual = styled.div`
+  background-color: ${theme.colors.lighterColor};
+  border-radius: 10px;
+  padding: 10px;
+  width: 200px;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 15%;
+    left: 5px;
+    width: 0;
+    border-bottom: 10px solid ${theme.colors.lighterColor};
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+  }
 `;
 const GraphButton = styled.button`
   height: 3rem;
