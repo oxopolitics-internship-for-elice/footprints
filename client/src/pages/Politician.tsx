@@ -22,23 +22,16 @@ const Politician = (): JSX.Element => {
         <title>정치인 상세페이지</title>
       </Helmet>
       <Header />
-      <Layout
-        children={
-          <>
-            <PoliticianInfo />
-            <PoliticianGraph />
-            <IssueAddModal
-              modalShow={modalShow}
-              handleModalToggle={handleModalToggle}
-            />
-            <Top3Issue />
-            <StandbyIssue />
-            {!modalShow && (
-              <IssueAddButton onClickToggleModal={handleModalToggle} />
-            )}
-          </>
-        }
+
+      <PoliticianInfo />
+      <PoliticianGraph />
+      <IssueAddModal
+        modalShow={modalShow}
+        handleModalToggle={handleModalToggle}
       />
+      <Top3Issue />
+      <StandbyIssue />
+      {!modalShow && <IssueAddButton onClickToggleModal={handleModalToggle} />}
     </>
   );
 };
