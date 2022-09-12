@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
+import { AnimationOnScroll } from 'react-animation-on-scroll';
 
 interface ServiceInfoProps {
   imageSrc: string;
@@ -16,20 +17,30 @@ const ServiceInfo = ({
   description,
   backgroundColor,
 }: ServiceInfoProps) => {
+  const animationStyle = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '0 10%',
+  };
   return (
     <>
       <Container backgroundColor={backgroundColor}>
-        <ImageContainer imagePosition={imagePosition}>
-          {imageSrc === '' ? (
-            <div>준비중입니다.</div>
-          ) : (
-            <Image src={imageSrc} />
-          )}
-        </ImageContainer>
-        <TextContainer>
-          <Title>{title}</Title>
-          <Description>{description}</Description>
-        </TextContainer>
+        <AnimationOnScroll animateIn="animate__fadeIn" style={animationStyle}>
+          <ImageContainer imagePosition={imagePosition}>
+            {imageSrc === '' ? (
+              <div>준비중입니다.</div>
+            ) : (
+              <Image src={imageSrc} />
+            )}
+          </ImageContainer>
+          <TextContainer>
+            <Title>{title}</Title>
+            <Description>{description}</Description>
+          </TextContainer>
+        </AnimationOnScroll>
       </Container>
     </>
   );
@@ -43,11 +54,14 @@ interface ContainerProps {
 
 const Container = styled.div<ContainerProps>`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   height: 100%;
   background-color: ${({ backgroundColor }) => backgroundColor || '#fff'};
-  padding: 1rem;
+  padding-top: 120px;
+  padding-bottom: 120px;
 `;
 
 interface ImageContainerProps {
@@ -57,10 +71,11 @@ interface ImageContainerProps {
 const ImageContainer = styled.div<ImageContainerProps>`
   display: flex;
   flex-direction: row;
-  width: 50%;
+  width: 100%;
   height: 100%;
-  justify-content: center;
   align-items: center;
+  justify-content: ${({ imagePosition }) =>
+    imagePosition === 'left' ? 'flex-start' : 'flex-end'};
   order: ${({ imagePosition }) => (imagePosition === 'left' ? 0 : 1)};
 `;
 
@@ -73,10 +88,9 @@ const Image = styled.img`
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
-  height: 100%;
-  justify-content: center;
+  width: 30%;
   align-items: center;
+  justify-content: center;
 `;
 
 const Title = styled.h2`
