@@ -81,7 +81,7 @@ const CarouselContainer = styled.div`
 `;
 
 const Img = styled.img`
-  width: 600px;
+  width: 550px;
   height: 363px;
-  object-fit: ;
+  object-fit: cover;
 `;
