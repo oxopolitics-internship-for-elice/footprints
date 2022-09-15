@@ -472,6 +472,13 @@ function darwTooltip(context: any, resData: ResDataTypes) {
             if (index === 5) {
             } else {
               const imageTh = CreateImg(body, total, index);
+              for (let i = 1; i < 4; i++) {
+                const elements =
+                  imageTh.children as HTMLCollectionOf<HTMLElement>;
+                elements[i].style.display = 'inline-block';
+                elements[i].style.width = '60px';
+              }
+
               div.appendChild(imageTh);
             }
           },
@@ -516,8 +523,8 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = `${theme.colors.lighterColor}`;
-  tooltipEl.style.borderRadius = '0 0 10px 10px';
-  tooltipEl.style.boxShadow = 'rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;';
+  tooltipEl.style.borderRadius = '10px';
+  tooltipEl.style.boxShadow = 'rgba(17, 12, 46, 0.75) 0px 48px 100px 0px;';
   tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
     tooltipEl.style.width = '300px';
@@ -578,7 +585,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       tempDiv.style.display = 'inline';
       tempDiv.style.marginLeft = '10px';
       tempDiv.style.position = 'relative';
-      tempDiv.style.top = '-10px';
+      tempDiv.style.top = '-9px';
       tempDiv.appendChild(img[i]);
       tempDiv.appendChild(count);
       imageTh.appendChild(tempDiv);
