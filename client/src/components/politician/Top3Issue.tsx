@@ -25,15 +25,13 @@ const Top3Issue = () => {
   return (
     <>
       <InfoDiv>*찬성 투표수가 일정 기준을 넘어야 그래프에 등록됩니다.</InfoDiv>
+      <Title>마감이 임박했어요!</Title>
       <TopIssueContainer>
-        <Title>마감이 임박했어요!</Title>
-        <div>
-          {topIssue.map(issue => {
-            return (
-              <Issue issue={issue} setIssueList={setTopIssue} key={issue._id} />
-            );
-          })}
-        </div>
+        {topIssue.map(issue => {
+          return (
+            <Issue issue={issue} setIssueList={setTopIssue} key={issue._id} />
+          );
+        })}
       </TopIssueContainer>
     </>
   );
@@ -46,10 +44,9 @@ const InfoDiv = styled.div`
   text-align: right;
 `;
 const TopIssueContainer = styled.div`
-  border-bottom: ${theme.colors.subColor} 2px solid;
+  background-color: ${theme.colors.lighterColor}
   border-radius: 2px;
   padding: 20px;
-  width: 1200px;
   margin: auto;
 `;
 const Title = styled.div`
