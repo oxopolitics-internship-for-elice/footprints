@@ -53,7 +53,8 @@ const SlideFullPage = () => {
   return (
     <FullPage>
       <Slide>
-        <Carousel>
+        <ServiceIntro />
+        {/* <Carousel>
           {politicansName.length > 0 ? (
             politicansName.map((politicanName: string, index: number) => {
               return (
@@ -67,7 +68,7 @@ const SlideFullPage = () => {
           ) : (
             <Loading />
           )}
-        </Carousel>
+        </Carousel> */}
       </Slide>
       {InfoContent.map((content, index) => (
         <Slide key={content.title}>
@@ -80,18 +81,6 @@ const SlideFullPage = () => {
           />
         </Slide>
       ))}
-      {/* {politicansName.length > 0 ? (
-        politicansName.map((politicanName: string, index: number) => (
-          <Slide key={politicansID[index]}>
-            <HomePolitician
-              politicanName={politicanName}
-              politicansID={politicansID[index]}
-            />
-          </Slide>
-        ))
-      ) : (
-        <Loading />
-      )} */}
     </FullPage>
   );
 };

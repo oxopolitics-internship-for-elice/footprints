@@ -1,14 +1,19 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { getCookie, removeCookie } from '@/utils/Cookie';
+import { removeCookie } from '@/utils/Cookie';
 import { useNavigate } from 'react-router-dom';
 import { Alert } from '@components/base/Alert';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isLogined, authTokenState } from '@/store/AuthTokenState';
 
 const AuthButton = () => {
-  const accessToken = getCookie('access_token');
+  // const accessToken = getCookie('access_token');
+  const isLoginState = useRecoilValue(isLogined);
+  const setAuthTokenState = useSetRecoilState(authTokenState);
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    setAuthTokenState(prev => (prev = { access_token: '' }));
     removeCookie('access_token');
     navigate('/');
     Alert.fire({
@@ -16,9 +21,10 @@ const AuthButton = () => {
       title: '로그아웃 되었습니다.',
     });
   };
+
   return (
     <>
-      {accessToken ? (
+      {isLoginState ? (
         <Button onClick={handleLogout}>로그아웃</Button>
       ) : (
         <Button onClick={() => navigate('/login')}>로그인</Button>
