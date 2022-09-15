@@ -1,4 +1,3 @@
-import { flexCenter } from '@/styles/Flex';
 import styled from '@emotion/styled';
 import FullHeightPage from '@components/system/FullHeightPage';
 
