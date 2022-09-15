@@ -9,6 +9,7 @@ import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
 import { useNavigate } from 'react-router-dom';
 import { PoliticiansTypes } from '@/types/PoliticiansTypes';
+import { HiChevronDoubleRight } from 'react-icons/hi';
 
 interface HomePoliticianProps {
   politicanName: string;
@@ -54,7 +55,8 @@ const HomePolitician = ({
               />
               <Name onClick={handleClickPolitician}>{politicanName}</Name>
               <NavigateButton onClick={handleClickPolitician}>
-                더 보기 {'>'}
+                더 보기
+                <HiChevronDoubleRight size="21" />
               </NavigateButton>
             </Row>
             <AnimationOnScroll animateIn="animate__fadeIn" delay={500}>

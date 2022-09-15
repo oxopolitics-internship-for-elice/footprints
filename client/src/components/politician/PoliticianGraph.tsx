@@ -31,7 +31,11 @@ import { useParams } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import MinMax from '@/utils/MinMax';
 import theme from '@/styles/theme';
-import { HiQuestionMarkCircle } from 'react-icons/hi';
+import {
+  HiArrowCircleLeft,
+  HiArrowCircleRight,
+  HiQuestionMarkCircle,
+} from 'react-icons/hi';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -325,22 +329,18 @@ const PoliticianGraph = (): JSX.Element => {
     };
   };
 
-  const handleMouseOver = () => {
-    setIsHovering(true);
-  };
-
-  const handleMouseOut = () => {
-    setIsHovering(false);
-  };
-
   return (
     <GraphContainer>
       <ManualContainer>
         <HiQuestionMarkCircle
           size="25"
           color={theme.colors.mainColor}
-          onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
+          onMouseOver={() => {
+            setIsHovering(true);
+          }}
+          onMouseOut={() => {
+            setIsHovering(false);
+          }}
           overflow="visible"
           cursor="pointer"
         ></HiQuestionMarkCircle>
@@ -354,10 +354,10 @@ const PoliticianGraph = (): JSX.Element => {
       </ManualContainer>
       {NextPageable === false ? null : (
         <GraphButton
-          style={{ float: 'left', marginTop: '350px' }}
+          style={{ float: 'left', top: '50%' }}
           onClick={getNextData}
         >
-          {'<'}
+          <HiArrowCircleLeft size="30" color={theme.colors.thirdColor} />
         </GraphButton>
       )}
 
@@ -376,14 +376,6 @@ const PoliticianGraph = (): JSX.Element => {
             plugins={[ChartDataLabels]}
           />
         )}
-        {index === 1 ? null : (
-          <GraphButton
-            style={{ marginTop: '-350px', marginRight: '-95px' }}
-            onClick={getPreData}
-          >
-            {'>'}
-          </GraphButton>
-        )}
         <div>
           {open && (
             <Modal
@@ -396,6 +388,15 @@ const PoliticianGraph = (): JSX.Element => {
           )}
         </div>
       </Graph>
+      {index === 1 ? null : (
+        <GraphButton
+          style={{ top: '50%', marginRight: '-95px' }}
+          onClick={getPreData}
+        >
+          <HiArrowCircleRight size="30" color={theme.colors.thirdColor} onMouseOver={({target})=>{console.log(target)} }
+      onMouseOut={(target)=>target.style.color=`${theme.colors.thirdColor}`}></HiArrowCircleRight>/>
+        </GraphButton>
+      )}
     </GraphContainer>
   );
 };
@@ -605,18 +606,9 @@ const Manual = styled.div`
   }
 `;
 const GraphButton = styled.button`
-  height: 3rem;
-  width: 3rem;
-  font-size: 30px;
-  font-weight: bolder;
-  border-radius: 30px;
-  border-width: 0.5px;
   float: right;
   opacity: 0.9;
   transition-duration: 0.4s;
-  background-color: #babbbd;
   &:hover {
-    color: white;
-    background-color: #676168;
-  }
+    color: ${theme.colors.lighterColor};
 `;
