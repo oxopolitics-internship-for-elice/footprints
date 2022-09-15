@@ -1,13 +1,19 @@
 // make infinite Carousel
 import styled from '@emotion/styled';
 import React, { PropsWithChildren } from 'react';
+import { GrNext, GrPrevious } from 'react-icons/gr';
 
 interface CarouselProps {
   children: React.ReactNode;
   style?: React.CSSProperties;
+  autoPlay?: boolean;
 }
 
-const Carousel = ({ children, style }: PropsWithChildren<CarouselProps>) => {
+const Carousel = ({
+  children,
+  style,
+  autoPlay,
+}: PropsWithChildren<CarouselProps>) => {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const handleClickPrev = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -28,10 +34,25 @@ const Carousel = ({ children, style }: PropsWithChildren<CarouselProps>) => {
     }
   };
 
+  React.useEffect(() => {
+    if (autoPlay) {
+      const interval = setInterval(() => {
+        if (currentSlide === React.Children.count(children) - 1) {
+          setCurrentSlide(0);
+        } else {
+          setCurrentSlide(currentSlide + 1);
+        }
+      }, 3000);
+      return () => clearInterval(interval);
+    }
+  }, [currentSlide, autoPlay, children]);
+
   return (
     <>
       <Container style={style}>
-        <Button onClick={handleClickPrev}>{'<'}</Button>
+        <Button onClick={handleClickPrev}>
+          <GrPrevious />
+        </Button>
         <SlideContainer>
           {React.Children.map(children, (child, index) => {
             return (
@@ -41,7 +62,9 @@ const Carousel = ({ children, style }: PropsWithChildren<CarouselProps>) => {
             );
           })}
         </SlideContainer>
-        <Button onClick={handleClickNext}>{'>'}</Button>
+        <Button onClick={handleClickNext}>
+          <GrNext />
+        </Button>
       </Container>
     </>
   );
@@ -104,7 +127,7 @@ const Button = styled.button`
   height: 50px;
   border: none;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: transparent;
   color: #000;
   font-size: 20px;
   font-weight: bold;

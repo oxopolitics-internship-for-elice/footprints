@@ -60,8 +60,7 @@ const Container = styled.div<ContainerProps>`
   width: 100%;
   height: 100%;
   background-color: ${({ backgroundColor }) => backgroundColor || '#fff'};
-  padding-top: 120px;
-  padding-bottom: 120px;
+  padding-top: 72px;
 `;
 
 interface ImageContainerProps {
