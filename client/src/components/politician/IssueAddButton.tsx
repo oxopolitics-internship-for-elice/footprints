@@ -11,8 +11,7 @@ const IssueAddButton = ({ onClickToggleModal }: IssueAddButtonProps) => {
     <>
       <Div>
         <button onClick={onClickToggleModal}>
-          <HiPlus size={22} />
-          <span>이슈 등록하기</span>
+          <HiPlus size={45} />
         </button>
       </Div>
     </>

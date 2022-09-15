@@ -3,11 +3,11 @@ import * as Api from './Api';
 
 interface GraphAPI {
   getGraph(
-    targetPolitician: String,
+    targetPolitician: string,
     index: Number,
   ): Promise<AxiosResponse<any>>;
-  updatePoll(target: String, newPoll: Object): Promise<AxiosResponse<any>>;
-  getPollInfo(target: String): Promise<AxiosResponse<any>>;
+  updatePoll(target: string, newPoll: Object): Promise<AxiosResponse<any>>;
+  getPollInfo(target: string): Promise<AxiosResponse<any>>;
 }
 
 const GraphAPI: GraphAPI = (() => {

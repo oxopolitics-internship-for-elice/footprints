@@ -24,9 +24,7 @@ const Top3Issue = () => {
 
   return (
     <>
-      <InfoDiv>
-        *찬성 수가 75 이상, 반대의 3배 이상일 때 그래프에 등록됩니다.
-      </InfoDiv>
+      <InfoDiv>*찬성 투표수가 일정 기준을 넘어야 그래프에 등록됩니다.</InfoDiv>
       <TopIssueContainer>
         <Title>마감이 임박했어요!</Title>
         <div>

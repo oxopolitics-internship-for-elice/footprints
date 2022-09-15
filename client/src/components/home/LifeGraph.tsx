@@ -93,6 +93,11 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
       {
         data: graphData,
         tension: 0.5,
+        fill: {
+          target: { value: 0 },
+          below: 'rgba(255, 26, 104, 0.2)',
+          above: 'rgba(75, 192, 192,0.2)',
+        },
       },
     ],
   };
