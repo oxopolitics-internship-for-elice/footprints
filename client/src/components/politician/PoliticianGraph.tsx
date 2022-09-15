@@ -277,7 +277,19 @@ const PoliticianGraph = (): JSX.Element => {
         },
         anchor: 'end',
         clamp: true,
-        align: 'top',
+        align: function ({
+          dataIndex,
+          dataset,
+        }: {
+          dataIndex: any;
+          dataset: any;
+        }) {
+          if (dataset.data[dataIndex] > 0) {
+            return 'end';
+          } else if (dataset.data[dataIndex] < 0) {
+            return 'start';
+          }
+        },
         offset: 0,
         display: 'auto',
       },
@@ -393,8 +405,16 @@ const PoliticianGraph = (): JSX.Element => {
           style={{ top: '50%', marginRight: '-95px' }}
           onClick={getPreData}
         >
-          <HiArrowCircleRight size="30" color={theme.colors.thirdColor} onMouseOver={({target})=>{console.log(target)} }
-      onMouseOut={(target)=>target.style.color=`${theme.colors.thirdColor}`}></HiArrowCircleRight>/>
+          <HiArrowCircleRight
+            size="30"
+            color={theme.colors.thirdColor}
+            onMouseOver={({ target }) => {
+              console.log(target);
+            }}
+            onMouseOut={target =>
+              (target.style.color = `${theme.colors.thirdColor}`)
+            }
+          ></HiArrowCircleRight>
         </GraphButton>
       )}
     </GraphContainer>
