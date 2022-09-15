@@ -191,7 +191,7 @@ const Container = styled.div<ContainerProps>`
   transform: translate(-50%, -50%);
 `;
 const HeaderText = styled.div`
-  font-size: 4vw;
+  font-size: 25px;
   display: flex;
   padding-right: 10px;
 `;

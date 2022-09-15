@@ -65,7 +65,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
         }) {
           if (dataset.data[dataIndex] > 0) {
             return 'end';
-          } else if (dataset.data[dataIndex] < 0) {
+          } else {
             return 'start';
           }
         },
@@ -93,9 +93,6 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
           },
         },
       },
-    },
-    layout: {
-      padding: 20,
     },
     elements: {
       point: {

@@ -36,6 +36,7 @@ import {
   HiArrowCircleRight,
   HiQuestionMarkCircle,
 } from 'react-icons/hi';
+import { keyframes } from '@emotion/react';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -292,6 +293,9 @@ const PoliticianGraph = (): JSX.Element => {
         },
         offset: 0,
         display: 'auto',
+        backgroundColor: `${theme.colors.lighterColor}`,
+        borderRadius: 20,
+        opacity: 0.7,
       },
     },
     elements: {
@@ -308,6 +312,9 @@ const PoliticianGraph = (): JSX.Element => {
         },
         min: minmax[1] - 30,
         max: minmax[0] + 30,
+        afterFit: (axis: any) => {
+          axis.paddingRight = 12;
+        },
       },
       x: {
         grid: {
@@ -347,10 +354,16 @@ const PoliticianGraph = (): JSX.Element => {
         <HiQuestionMarkCircle
           size="25"
           color={theme.colors.mainColor}
-          onMouseOver={() => {
+          onMouseOver={event => {
+            (
+              event.target as HTMLButtonElement
+            ).style.color = `${theme.colors.subColor}`;
             setIsHovering(true);
           }}
-          onMouseOut={() => {
+          onMouseOut={event => {
+            (
+              event.target as HTMLButtonElement
+            ).style.color = `${theme.colors.mainColor}`;
             setIsHovering(false);
           }}
           overflow="visible"
@@ -369,7 +382,20 @@ const PoliticianGraph = (): JSX.Element => {
           style={{ float: 'left', top: '50%' }}
           onClick={getNextData}
         >
-          <HiArrowCircleLeft size="30" color={theme.colors.thirdColor} />
+          <HiArrowCircleLeft
+            size="30"
+            color={theme.colors.thirdColor}
+            onMouseOver={event => {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.subColor}`;
+            }}
+            onMouseOut={event => {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.thirdColor}`;
+            }}
+          />
         </GraphButton>
       )}
 
@@ -408,12 +434,16 @@ const PoliticianGraph = (): JSX.Element => {
           <HiArrowCircleRight
             size="30"
             color={theme.colors.thirdColor}
-            onMouseOver={({ target }) => {
-              console.log(target);
+            onMouseOver={event => {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.subColor}`;
             }}
-            onMouseOut={target =>
-              (target.style.color = `${theme.colors.thirdColor}`)
-            }
+            onMouseOut={event => {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.thirdColor}`;
+            }}
           ></HiArrowCircleRight>
         </GraphButton>
       )}
@@ -612,6 +642,14 @@ const ManualContainer = styled.div`
   width: 5px;
   overflow: visible;
 `;
+const ManualFade = keyframes`
+  from {
+    width: 0
+  }
+  to {
+    width: 250
+  }
+`;
 const Manual = styled.div`
   background-color: ${theme.colors.lighterColor};
   border-radius: 10px;
@@ -621,6 +659,7 @@ const Manual = styled.div`
   right: -30px;
   top: -135px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  animation: ${ManualFade} 1s 1s linear,
   &:before {
     content: '';
     position: absolute;
