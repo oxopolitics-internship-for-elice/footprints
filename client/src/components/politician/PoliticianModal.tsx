@@ -178,10 +178,11 @@ const Container = styled.div<ContainerProps>`
   width: 600px;
   overflow-y: initial !important;
   position: relative;
-  top: 550px;
+  top: 55vh;
   right: 0px;
   bottom: 0px;
   left: 50%;
+  border-radius: 20px;
   background-color: #fff;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
@@ -190,10 +191,9 @@ const Container = styled.div<ContainerProps>`
   transform: translate(-50%, -50%);
 `;
 const HeaderText = styled.div`
-  font-size: 35px;
-  overflow: hidden;
-  padding-top: 10px;
+  font-size: 25px;
   display: flex;
+  padding-right: 10px;
 `;
 const CloseButton = styled.div`
   cursor: pointer;
@@ -206,6 +206,7 @@ const Header = styled.div`
   border-radius: 20px 20px 0 0;
   font-weight: 700;
   display: flex;
+  padding: 10px;
   justify-content: space-between;
 `;
 const Content = styled.div`
@@ -217,16 +218,16 @@ const Content = styled.div`
   flex-wrap: wrap;
   display: flex;
   flex-direction: row;
+  border-radius: 20px;
+  padding: 20px 20px 100px 20px;
   max-height: 500px;
   overflow: auto;
 `;
 const ContentText = styled.div`
-  font-size: 40px;
+  font-size: 20px;
   height: 100%;
   overflow: hidden;
-  padding-top: 10px;
   display: flex;
-  padding-bottom: 100px;
 `;
 const ChooseBox = styled.div`
   display: flex;

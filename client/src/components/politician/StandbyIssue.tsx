@@ -75,8 +75,8 @@ export default StandbyIssue;
 
 const StandbyIssueContainer = styled.div`
   padding: 40px 20px 20px 20px;
-  width: 1200px;
   margin: auto;
+  max-width: 800px;
 `;
 const PaginationButton = styled.button`
   background-color: ${theme.colors.lighterColor};

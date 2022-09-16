@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { HiPlus } from 'react-icons/hi';
+import theme from '@/styles/theme';
 
 interface IssueAddButtonProps {
   onClickToggleModal: () => void;
@@ -40,7 +41,7 @@ const Div = styled.div`
     height: 100%;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 4px rgba(0, 0, 0, 0.2);
     &:hover {
-      background: white;
+      background: ${theme.colors.mainColor};
       color: black;
     }
     span {

@@ -31,7 +31,12 @@ import { useParams } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import MinMax from '@/utils/MinMax';
 import theme from '@/styles/theme';
-import { HiQuestionMarkCircle } from 'react-icons/hi';
+import {
+  HiArrowCircleLeft,
+  HiArrowCircleRight,
+  HiQuestionMarkCircle,
+} from 'react-icons/hi';
+import { keyframes } from '@emotion/react';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -273,9 +278,24 @@ const PoliticianGraph = (): JSX.Element => {
         },
         anchor: 'end',
         clamp: true,
-        align: 'top',
+        align: function ({
+          dataIndex,
+          dataset,
+        }: {
+          dataIndex: any;
+          dataset: any;
+        }) {
+          if (dataset.data[dataIndex] > 0) {
+            return 'end';
+          } else if (dataset.data[dataIndex] < 0) {
+            return 'start';
+          }
+        },
         offset: 0,
         display: 'auto',
+        backgroundColor: `${theme.colors.lighterColor}`,
+        borderRadius: 20,
+        opacity: 0.7,
       },
     },
     elements: {
@@ -292,6 +312,9 @@ const PoliticianGraph = (): JSX.Element => {
         },
         min: minmax[1] - 30,
         max: minmax[0] + 30,
+        afterFit: (axis: any) => {
+          axis.paddingRight = 12;
+        },
       },
       x: {
         grid: {
@@ -325,22 +348,24 @@ const PoliticianGraph = (): JSX.Element => {
     };
   };
 
-  const handleMouseOver = () => {
-    setIsHovering(true);
-  };
-
-  const handleMouseOut = () => {
-    setIsHovering(false);
-  };
-
   return (
     <GraphContainer>
       <ManualContainer>
         <HiQuestionMarkCircle
           size="25"
           color={theme.colors.mainColor}
-          onMouseOver={handleMouseOver}
-          onMouseOut={handleMouseOut}
+          onMouseOver={event => {
+            (
+              event.target as HTMLButtonElement
+            ).style.color = `${theme.colors.subColor}`;
+            setIsHovering(true);
+          }}
+          onMouseOut={event => {
+            (
+              event.target as HTMLButtonElement
+            ).style.color = `${theme.colors.mainColor}`;
+            setIsHovering(false);
+          }}
           overflow="visible"
           cursor="pointer"
         ></HiQuestionMarkCircle>
@@ -354,10 +379,23 @@ const PoliticianGraph = (): JSX.Element => {
       </ManualContainer>
       {NextPageable === false ? null : (
         <GraphButton
-          style={{ float: 'left', marginTop: '350px' }}
+          style={{ float: 'left', top: '50%' }}
           onClick={getNextData}
         >
-          {'<'}
+          <HiArrowCircleLeft
+            size="30"
+            color={theme.colors.thirdColor}
+            onMouseOver={event => {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.subColor}`;
+            }}
+            onMouseOut={event => {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.thirdColor}`;
+            }}
+          />
         </GraphButton>
       )}
 
@@ -376,14 +414,6 @@ const PoliticianGraph = (): JSX.Element => {
             plugins={[ChartDataLabels]}
           />
         )}
-        {index === 1 ? null : (
-          <GraphButton
-            style={{ marginTop: '-350px', marginRight: '-95px' }}
-            onClick={getPreData}
-          >
-            {'>'}
-          </GraphButton>
-        )}
         <div>
           {open && (
             <Modal
@@ -396,6 +426,27 @@ const PoliticianGraph = (): JSX.Element => {
           )}
         </div>
       </Graph>
+      {index === 1 ? null : (
+        <GraphButton
+          style={{ top: '50%', marginRight: '-95px' }}
+          onClick={getPreData}
+        >
+          <HiArrowCircleRight
+            size="30"
+            color={theme.colors.thirdColor}
+            onMouseOver={event => {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.subColor}`;
+            }}
+            onMouseOut={event => {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.thirdColor}`;
+            }}
+          ></HiArrowCircleRight>
+        </GraphButton>
+      )}
     </GraphContainer>
   );
 };
@@ -451,6 +502,13 @@ function darwTooltip(context: any, resData: ResDataTypes) {
             if (index === 5) {
             } else {
               const imageTh = CreateImg(body, total, index);
+              for (let i = 1; i < 4; i++) {
+                const elements =
+                  imageTh.children as HTMLCollectionOf<HTMLElement>;
+                elements[i].style.display = 'inline-block';
+                elements[i].style.width = '60px';
+              }
+
               div.appendChild(imageTh);
             }
           },
@@ -495,8 +553,8 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
   tooltipEl.style.pointerEvents = 'none';
   tooltipEl.style.background = `${theme.colors.lighterColor}`;
-  tooltipEl.style.borderRadius = '0 0 10px 10px';
-  tooltipEl.style.boxShadow = 'rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;';
+  tooltipEl.style.borderRadius = '10px';
+  tooltipEl.style.boxShadow = 'rgba(17, 12, 46, 0.75) 0px 48px 100px 0px;';
   tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
     tooltipEl.style.width = '300px';
@@ -557,7 +615,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       tempDiv.style.display = 'inline';
       tempDiv.style.marginLeft = '10px';
       tempDiv.style.position = 'relative';
-      tempDiv.style.top = '-10px';
+      tempDiv.style.top = '-9px';
       tempDiv.appendChild(img[i]);
       tempDiv.appendChild(count);
       imageTh.appendChild(tempDiv);
@@ -584,6 +642,14 @@ const ManualContainer = styled.div`
   width: 5px;
   overflow: visible;
 `;
+const ManualFade = keyframes`
+  from {
+    width: 0
+  }
+  to {
+    width: 250
+  }
+`;
 const Manual = styled.div`
   background-color: ${theme.colors.lighterColor};
   border-radius: 10px;
@@ -593,6 +659,7 @@ const Manual = styled.div`
   right: -30px;
   top: -135px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  animation: ${ManualFade} 1s 1s linear,
   &:before {
     content: '';
     position: absolute;
@@ -605,18 +672,9 @@ const Manual = styled.div`
   }
 `;
 const GraphButton = styled.button`
-  height: 3rem;
-  width: 3rem;
-  font-size: 30px;
-  font-weight: bolder;
-  border-radius: 30px;
-  border-width: 0.5px;
   float: right;
   opacity: 0.9;
   transition-duration: 0.4s;
-  background-color: #babbbd;
   &:hover {
-    color: white;
-    background-color: #676168;
-  }
+    color: ${theme.colors.lighterColor};
 `;
