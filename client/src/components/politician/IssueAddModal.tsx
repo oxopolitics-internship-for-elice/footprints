@@ -122,10 +122,10 @@ const IssueAddModal = ({
                   />
                 </FormGroup>
                 <FormGroup>
-                  <FormLabel>이슈 링크</FormLabel>
+                  <FormLabel>관련 기사</FormLabel>
                   <FormInput
                     type="text"
-                    placeholder="이슈 링크를 입력해주세요"
+                    placeholder="관련 기사를 입력해주세요"
                     value={issueLink}
                     onChange={event => setIssueLink(event.target.value)}
                   />
