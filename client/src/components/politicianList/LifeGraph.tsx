@@ -12,6 +12,7 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import styled from '@emotion/styled';
 import dateFormatter from '@/utils/DateFormatter';
+import { endianness } from 'os';
 
 ChartJS.register(
   CategoryScale,
@@ -53,6 +54,22 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
             return '';
           }
         },
+        anchor: 'end',
+        clamp: true,
+        align: function ({
+          dataIndex,
+          dataset,
+        }: {
+          dataIndex: any;
+          dataset: any;
+        }) {
+          if (dataset.data[dataIndex] > 0) {
+            return 'end';
+          } else {
+            return 'start';
+          }
+        },
+        offset: 0,
       },
     },
     scales: {
@@ -77,9 +94,6 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
         },
       },
     },
-    layout: {
-      padding: 20,
-    },
     elements: {
       point: {
         radius: 0,
@@ -93,6 +107,11 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
       {
         data: graphData,
         tension: 0.5,
+        fill: {
+          target: { value: 0 },
+          below: 'rgba(255, 26, 104, 0.2)',
+          above: 'rgba(75, 192, 192,0.2)',
+        },
       },
     ],
   };
