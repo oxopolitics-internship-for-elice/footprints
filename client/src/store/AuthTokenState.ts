@@ -1,5 +1,3 @@
-// authToken Recoil state
-
 import { atom, selector } from 'recoil';
 
 interface AuthTokenState {

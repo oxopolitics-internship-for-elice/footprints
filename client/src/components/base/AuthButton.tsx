@@ -5,12 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from '@components/base/Alert';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { isLogined, authTokenState } from '@/store/AuthTokenState';
+import { loginModalState } from '@/store/LoginModalState';
 
 const AuthButton = () => {
   // const accessToken = getCookie('access_token');
   const isLoginState = useRecoilValue(isLogined);
   const setAuthTokenState = useSetRecoilState(authTokenState);
   const navigate = useNavigate();
+  const setLoginModalState = useSetRecoilState(loginModalState);
+
+  const handleLogin = () => {
+    setLoginModalState(prev => (prev = { isOpen: true }));
+  };
 
   const handleLogout = () => {
     setAuthTokenState(prev => (prev = { access_token: '' }));
@@ -27,7 +33,7 @@ const AuthButton = () => {
       {isLoginState ? (
         <Button onClick={handleLogout}>로그아웃</Button>
       ) : (
-        <Button onClick={() => navigate('/login')}>로그인</Button>
+        <Button onClick={handleLogin}>로그인</Button>
       )}
     </>
   );
