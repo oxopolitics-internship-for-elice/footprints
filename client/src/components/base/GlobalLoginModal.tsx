@@ -1,17 +1,26 @@
 import { flexCenter } from '@/styles/Flex';
 import styled from '@emotion/styled';
 import React from 'react';
-import kakaoSymbol from '@/assets/kakaoSymbol.png';
+import kakaoSymbol from '@/assets/KakaoSymbol.png';
 import { Helmet } from 'react-helmet-async';
-import AuthAPI from '@/api/AuthAPI';
+import { loginModalState } from '@/store/LoginModalState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import Modal from '@/components/base/Modal';
 
-const Login = () => {
+const GlobalLoginModal = () => {
   const serverURL =
     import.meta.env.MODE === 'development'
       ? 'http://localhost:5000'
       : window.location.origin;
+
+  const setLoginModalState = useSetRecoilState(loginModalState);
+  const isLoginModalOpen = useRecoilValue(loginModalState);
+
+  const handleToggleLoginModal = () => {
+    setLoginModalState(prev => (prev = { isOpen: !isLoginModalOpen.isOpen }));
+  };
   return (
-    <>
+    <Modal onClickToggleModal={handleToggleLoginModal}>
       <Helmet>
         <title>로그인</title>
       </Helmet>
@@ -28,11 +37,11 @@ const Login = () => {
           </ButtonWrap>
         </LoginWrap>
       </Container>
-    </>
+    </Modal>
   );
 };
 
-export default Login;
+export default GlobalLoginModal;
 
 const Container = styled.div`
   ${flexCenter}

@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Issue, issueSchema } from 'src/schemas/issue.schema';
+import { AuthModule } from 'src/auth/auth.module';
 import { Politician, politicianSchema } from 'src/schemas/politician.schema';
+import { User, userSchema } from 'src/schemas/user.schema';
+import { UserService } from 'src/user/user.service';
 import { PoliticianController } from './politician.controller';
 import { PoliticianService } from './politician.service';
 
@@ -9,10 +11,11 @@ import { PoliticianService } from './politician.service';
   imports: [
     MongooseModule.forFeature([
       { name: Politician.name, schema: politicianSchema },
-      { name: Issue.name, schema: issueSchema },
+      { name: User.name, schema: userSchema },
     ]),
+    AuthModule,
   ],
   controllers: [PoliticianController],
-  providers: [PoliticianService],
+  providers: [PoliticianService, UserService],
 })
 export class PoliticianModule {}

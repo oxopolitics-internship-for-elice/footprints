@@ -1,5 +1,3 @@
-import errorHandler from '@/api/ErrorHandler';
-import UserAPI from '@/api/UserAPI';
 import styled from '@emotion/styled';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +6,6 @@ import MainLogo from '@/assets/MainLogo.gif';
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
   const [isMainFirstPage, setIsMainFirstPage] = React.useState(true);
 
   const handleScroll = () => {
@@ -18,6 +15,10 @@ const Header = () => {
     } else {
       setIsMainFirstPage(true);
     }
+  };
+
+  const handleClickPoliticianList = () => {
+    navigate('/politician');
   };
 
   React.useEffect(() => {
@@ -49,9 +50,11 @@ const Header = () => {
           <Title fontWhite={isMainFirstPage} onClick={() => navigate('/')}>
             <img src={MainLogo} width="140px" />
           </Title>
-          <AuthContainer>
+          <NavContainer>
+            {/* <NavItem>About</NavItem> */}
+            <NavItem onClick={handleClickPoliticianList}>정치인 목록</NavItem>
             <AuthButton />
-          </AuthContainer>
+          </NavContainer>
         </InnerHeader>
       </HeaderBlock>
     </>
@@ -70,7 +73,7 @@ const HeaderBlock = styled.header<HeaderBlockProps>`
   right: 0;
   top: 0;
   z-index: 2;
-  background-color: ${props => (props.istransparent ? 'transparent' : '#fff')};
+  background-color: ${props => (props.istransparent ? '#fff' : '#fff')};
   box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
   transition: all 0.5s ease 0s;
 `;
@@ -102,8 +105,29 @@ const Title = styled.h1<TitleProps>`
   cursor: pointer;
 `;
 
-const AuthContainer = styled.div`
+const NavContainer = styled.div`
   display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
-  margin-right: 1rem;
+  width: 100%;
+  height: 100%;
+`;
+
+const NavItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #000;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-left: 40px;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.mainColor};
+  }
 `;

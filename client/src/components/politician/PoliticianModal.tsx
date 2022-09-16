@@ -8,6 +8,9 @@ import { IoCloseCircleOutline } from 'react-icons/io5';
 import { ResDataTypes } from '@/types/GraphTypes';
 import errorHandler from '@/api/ErrorHandler';
 import theme from '@/styles/theme';
+import { getCookie } from '@/utils/Cookie';
+import { LinkPreview } from '@dhaiwat10/react-link-preview';
+
 type Element = {
   $context: Object;
   x: number;
@@ -32,6 +35,7 @@ const Modal = ({
   resData,
 }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
+  const accessToken = getCookie('access_token');
 
   const ref = useRef<null | HTMLDivElement>(null);
   const Imgsrc = [BasicCircle, BasicTriangle, BasicX];
@@ -81,7 +85,7 @@ const Modal = ({
           };
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error);
     }
   }
@@ -110,7 +114,9 @@ const Modal = ({
         });
       }
     };
-    fetchPollInfo();
+    if (accessToken) {
+      fetchPollInfo();
+    }
   }, []);
 
   return (
@@ -173,6 +179,7 @@ const Background = styled.div`
   animation-timing-function: ease-out;
   animation-name: fadeIn;
   animation-fill-mode: forwards;
+  z-index: 3;
 `;
 const Container = styled.div<ContainerProps>`
   width: 600px;
@@ -189,6 +196,7 @@ const Container = styled.div<ContainerProps>`
   animation-name: fadeIn;
   animation-fill-mode: forwards;
   transform: translate(-50%, -50%);
+  z-index: 4;
 `;
 const HeaderText = styled.div`
   font-size: 25px;
