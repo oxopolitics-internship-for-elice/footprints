@@ -4,23 +4,23 @@ import React from 'react';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 import leejaemyung from '@/assets/Leejaemyung.webp';
 import yoonseokyeol from '@/assets/Yoonseokyeol.webp';
-import LifeGraph from '@components/home/LifeGraph';
+import LifeGraph from '@/components/politicianList/LifeGraph';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
 import { useNavigate } from 'react-router-dom';
 import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 
-interface HomePoliticianProps {
+interface PoliticianListItemProps {
   politicanName: string;
   politicansID: string;
 }
 
 type ImgSrc = { [politicanNames: string]: string };
 
-const HomePolitician = ({
+const PoliticianListItem = ({
   politicanName,
   politicansID,
-}: HomePoliticianProps) => {
+}: PoliticianListItemProps) => {
   const navigate = useNavigate();
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
   const politican = fetchedPoliticans.find(
@@ -41,10 +41,7 @@ const HomePolitician = ({
   return (
     <>
       <Container>
-        <AnimationOnScroll
-          animateIn="animate__fadeIn"
-          animateOut="animate__fadeOut"
-        >
+        <AnimationOnScroll animateIn="animate__fadeIn">
           <Politician>
             <Row>
               <Image
@@ -67,12 +64,13 @@ const HomePolitician = ({
   );
 };
 
-export default HomePolitician;
+export default PoliticianListItem;
 
 const Container = styled.div`
   ${flexCenter}
   max-width: 100%;
   height: 100%;
+  padding: 150px 5% 150px 5%;
 `;
 
 const Row = styled.div`

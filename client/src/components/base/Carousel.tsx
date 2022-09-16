@@ -109,15 +109,6 @@ const Slide = styled.div<SlideProps>`
   transition: transform ease-out 0.45s;
 `;
 
-const ButtonContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: auto;
-`;
-
 const Button = styled.button`
   display: flex;
   flex-direction: row;

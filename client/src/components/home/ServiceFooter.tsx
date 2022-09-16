@@ -59,7 +59,7 @@ const ServiceFooter = () => {
             <img src={MainLogo} width="140px" />
           </FooterLogo>
           <FooterInfoText>
-            <span>© 2022. 발자국. All rights reserved.</span>
+            <span>© 2022. 정치 발자국. All rights reserved.</span>
           </FooterInfoText>
         </FooterInfo>
       </Container>

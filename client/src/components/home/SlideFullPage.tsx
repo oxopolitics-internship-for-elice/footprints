@@ -2,9 +2,6 @@ import React from 'react';
 import ServiceIntro from '@/components/home/ServiceIntro';
 import ServiceInfo from './ServiceInfo';
 import { FullPage, Slide } from 'react-full-page';
-import { useRecoilValue } from 'recoil';
-import PoliticiansState from '@/store/PoliticiansState';
-import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import PoliticianGraph from '@/assets/PoliticianGraph.png';
 import PoliticianGraphModal from '@/assets/PoliticianGraphModal.png';
 import StandbyIssue from '@/assets/StandbyIssue.png';
@@ -12,7 +9,6 @@ import theme from '@/styles/theme';
 import ServiceFooter from './ServiceFooter';
 
 const SlideFullPage = () => {
-  const fetchedPoliticans = useRecoilValue(PoliticiansState);
   const InfoContent = [
     {
       imageSrc: PoliticianGraph,
@@ -37,37 +33,11 @@ const SlideFullPage = () => {
       imagePosition: 'right',
     },
   ];
-  const politicansName = fetchedPoliticans.map(
-    (politician: PoliticiansTypes) => {
-      if (!politician?.politicianInfo[0].name) {
-        return 'null';
-      }
-      return politician?.politicianInfo[0].name;
-    },
-  );
-  const politicansID = fetchedPoliticans.map(
-    (politician: PoliticiansTypes) => politician?._id,
-  );
 
   return (
-    <FullPage controls>
+    <FullPage>
       <Slide>
         <ServiceIntro />
-        {/* <Carousel>
-          {politicansName.length > 0 ? (
-            politicansName.map((politicanName: string, index: number) => {
-              return (
-                <HomePolitician
-                  politicanName={politicanName}
-                  politicansID={politicansID[index]}
-                  key={index}
-                />
-              );
-            })
-          ) : (
-            <Loading />
-          )}
-        </Carousel> */}
       </Slide>
       {InfoContent.map((content, index) => (
         <Slide key={content.title}>
