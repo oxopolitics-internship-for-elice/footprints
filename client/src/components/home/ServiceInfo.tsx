@@ -90,7 +90,7 @@ const Image = styled.img`
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 30%;
+  width: 40%;
   align-items: flex-start;
   justify-content: center;
 
