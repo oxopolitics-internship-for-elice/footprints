@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import FullHeightPage from '@components/system/FullHeightPage';
 import { isLoginModalOpen } from '@/store/LoginModalState';
 import { useRecoilValue } from 'recoil';
-import GlobalLoginModal from '@/pages/GlobalLoginModal';
+import GlobalLoginModal from '@/components/base/GlobalLoginModal';
 
 export interface LayoutProps {
   children: JSX.Element;

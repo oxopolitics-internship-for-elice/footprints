@@ -4,15 +4,17 @@ import { HiX } from 'react-icons/hi';
 
 interface ModalDefaultType {
   onClickToggleModal: () => void;
+  size?: 'small' | 'medium' | 'large';
 }
 
 function Modal({
   onClickToggleModal,
   children,
+  size,
 }: PropsWithChildren<ModalDefaultType>) {
   return (
     <ModalContainer>
-      <DialogBox>
+      <DialogBox size={size}>
         <ExitButton onClick={onClickToggleModal}>
           <HiX />
         </ExitButton>
@@ -57,9 +59,35 @@ const ExitButton = styled.button`
   outline: none;
 `;
 
-const DialogBox = styled.dialog`
-  width: 500px;
-  height: 578px;
+interface DialogBoxProps {
+  size?: 'small' | 'medium' | 'large';
+}
+
+const DialogBox = styled.dialog<DialogBoxProps>`
+  width: ${props => {
+    switch (props.size) {
+      case 'small':
+        return '500px';
+      case 'medium':
+        return '700px';
+      case 'large':
+        return '900px';
+      default:
+        return '500px';
+    }
+  }};
+  height: ${props => {
+    switch (props.size) {
+      case 'small':
+        return '378px';
+      case 'medium':
+        return '678px';
+      case 'large':
+        return '830px';
+      default:
+        return '378px';
+    }
+  }};
   display: flex;
   flex-direction: column;
   align-items: center;

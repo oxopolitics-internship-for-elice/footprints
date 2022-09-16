@@ -42,17 +42,18 @@ const AuthButton = () => {
 export default AuthButton;
 
 const Button = styled.button`
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #fff;
-  color: #000;
-  font-size: 0.875em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
   font-weight: bold;
+  color: #000;
+  background-color: transparent;
+  border: none;
+  outline: none;
   cursor: pointer;
-  transition: all 0.5s ease 0s;
+  margin-left: 40px;
   &:hover {
-    background: #f5f5f5;
+    color: ${({ theme }) => theme.colors.subColor};
   }
 `;

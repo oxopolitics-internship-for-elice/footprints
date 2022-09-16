@@ -1,3 +1,4 @@
+import PoliticianList from '@/pages/PoliticianList';
 import Home from '@/pages/Home';
 import Politician from '@/pages/Politician';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
@@ -7,6 +8,7 @@ const Router = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/politician" element={<PoliticianList />} />
         <Route path="/politician/:politicianID" element={<Politician />} />
       </Routes>
     </BrowserRouter>

@@ -17,6 +17,10 @@ const Header = () => {
     }
   };
 
+  const handleClickPoliticianList = () => {
+    navigate('/politician');
+  };
+
   React.useEffect(() => {
     if (location.pathname === '/') {
       setIsMainFirstPage(true);
@@ -46,9 +50,11 @@ const Header = () => {
           <Title fontWhite={isMainFirstPage} onClick={() => navigate('/')}>
             <img src={MainLogo} width="140px" />
           </Title>
-          <AuthContainer>
+          <NavContainer>
+            {/* <NavItem>About</NavItem> */}
+            <NavItem onClick={handleClickPoliticianList}>정치인 목록</NavItem>
             <AuthButton />
-          </AuthContainer>
+          </NavContainer>
         </InnerHeader>
       </HeaderBlock>
     </>
@@ -99,8 +105,29 @@ const Title = styled.h1<TitleProps>`
   cursor: pointer;
 `;
 
-const AuthContainer = styled.div`
+const NavContainer = styled.div`
   display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
-  margin-right: 1rem;
+  width: 100%;
+  height: 100%;
+`;
+
+const NavItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #000;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-left: 40px;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.mainColor};
+  }
 `;
