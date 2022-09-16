@@ -2,15 +2,14 @@ import React from 'react';
 import ServiceIntro from '@/components/home/ServiceIntro';
 import ServiceInfo from './ServiceInfo';
 import { FullPage, Slide } from 'react-full-page';
-import HomePolitician from '@/components/home/HomePolitician';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
-import Loading from '@components/base/Loading';
 import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import PoliticianGraph from '@/assets/PoliticianGraph.png';
 import PoliticianGraphModal from '@/assets/PoliticianGraphModal.png';
 import StandbyIssue from '@/assets/StandbyIssue.png';
-import Carousel from '@components/base/Carousel';
+import theme from '@/styles/theme';
+import ServiceFooter from './ServiceFooter';
 
 const SlideFullPage = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
@@ -20,7 +19,7 @@ const SlideFullPage = () => {
       title: '정치인 그래프',
       description:
         '해당 정치인의 여러가지 이슈를 투표받아 수치로 환산해 그래프로 보여줍니다.',
-      backgroundColor: '#F5F5F5',
+      backgroundColor: theme.colors?.lighterColor,
       imagePosition: 'right',
     },
     {
@@ -34,7 +33,7 @@ const SlideFullPage = () => {
       title: '대기 중 이슈',
       description:
         '그래프로 등록하기 위해서 대기 중 이슈를 등록하거나 다른 대기 중 이슈를 투표할 수 있습니다.',
-      backgroundColor: '#F5F5F5',
+      backgroundColor: theme.colors?.lighterColor,
       imagePosition: 'right',
     },
   ];
@@ -51,7 +50,7 @@ const SlideFullPage = () => {
   );
 
   return (
-    <FullPage>
+    <FullPage controls>
       <Slide>
         <ServiceIntro />
         {/* <Carousel>
@@ -73,6 +72,7 @@ const SlideFullPage = () => {
       {InfoContent.map((content, index) => (
         <Slide key={content.title}>
           <ServiceInfo
+            index={index + 1}
             imageSrc={content.imageSrc}
             title={content.title}
             description={content.description}
@@ -81,6 +81,9 @@ const SlideFullPage = () => {
           />
         </Slide>
       ))}
+      <Slide>
+        <ServiceFooter />
+      </Slide>
     </FullPage>
   );
 };

@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 
 interface ServiceInfoProps {
+  index: number;
   imageSrc: string;
   imagePosition: string;
   title: string;
@@ -11,6 +12,7 @@ interface ServiceInfoProps {
 }
 
 const ServiceInfo = ({
+  index,
   imageSrc,
   imagePosition,
   title,
@@ -37,8 +39,9 @@ const ServiceInfo = ({
             )}
           </ImageContainer>
           <TextContainer>
-            <Title>{title}</Title>
-            <Description>{description}</Description>
+            <InfoIndex>{`서비스 소개 ${index}`}</InfoIndex>
+            <h2>{title}</h2>
+            <p>{description}</p>
           </TextContainer>
         </AnimationOnScroll>
       </Container>
@@ -60,7 +63,6 @@ const Container = styled.div<ContainerProps>`
   width: 100%;
   height: 100%;
   background-color: ${({ backgroundColor }) => backgroundColor || '#fff'};
-  padding-top: 72px;
 `;
 
 interface ImageContainerProps {
@@ -79,8 +81,8 @@ const ImageContainer = styled.div<ImageContainerProps>`
 `;
 
 const Image = styled.img`
-  width: 80%;
-  height: 80%;
+  width: 90%;
+  height: 100%;
   object-fit: contain;
 `;
 
@@ -88,21 +90,30 @@ const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 30%;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+
+  h2 {
+    font-size: 44px;
+    line-height: 1.36;
+    font-weight: 400;
+  }
+  p {
+    word-break: keep-all;
+    padding-top: 1em;
+    font-size: 1.2rem;
+    line-height: 1.55;
+  }
 `;
 
-const Title = styled.h2`
-  font-size: 44px;
-  line-height: 1.36;
-  font-weight: 400;
-`;
-
-const Description = styled.p`
-  word-break: keep-all;
-  padding-top: 1em;
-  font-size: 1.2rem;
-  line-height: 1.55;
-  text-align: center;
-}
+const InfoIndex = styled.h6`
+  font-size: 1.2vw;
+  background-color: ${({ theme }) => theme.colors.subColor};
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  width: fit-content;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  align-self: flex-start;
 `;

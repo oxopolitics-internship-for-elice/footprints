@@ -1,5 +1,3 @@
-import errorHandler from '@/api/ErrorHandler';
-import UserAPI from '@/api/UserAPI';
 import styled from '@emotion/styled';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +6,6 @@ import MainLogo from '@/assets/MainLogo.gif';
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
   const [isMainFirstPage, setIsMainFirstPage] = React.useState(true);
 
   const handleScroll = () => {

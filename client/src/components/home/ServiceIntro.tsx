@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React from 'react';
 import laptop from '@/assets/laptop.jpg';
-import Carousel from '@components/base/Carousel';
+import carousel1 from '@/assets/carousel1.png';
 
 const ServiceIntro = () => {
   return (
@@ -13,18 +13,9 @@ const ServiceIntro = () => {
             '정치 발자국에서는 유저들이 정치 이슈를 등록하고 투표로 발자국에 참여할 수 있습니다.'
           }
         </p>
+        <button>{'무료로 시작하기'}</button>
         <ImageContainer>
-          <CarouselContainer>
-            <Carousel
-              style={{
-                width: '600px',
-              }}
-            >
-              <Img src={laptop} alt="laptop" />
-              <Img src={laptop} alt="laptop" />
-              <Img src={laptop} alt="laptop" />
-            </Carousel>
-          </CarouselContainer>
+          <CarouselContainer></CarouselContainer>
         </ImageContainer>
       </Content>
     </>
@@ -36,7 +27,7 @@ export default ServiceIntro;
 const Content = styled.div`
   display: grid;
   grid-row-gap: 6px;
-  padding-top: 120px;
+  padding-top: 80px;
   margin: 0px auto 0px auto;
   width: 100%;
   max-width: 1400px;
@@ -45,7 +36,6 @@ const Content = styled.div`
 
   h2 {
     font-size: 3rem;
-    line-height: 8.4rem;
     letter-spacing: -1.5px;
     font-weight: 800;
     text-align: center;
@@ -56,6 +46,26 @@ const Content = styled.div`
     letter-spacing: -0.75px;
     font-weight: 400;
     text-align: center;
+  }
+  button {
+    width: 200px;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: none;
+    background-color: ${({ theme }) => theme.colors.subColor};
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    justify-self: center;
+
+    &:hover {
+      color: ${({ theme }) => theme.colors.subColor};
+      background-color: white;
+      border: 3px solid ${({ theme }) => theme.colors.subColor};
+    }
   }
 `;
 
@@ -78,10 +88,8 @@ const CarouselContainer = styled.div`
   width: 600px;
   height: 363px;
   margin: 0px auto 0px auto;
-`;
-
-const Img = styled.img`
-  width: 550px;
-  height: 363px;
-  object-fit: cover;
+  background: url(${carousel1});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 `;
