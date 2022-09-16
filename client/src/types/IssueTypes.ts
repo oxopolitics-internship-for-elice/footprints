@@ -13,4 +13,5 @@ export interface IssueTypes {
   content: string;
   isPollActive: boolean;
   updatedAt: Date;
+  link?: string;
 }

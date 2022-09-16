@@ -21,6 +21,7 @@ const IssueAddModal = ({
   const [issueDate, setIssueDate] = React.useState(new Date());
   const [issueTitle, setIssueTitle] = React.useState('');
   const [issueContent, setIssueContent] = React.useState('');
+  const [issueLink, setIssueLink] = React.useState('');
   const { politicianID } = useParams();
 
   registerLocale('ko', ko);
@@ -59,6 +60,7 @@ const IssueAddModal = ({
         issueDate,
         title: issueTitle,
         content: issueContent,
+        link: issueLink,
       };
 
       const { data } = await PoliticianAPI.postIssue(body);
@@ -77,7 +79,7 @@ const IssueAddModal = ({
   return (
     <>
       {modalShow && (
-        <Modal onClickToggleModal={handleModalToggle}>
+        <Modal onClickToggleModal={handleModalToggle} size="medium">
           <ModalDiv>
             <ModalTitle>이슈 등록</ModalTitle>
             <ModalBody>
@@ -93,7 +95,7 @@ const IssueAddModal = ({
                     dateFormat="yyyy-MM-dd"
                     disabledKeyboardNavigation
                     maxDate={new Date()}
-                    popperPlacement="bottom"
+                    popperPlacement="top-end"
                     id="issue-date"
                     placeholderText="YYYY-MM-DD"
                   />
@@ -117,6 +119,15 @@ const IssueAddModal = ({
                     maxLength={200}
                     value={issueContent}
                     onChange={event => setIssueContent(event.target.value)}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <FormLabel>이슈 링크</FormLabel>
+                  <FormInput
+                    type="text"
+                    placeholder="이슈 링크를 입력해주세요"
+                    value={issueLink}
+                    onChange={event => setIssueLink(event.target.value)}
                   />
                 </FormGroup>
                 <FormSubmit type="submit">등록</FormSubmit>

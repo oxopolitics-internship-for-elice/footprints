@@ -5,9 +5,10 @@ import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import errorHandler from '@/api/ErrorHandler';
 import { Alert, errorAlert } from '../base/Alert';
+import { LinkPreview } from '@dhaiwat10/react-link-preview';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
-  const { _id, issueDate, title, content, regi } = issue;
+  const { _id, issueDate, title, content, regi, link } = issue;
   const issuedDate = dateFormatter(issueDate, '년월일');
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -89,7 +90,7 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
           </LighterDiv>
         </div>
       </SubContainer>
-
+      {link && <LinkPreview url={link} />}
       <Title>{title}</Title>
       <Content>{content}</Content>
 
