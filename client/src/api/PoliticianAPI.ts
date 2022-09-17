@@ -6,6 +6,7 @@ export type postIssueBody = {
   issueDate: Date;
   title: string;
   content: string;
+  link?: string;
 };
 interface IPoliticianAPI {
   getList(): Promise<AxiosResponse<any>>;

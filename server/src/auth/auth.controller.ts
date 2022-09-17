@@ -19,14 +19,8 @@ export class AuthController {
     // console.log('req.user: ', req.user);
     // console.log('accessToken', req.user.accessToken);
     // console.log('refresh_token', req.user.refreshToken);
-    if (req.user.type === 'login') {
-      res.cookie('access_token', req.user.accessToken);
-      res.cookie('refresh_token', req.user.refreshToken);
-    } else {
-      res.cookie('once_token', req.user.onceToken);
-    }
 
-    res.redirect(process.env.CLIENT_HOST);
+    res.redirect(`${process.env.CLIENT_HOST}?access=${req.user.accessToken}&refresh=${req.user.refreshToken}`);
     res.end();
   }
 }
