@@ -1,19 +1,19 @@
 import styled from '@emotion/styled';
-import React from 'react';
 import laptop from '@/assets/laptop.jpg';
 import carousel1 from '@/assets/carousel1.png';
+import { HiArrowSmRight } from 'react-icons/hi';
 
-const ServiceIntro = () => {
+const ServiceIntro = (): JSX.Element => {
   return (
     <>
       <Content>
-        <h2>{'정치인의 발자국을 직접 남겨보세요!'}</h2>
+        <h2>정치인의 발자취를 평가해보세요</h2>
         <p>
-          {
-            '정치 발자국에서는 유저들이 정치 이슈를 등록하고 투표로 발자국에 참여할 수 있습니다.'
-          }
+          정치 발자국에서는 유저들이 정치 이슈를 등록하고
+          <br />
+          투표로 발자국에 참여할 수 있습니다.
         </p>
-        <button>{'무료로 시작하기'}</button>
+        <button>무료로 시작하기</button>
         <ImageContainer>
           <CarouselContainer></CarouselContainer>
         </ImageContainer>
@@ -25,30 +25,25 @@ const ServiceIntro = () => {
 export default ServiceIntro;
 
 const Content = styled.div`
-  display: grid;
-  grid-row-gap: 6px;
-  padding-top: 80px;
-  margin: 0px auto 0px auto;
+  padding-top: 120px;
   width: 100%;
-  max-width: 1400px;
-  min-width: 1200px;
   text-align: center;
 
   h2 {
-    font-size: 3rem;
+    font-size: 2.5rem;
     letter-spacing: -1.5px;
     font-weight: 800;
     text-align: center;
   }
   p {
     font-size: 1.5rem;
-    line-height: 3.6rem;
+    line-height: 3rem;
     letter-spacing: -0.75px;
     font-weight: 400;
     text-align: center;
   }
   button {
-    width: 200px;
+    width: 170px;
     height: 50px;
     margin-top: 10px;
     margin-bottom: 20px;
@@ -56,8 +51,8 @@ const Content = styled.div`
     border: none;
     background-color: ${({ theme }) => theme.colors.subColor};
     color: white;
-    font-size: 1.3rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 500;
     cursor: pointer;
     justify-self: center;
 
@@ -71,23 +66,19 @@ const Content = styled.div`
 
 const ImageContainer = styled.div`
   background: url(${laptop});
-  background-size: cover;
+  background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  width: 100%;
-  height: 600px;
-  margin: 0px auto 0px auto;
-  max-width: 1400px;
-  min-width: 1200px;
+  height: 400px;
   display: flex;
   justify-content: center;
   padding-top: 5.25%;
 `;
 
 const CarouselContainer = styled.div`
-  width: 600px;
-  height: 363px;
-  margin: 0px auto 0px auto;
+  width: 41%;
+  height: 58%;
+  margin: 4% auto;
   background: url(${carousel1});
   background-size: cover;
   background-position: center;

@@ -80,7 +80,8 @@ const HeaderBlock = styled.header<HeaderBlockProps>`
 
 const InnerHeader = styled.section`
   position: relative;
-  width: 75vw;
+  min-width: 700px;
+  max-width: 900px;
   height: 72px;
   padding: 19px 20px;
   margin: 0 auto;
