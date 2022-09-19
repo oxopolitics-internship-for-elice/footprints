@@ -377,7 +377,9 @@ const PoliticianGraph = (): JSX.Element => {
           </Manual>
         )}
       </ManualContainer>
-      {NextPageable === false ? null : (
+      {NextPageable === false ? (
+        <HiArrowCircleLeft color="white" size="30" />
+      ) : (
         <GraphButton
           style={{ float: 'left', top: '50%' }}
           onClick={getNextData}
@@ -398,9 +400,8 @@ const PoliticianGraph = (): JSX.Element => {
           />
         </GraphButton>
       )}
-
-      <Graph>
-        {data && (
+      {data && (
+        <ChartContainer>
           <Line
             ref={chartRef}
             onClick={event => {
@@ -413,20 +414,22 @@ const PoliticianGraph = (): JSX.Element => {
             data={data}
             plugins={[ChartDataLabels]}
           />
+        </ChartContainer>
+      )}
+      <div>
+        {open && (
+          <Modal
+            setOpen={setOpen}
+            element={point}
+            content={content}
+            issueDate={issueDate}
+            resData={resData}
+          />
         )}
-        <div>
-          {open && (
-            <Modal
-              setOpen={setOpen}
-              element={point}
-              content={content}
-              issueDate={issueDate}
-              resData={resData}
-            />
-          )}
-        </div>
-      </Graph>
-      {index === 1 ? null : (
+      </div>
+      {index === 1 ? (
+        <HiArrowCircleRight color="white" size="30" />
+      ) : (
         <GraphButton
           style={{ top: '50%', marginRight: '-95px' }}
           onClick={getPreData}
@@ -626,20 +629,22 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
 const GraphContainer = styled.div`
   display: flex;
-  height: 80vh;
+  justify-content: center;
   margin: 30px 0 70px 0;
   position: relative;
-  max-height: 500px;
 `;
-const Graph = styled.div`
-  height: 100%;
-  width: 80vw;
+const ChartContainer = styled.div`
+  position: relative;
+  height: 65vh;
+  width: 60vw;
+  min-width: 600px;
+  margin: 0 10px;
 `;
 const ManualContainer = styled.div`
   position: absolute;
-  right: 3vw;
+  right: 8%;
   top: -2%;
-  width: 5px;
+  z-index: 2;
   overflow: visible;
 `;
 const ManualFade = keyframes`

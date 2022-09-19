@@ -27,8 +27,6 @@ export default Layout;
 const Container = styled.div`
   max-width: 1280px;
   min-width: 700px;
-  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  font-family: Noto Sans KR, AppleSDGothicNeo, Arial, sans-serif;
 `;

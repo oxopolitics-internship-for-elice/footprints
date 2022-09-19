@@ -25,50 +25,44 @@ const ServiceIntro = (): JSX.Element => {
 export default ServiceIntro;
 
 const Content = styled.div`
-  padding-top: 120px;
+  padding-top: 100px;
   width: 100%;
   text-align: center;
 
   h2 {
-    font-size: 2.5rem;
+    font-size: 37px;
     letter-spacing: -1.5px;
     font-weight: 800;
-    text-align: center;
   }
   p {
-    font-size: 1.5rem;
-    line-height: 3rem;
+    font-size: 22px;
     letter-spacing: -0.75px;
     font-weight: 400;
-    text-align: center;
+    padding: 20px 0 10px 0;
   }
   button {
-    width: 170px;
-    height: 50px;
+    padding: 7px 15px;
     margin-top: 10px;
     margin-bottom: 20px;
     border-radius: 10px;
     border: none;
     background-color: ${({ theme }) => theme.colors.subColor};
     color: white;
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: 19px;
     cursor: pointer;
     justify-self: center;
 
     &:hover {
-      color: ${({ theme }) => theme.colors.subColor};
-      background-color: white;
-      border: 3px solid ${({ theme }) => theme.colors.subColor};
+      background-color: ${({ theme }) => theme.colors.mainColor};
+      color: white;
     }
   }
 `;
 
 const ImageContainer = styled.div`
   background: url(${laptop});
-  background-size: contain;
+  background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
   height: 400px;
   display: flex;
   justify-content: center;
@@ -77,10 +71,9 @@ const ImageContainer = styled.div`
 
 const CarouselContainer = styled.div`
   width: 41%;
-  height: 58%;
-  margin: 4% auto;
+  height: 250px;
+  margin: 10px auto;
   background: url(${carousel1});
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
 `;

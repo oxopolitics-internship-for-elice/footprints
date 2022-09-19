@@ -14,7 +14,6 @@ const Politician = (): JSX.Element => {
   const handleModalToggle = () => {
     setModalShow(prev => !prev);
   };
-
   return (
     <>
       <Helmet>

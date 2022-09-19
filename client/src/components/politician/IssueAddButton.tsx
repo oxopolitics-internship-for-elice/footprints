@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { HiPlus } from 'react-icons/hi';
 import theme from '@/styles/theme';
@@ -39,10 +38,9 @@ const Div = styled.div`
     padding: 0.7vw;
     width: 100%;
     height: 100%;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: rgba(0, 0, 0, 0.25) 3px 3px 4px;
     &:hover {
       background: ${theme.colors.mainColor};
-      color: black;
     }
     span {
       margin-left: 0.5vw;

@@ -47,7 +47,6 @@ const TopIssueContainer = styled.div`
   background-color: ${theme.colors.lighterColor}
   border-radius: 2px;
   padding: 20px;
-  margin: auto;
 `;
 const Title = styled.div`
   font-size: 20px;

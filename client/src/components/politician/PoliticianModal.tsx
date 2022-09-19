@@ -223,6 +223,7 @@ const Content = styled.div`
   animation-timing-function: ease-out;
   animation-name: slideUp;
   animation-fill-mode: forwards;
+  min-height: 250px;
   flex-wrap: wrap;
   display: flex;
   flex-direction: row;
@@ -246,7 +247,7 @@ const ChooseBox = styled.div`
   width: 100%;
   background-color: #dedcdc;
   border-radius: 20px;
-  height: 80px;
+  height: 70px;
 `;
 
 interface ChooseItemProps {
@@ -259,7 +260,6 @@ const ChooseItem = styled.button<ChooseItemProps>`
   height: 100%;
   flex-grow: 1;
   border-radius: ${({ btnType }) => {
-    console.log(btnType);
     if (btnType.includes('BasicCircle')) {
       return '0 0 0 20px';
     } else if (btnType.includes('BasicX')) {
