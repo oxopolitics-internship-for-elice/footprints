@@ -22,12 +22,11 @@ const StandbyIssue = (): JSX.Element => {
 
   const id = useLocation().pathname.split('/')[2];
   const loadMore = () => {
-    if (pageNum === maxPage) {
+    if (pageNum >= maxPage) {
       Alert.fire({
         icon: 'error',
         title: '마지막 페이지입니다.',
       });
-      // return;
     }
     setPageNum(prev => prev + 1);
   };
@@ -66,7 +65,9 @@ const StandbyIssue = (): JSX.Element => {
       ) : (
         <Loading />
       )}
-      <PaginationButton onClick={loadMore}>더 보기</PaginationButton>
+      {pageNum <= maxPage && (
+        <PaginationButton onClick={loadMore}>더 보기</PaginationButton>
+      )}
     </StandbyIssueContainer>
   );
 };
@@ -74,16 +75,17 @@ const StandbyIssue = (): JSX.Element => {
 export default StandbyIssue;
 
 const StandbyIssueContainer = styled.div`
-  padding: 40px 20px 20px 20px;
-  margin: auto;
-  max-width: 800px;
+  padding: 40px 20px 70px 20px;
+  position: relative;
 `;
 const PaginationButton = styled.button`
   background-color: ${theme.colors.lighterColor};
-  color: 'black';
   border-radius: 10px;
-  cursor: pointer;
-  padding: 5px;
   padding: 10px;
-  margin-left: 35vw;
+  margin-top: 30px;
+  width: 80px;
+  position: absolute;
+  left: 50%;
+  bottom: 3px;
+  transform: translate(-50%, -50%);
 `;
