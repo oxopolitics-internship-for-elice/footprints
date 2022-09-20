@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -377,29 +377,40 @@ const PoliticianGraph = (): JSX.Element => {
           </Manual>
         )}
       </ManualContainer>
-      {NextPageable === false ? (
-        <HiArrowCircleLeft color="white" size="30" />
-      ) : (
-        <GraphButton
-          style={{ float: 'left', top: '50%' }}
-          onClick={getNextData}
-        >
-          <HiArrowCircleLeft
-            size="30"
-            color={theme.colors.thirdColor}
-            onMouseOver={event => {
+
+      <GraphButton
+        style={{ float: 'left', top: '50%' }}
+        onClick={getNextData}
+        disabled={!NextPageable}
+        pageable={NextPageable}
+      >
+        <HiArrowCircleLeft
+          size="30"
+          color={theme.colors.thirdColor}
+          onMouseOver={event => {
+            if (NextPageable) {
               (
                 event.target as HTMLButtonElement
               ).style.color = `${theme.colors.subColor}`;
-            }}
-            onMouseOut={event => {
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+          onMouseOut={event => {
+            if (NextPageable) {
               (
                 event.target as HTMLButtonElement
               ).style.color = `${theme.colors.thirdColor}`;
-            }}
-          />
-        </GraphButton>
-      )}
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+        />
+      </GraphButton>
       {data && (
         <ChartContainer>
           <Line
@@ -427,29 +438,40 @@ const PoliticianGraph = (): JSX.Element => {
           />
         )}
       </div>
-      {index === 1 ? (
-        <HiArrowCircleRight color="white" size="30" />
-      ) : (
-        <GraphButton
-          style={{ top: '50%', marginRight: '-95px' }}
-          onClick={getPreData}
-        >
-          <HiArrowCircleRight
-            size="30"
-            color={theme.colors.thirdColor}
-            onMouseOver={event => {
+
+      <GraphButton
+        style={{ top: '50%', marginRight: '-95px' }}
+        onClick={getPreData}
+        disabled={index === 1}
+        pageable={index !== 1}
+      >
+        <HiArrowCircleRight
+          size="30"
+          color={theme.colors.thirdColor}
+          onMouseOver={event => {
+            if (index !== 1) {
               (
                 event.target as HTMLButtonElement
               ).style.color = `${theme.colors.subColor}`;
-            }}
-            onMouseOut={event => {
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+          onMouseOut={event => {
+            if (index !== 1) {
               (
                 event.target as HTMLButtonElement
               ).style.color = `${theme.colors.thirdColor}`;
-            }}
-          ></HiArrowCircleRight>
-        </GraphButton>
-      )}
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+        />
+      </GraphButton>
     </GraphContainer>
   );
 };
@@ -676,10 +698,12 @@ const Manual = styled.div`
     border-right: 8px solid transparent;
   }
 `;
-const GraphButton = styled.button`
+interface GraphButtonProps {
+  pageable: boolean;
+}
+const GraphButton = styled.button<GraphButtonProps>`
   float: right;
   opacity: 0.9;
   transition-duration: 0.4s;
-  &:hover {
-    color: ${theme.colors.lighterColor};
+  cursor: ${props => (props.pageable ? 'pointer' : 'none')};
 `;
