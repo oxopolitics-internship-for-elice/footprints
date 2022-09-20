@@ -379,7 +379,6 @@ const PoliticianGraph = (): JSX.Element => {
       </ManualContainer>
 
       <GraphButton
-        style={{ float: 'left', top: '50%' }}
         onClick={getNextData}
         disabled={!NextPageable}
         pageable={NextPageable}
@@ -440,7 +439,6 @@ const PoliticianGraph = (): JSX.Element => {
       </div>
 
       <GraphButton
-        style={{ top: '50%', marginRight: '-95px' }}
         onClick={getPreData}
         disabled={index === 1}
         pageable={index !== 1}
@@ -683,26 +681,15 @@ const Manual = styled.div`
   padding: 10px;
   width: 250px;
   position: absolute;
-  right: -30px;
+  right: -10px;
   top: -135px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  animation: ${ManualFade} 1s 1s linear,
-  &:before {
-    content: '';
-    position: absolute;
-    top: 100%;
-    right: 10px;
-    width: 0;
-    border-top: 10px solid ${theme.colors.lighterColor};
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-  }
+  animation: ${ManualFade} 1s 1s linear;
 `;
 interface GraphButtonProps {
   pageable: boolean;
 }
 const GraphButton = styled.button<GraphButtonProps>`
-  float: right;
   opacity: 0.9;
   transition-duration: 0.4s;
   cursor: ${props => (props.pageable ? 'pointer' : 'none')};
