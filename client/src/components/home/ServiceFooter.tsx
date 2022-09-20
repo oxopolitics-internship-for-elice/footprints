@@ -80,9 +80,9 @@ const Container = styled.div`
 `;
 
 const Img = styled.img`
-  margin-top: 50px;
-  width: 35%;
-  height: 50%;
+  margin-top: 90px;
+  width: 70%;
+  height: 80%;
   object-fit: contain;
 `;
 
@@ -91,16 +91,18 @@ interface NavigatePoliticianButtonProps {
 }
 
 const NavigatePoliticianButton = styled.div<NavigatePoliticianButtonProps>`
-  width: 350px;
-  height: 100px;
+  width: 300px;
+  height: 120px;
   margin-top: 50px;
   border-radius: 10px;
   border: ${({ isMouseOver, theme }) =>
-    isMouseOver ? `3px solid ${theme.colors.thirdColor}` : 'none'};
+    isMouseOver
+      ? `3px solid ${theme.colors.subColor}`
+      : `3px solid transparent`};
   background-color: ${({ isMouseOver, theme }) =>
-    isMouseOver ? '#fff' : theme.colors.thirdColor};
+    isMouseOver ? '#fff' : theme.colors.subColor};
   color: ${({ isMouseOver, theme }) =>
-    isMouseOver ? theme.colors.thirdColor : 'white'};
+    isMouseOver ? theme.colors.subColor : 'white'};
   font-size: 2rem;
   font-weight: 600;
   cursor: pointer;
@@ -126,7 +128,7 @@ const FooterInfo = styled.div`
   align-items: center;
   width: 100%;
   height: 500px;
-  padding: 100px 0 50px 0;
+  padding: 50px 0 20px 0;
 `;
 
 const FooterButtonContainer = styled.div`
@@ -134,8 +136,6 @@ const FooterButtonContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
 `;
 
 const FooterButton = styled.div`
@@ -143,9 +143,9 @@ const FooterButton = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 200px;
-  height: 60px;
-  margin: 0 10px;
+  width: 130px;
+  height: 40px;
+  margin: 0 30px;
   border-radius: 10px;
   border: none;
   background-color: #fff;
@@ -155,17 +155,17 @@ const FooterButton = styled.div`
   cursor: pointer;
 
   svg {
-    font-size: 2.5rem;
+    font-size: 30px;
     margin-right: 10px;
     margin-top: 5px;
   }
 
   span {
-    font-size: 1.5rem;
+    font-size: 20px;
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.thirdColor};
+    background-color: ${({ theme }) => theme.colors.subColor};
     color: #fff;
   }
 `;
@@ -186,8 +186,7 @@ const FooterInfoText = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
   span {
-    font-size: 1.5rem;
+    font-size: 15px;
   }
 `;

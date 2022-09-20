@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
-import laptop from '@/assets/laptop.jpg';
-import carousel1 from '@/assets/carousel1.png';
+import laptop from '@/assets/Laptop.png';
 import { HiArrowSmRight } from 'react-icons/hi';
 
 const ServiceIntro = (): JSX.Element => {
@@ -13,10 +12,11 @@ const ServiceIntro = (): JSX.Element => {
           <br />
           투표로 발자국에 참여할 수 있습니다.
         </p>
-        <button>무료로 시작하기</button>
-        <ImageContainer>
-          <CarouselContainer></CarouselContainer>
-        </ImageContainer>
+        <button>
+          무료로 시작하기
+          <HiArrowSmRight size="25" style={{ verticalAlign: 'bottom' }} />
+        </button>
+        <ImageContainer />
       </Content>
     </>
   );
@@ -67,13 +67,4 @@ const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 5.25%;
-`;
-
-const CarouselContainer = styled.div`
-  width: 41%;
-  height: 250px;
-  margin: 10px auto;
-  background: url(${carousel1});
-  background-size: cover;
-  background-position: center;
 `;

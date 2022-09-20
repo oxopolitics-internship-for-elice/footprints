@@ -1,4 +1,3 @@
-import React from 'react';
 import ServiceIntro from '@/components/home/ServiceIntro';
 import ServiceInfo from './ServiceInfo';
 import { FullPage, Slide } from 'react-full-page';
@@ -14,21 +13,21 @@ const SlideFullPage = () => {
       imageSrc: PoliticianGraph,
       title: '정치인 그래프',
       description:
-        '해당 정치인의 여러가지 이슈를 투표받아 수치로 환산해 그래프로 보여줍니다.',
+        '정치인의 사건·사고에 대한 여론 투표 결과를 그래프로 확인해보세요.',
       backgroundColor: theme.colors?.lighterColor,
       imagePosition: 'right',
     },
     {
       imageSrc: PoliticianGraphModal,
       title: '이슈 투표',
-      description: '그래프 속 이슈를 클릭 해 해당 이슈를 평가할 수 있습니다.',
+      description: '그래프 속 이슈를 클릭해 자신의 의견을 표현할 수 있습니다.',
       imagePosition: 'left',
     },
     {
       imageSrc: StandbyIssue,
       title: '대기 중 이슈',
       description:
-        '그래프로 등록하기 위해서 대기 중 이슈를 등록하거나 다른 대기 중 이슈를 투표할 수 있습니다.',
+        '이용자들의 동의를 얻은 이슈만이 그래프에 등록됩니다! 새로운 이슈를 등록하거나 대기 중인 이슈에 투표해보세요.',
       backgroundColor: theme.colors?.lighterColor,
       imagePosition: 'right',
     },
