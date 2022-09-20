@@ -44,9 +44,9 @@ const InfoDiv = styled.div`
   text-align: right;
 `;
 const TopIssueContainer = styled.div`
-  background-color: ${theme.colors.lighterColor}
-  border-radius: 2px;
-  padding: 20px;
+  border: ${theme.colors.mainColor} 10px solid;
+  border-radius: 20px;
+  padding: 20px 20px 0 20px;
 `;
 const Title = styled.div`
   font-size: 20px;
