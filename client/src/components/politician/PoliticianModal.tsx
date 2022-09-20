@@ -179,7 +179,7 @@ const Background = styled.div`
   animation-timing-function: ease-out;
   animation-name: fadeIn;
   animation-fill-mode: forwards;
-  z-index: 3;
+  z-index: 1000;
 `;
 const Container = styled.div<ContainerProps>`
   width: 600px;
@@ -196,7 +196,7 @@ const Container = styled.div<ContainerProps>`
   animation-name: fadeIn;
   animation-fill-mode: forwards;
   transform: translate(-50%, -50%);
-  z-index: 4;
+  z-index: 1001;
 `;
 const HeaderText = styled.div`
   font-size: 25px;
