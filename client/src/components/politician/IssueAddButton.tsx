@@ -1,3 +1,4 @@
+import React from 'react';
 import styled from '@emotion/styled';
 import { HiPlus } from 'react-icons/hi';
 import theme from '@/styles/theme';
@@ -21,11 +22,13 @@ const IssueAddButton = ({ onClickToggleModal }: IssueAddButtonProps) => {
 export default IssueAddButton;
 
 const Div = styled.div`
-  position: fixed;
-  bottom: 5%;
-  right: 3%;
+  position: sticky;
+  width: 50px;
+  height: 50px;
+  bottom: 20px;
   background: none;
   z-index: 999;
+  align-self: flex-end;
   button {
     background: grey;
     border: none;
