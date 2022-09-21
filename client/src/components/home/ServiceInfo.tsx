@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from '@emotion/styled';
 import { AnimationOnScroll } from 'react-animation-on-scroll';
 
@@ -25,7 +24,7 @@ const ServiceInfo = ({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: '0 10%',
+    padding: '0 20px',
   };
   return (
     <>
@@ -33,13 +32,13 @@ const ServiceInfo = ({
         <AnimationOnScroll animateIn="animate__fadeIn" style={animationStyle}>
           <ImageContainer imagePosition={imagePosition}>
             {imageSrc === '' ? (
-              <div>준비중입니다.</div>
+              <div>이미지 준비중입니다.</div>
             ) : (
               <Image src={imageSrc} />
             )}
           </ImageContainer>
           <TextContainer>
-            <InfoIndex>{`서비스 소개 ${index}`}</InfoIndex>
+            <InfoIndex>{`기능 ${index}`}</InfoIndex>
             <h2>{title}</h2>
             <p>{description}</p>
           </TextContainer>
@@ -85,19 +84,20 @@ const Image = styled.img`
   width: 90%;
   height: 100%;
   object-fit: contain;
+  border-radius: 10px !important;
 `;
 
 const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 45%;
   align-items: flex-start;
   justify-content: center;
 
   h2 {
-    font-size: 44px;
+    font-size: 30px;
     line-height: 1.36;
-    font-weight: 400;
+    font-weight: 600;
   }
   p {
     word-break: keep-all;

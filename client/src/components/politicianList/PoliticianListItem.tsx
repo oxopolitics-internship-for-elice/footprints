@@ -72,7 +72,7 @@ const Container = styled.div`
   ${flexCenter}
   max-width: 100%;
   height: 100%;
-  padding: 150px 5% 150px 5%;
+  padding: 50px 0;
 `;
 
 const Row = styled.div`

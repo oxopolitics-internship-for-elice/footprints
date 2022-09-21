@@ -25,8 +25,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 export default Layout;
 
 const Container = styled.div`
-  max-width: 100%;
-  margin: 0 5% 0 5%;
+  max-width: 1280px;
+  min-width: 700px;
   display: flex;
   flex-direction: column;
 `;

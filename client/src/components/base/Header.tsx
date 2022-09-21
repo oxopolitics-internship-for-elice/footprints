@@ -74,13 +74,14 @@ const HeaderBlock = styled.header<HeaderBlockProps>`
   top: 0;
   z-index: 2;
   background-color: ${props => (props.istransparent ? '#fff' : '#fff')};
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   transition: all 0.5s ease 0s;
 `;
 
 const InnerHeader = styled.section`
   position: relative;
-  width: 75vw;
+  min-width: 700px;
+  max-width: 900px;
   height: 72px;
   padding: 19px 20px;
   margin: 0 auto;

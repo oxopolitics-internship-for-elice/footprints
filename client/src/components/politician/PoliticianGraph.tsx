@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -377,30 +377,41 @@ const PoliticianGraph = (): JSX.Element => {
           </Manual>
         )}
       </ManualContainer>
-      {NextPageable === false ? null : (
-        <GraphButton
-          style={{ float: 'left', top: '50%' }}
-          onClick={getNextData}
-        >
-          <HiArrowCircleLeft
-            size="30"
-            color={theme.colors.thirdColor}
-            onMouseOver={event => {
+
+      <GraphButton
+        onClick={getNextData}
+        disabled={!NextPageable}
+        pageable={NextPageable}
+      >
+        <HiArrowCircleLeft
+          size="30"
+          color={theme.colors.thirdColor}
+          onMouseOver={event => {
+            if (NextPageable) {
               (
                 event.target as HTMLButtonElement
               ).style.color = `${theme.colors.subColor}`;
-            }}
-            onMouseOut={event => {
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+          onMouseOut={event => {
+            if (NextPageable) {
               (
                 event.target as HTMLButtonElement
               ).style.color = `${theme.colors.thirdColor}`;
-            }}
-          />
-        </GraphButton>
-      )}
-
-      <Graph>
-        {data && (
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+        />
+      </GraphButton>
+      {data && (
+        <ChartContainer>
           <Line
             ref={chartRef}
             onClick={event => {
@@ -413,40 +424,52 @@ const PoliticianGraph = (): JSX.Element => {
             data={data}
             plugins={[ChartDataLabels]}
           />
+        </ChartContainer>
+      )}
+      <div>
+        {open && (
+          <Modal
+            setOpen={setOpen}
+            element={point}
+            content={content}
+            issueDate={issueDate}
+            resData={resData}
+          />
         )}
-        <div>
-          {open && (
-            <Modal
-              setOpen={setOpen}
-              element={point}
-              content={content}
-              issueDate={issueDate}
-              resData={resData}
-            />
-          )}
-        </div>
-      </Graph>
-      {index === 1 ? null : (
-        <GraphButton
-          style={{ top: '50%', marginRight: '-95px' }}
-          onClick={getPreData}
-        >
-          <HiArrowCircleRight
-            size="30"
-            color={theme.colors.thirdColor}
-            onMouseOver={event => {
+      </div>
+
+      <GraphButton
+        onClick={getPreData}
+        disabled={index === 1}
+        pageable={index !== 1}
+      >
+        <HiArrowCircleRight
+          size="30"
+          color={theme.colors.thirdColor}
+          onMouseOver={event => {
+            if (index !== 1) {
               (
                 event.target as HTMLButtonElement
               ).style.color = `${theme.colors.subColor}`;
-            }}
-            onMouseOut={event => {
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+          onMouseOut={event => {
+            if (index !== 1) {
               (
                 event.target as HTMLButtonElement
               ).style.color = `${theme.colors.thirdColor}`;
-            }}
-          ></HiArrowCircleRight>
-        </GraphButton>
-      )}
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+        />
+      </GraphButton>
     </GraphContainer>
   );
 };
@@ -626,20 +649,22 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
 const GraphContainer = styled.div`
   display: flex;
-  height: 80vh;
+  justify-content: center;
   margin: 30px 0 70px 0;
   position: relative;
-  max-height: 500px;
 `;
-const Graph = styled.div`
-  height: 100%;
-  width: 80vw;
+const ChartContainer = styled.div`
+  position: relative;
+  height: 65vh;
+  width: 60vw;
+  min-width: 600px;
+  margin: 0 10px;
 `;
 const ManualContainer = styled.div`
   position: absolute;
-  right: 3vw;
+  right: 8%;
   top: -2%;
-  width: 5px;
+  z-index: 2;
   overflow: visible;
 `;
 const ManualFade = keyframes`
@@ -656,25 +681,16 @@ const Manual = styled.div`
   padding: 10px;
   width: 250px;
   position: absolute;
-  right: -30px;
+  right: -10px;
   top: -135px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  animation: ${ManualFade} 1s 1s linear,
-  &:before {
-    content: '';
-    position: absolute;
-    top: 100%;
-    right: 10px;
-    width: 0;
-    border-top: 10px solid ${theme.colors.lighterColor};
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-  }
+  animation: ${ManualFade} 1s 1s linear;
 `;
-const GraphButton = styled.button`
-  float: right;
+interface GraphButtonProps {
+  pageable: boolean;
+}
+const GraphButton = styled.button<GraphButtonProps>`
   opacity: 0.9;
   transition-duration: 0.4s;
-  &:hover {
-    color: ${theme.colors.lighterColor};
+  cursor: ${props => (props.pageable ? 'pointer' : 'none')};
 `;

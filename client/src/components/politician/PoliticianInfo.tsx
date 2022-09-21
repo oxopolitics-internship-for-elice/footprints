@@ -26,7 +26,7 @@ const PoliticianInfo = (): JSX.Element => {
 export default PoliticianInfo;
 const InfoContainer = styled.div`
   display: flex;
-  padding: 150px 0 20px 70px;
+  padding-top: 100px;
   align-items: center;
   gap: 20px;
 `;
