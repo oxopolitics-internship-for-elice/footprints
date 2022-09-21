@@ -26,6 +26,7 @@ const Div = styled.div`
   width: 50px;
   height: 50px;
   bottom: 20px;
+  margin-right: -100px;
   background: none;
   z-index: 999;
   align-self: flex-end;
