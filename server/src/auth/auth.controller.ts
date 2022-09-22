@@ -26,7 +26,7 @@ export class AuthController {
       res.cookie('once_token', req.user.onceToken);
     }
 
-    res.redirect(process.env.CLIENT_HOST);
+    res.redirect(`${process.env.CLIENT_HOST}?access=${req.user.accessToken}&refresh=${req.user.refreshToken}`);
     res.end();
   }
 }

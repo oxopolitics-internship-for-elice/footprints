@@ -15,4 +15,7 @@ export class AddIssueDto {
 
   @IsString()
   readonly title: string;
+
+  @IsString()
+  readonly link: string;
 }
