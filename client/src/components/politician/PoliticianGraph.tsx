@@ -11,9 +11,9 @@ import {
   Filler,
   InteractionItem,
 } from 'chart.js';
-import Circle from '@/assets/img/circle.png';
-import Triangle from '@/assets/img/triangle.png';
-import X from '@/assets/img/x.png';
+import ColoredCircle from '@/assets/selection/ColoredCircle.svg';
+import ColoredTriangle from '@/assets/selection/ColoredTriangle.svg';
+import ColoredX from '@/assets/selection/ColoredX.svg';
 import { PollFormatter, ScoreFormatter } from '@/utils/Formatter';
 import DateFormatter from '@/utils/DateFormatter';
 import styled from '@emotion/styled';
@@ -24,13 +24,19 @@ import hippo from '@/assets/tribe/hippo.png';
 import lion from '@/assets/tribe/lion.png';
 import tiger from '@/assets/tribe/tiger.png';
 import oxo from '@/assets/tribe/oxo.png';
-
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
 import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
 import { useParams } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import MinMax from '@/utils/MinMax';
+import theme from '@/styles/theme';
+import {
+  HiArrowCircleLeft,
+  HiArrowCircleRight,
+  HiQuestionMarkCircle,
+} from 'react-icons/hi';
+import { keyframes } from '@emotion/react';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -57,14 +63,11 @@ const PoliticianGraph = (): JSX.Element => {
   const [NextPageable, isNextPageable] = useState<boolean>(true);
   const [resData, setResData] = useState<any>([]);
   const [minmax, setMinmax] = useState<any>([]);
-  const id = useLocation().pathname.split('/')[2];
-  const name = useRecoilValue(PoliticianNameState).find(
-    (politician: any) => politician[id],
-  )[id];
+  const [isHovering, setIsHovering] = useState(false);
+  const { politicianID } = useParams<keyof Params>() as Params;
 
-  function ClickHander(element: InteractionItem[]) {
+  function ClickHandler(element: InteractionItem[]) {
     if (element.length !== 0) {
-      const { datasetIndex, index } = element[0];
       setOpen(!open);
       document.body.style.overflow = 'hidden';
       return element[0].element;
@@ -72,11 +75,10 @@ const PoliticianGraph = (): JSX.Element => {
   }
 
   const getData = async (index: number | Number) => {
-    console.log(id);
-    const res = await GraphAPI.getGraph(id, index);
+    const res = await GraphAPI.getGraph(politicianID, index);
     res.data.data.map(async (res: ResTypes, index: number) => {
       setResData((current: any) => {
-        let tempData = DateFormatter(res.issueDate);
+        let tempData = DateFormatter(res.issueDate, '.');
         let tempPoll = PollFormatter(res);
         let tempScore = ScoreFormatter(res);
 
@@ -126,27 +128,15 @@ const PoliticianGraph = (): JSX.Element => {
         labels: resData.issueDate,
         datasets: [
           {
-            label: '공룡',
-            data: resData.score.map((score: any) => {
-              return score.dinosaur.score;
-            }),
-            tension: 0.3,
-            borderColor: 'yellow',
-            pointStyle: chartPoint[0],
-            pointBorderColor: 'black',
-            pointRadius: 5,
-          },
-          {
-            label: '코끼리',
+            label: '호랑이',
 
             data: resData.score.map((score: any) => {
               return score.tiger.score;
             }),
             tension: 0.3,
-            borderColor: 'skyblue',
-            pointStyle: chartPoint[1],
-            pointBorderColor: 'black',
-            pointRadius: 5,
+            borderColor: '#E48F05',
+            backgroundColor: 'transparent',
+            pointStyle: chartPoint[0],
           },
           {
             label: '하마',
@@ -155,10 +145,18 @@ const PoliticianGraph = (): JSX.Element => {
               return score.hippo.score;
             }),
             tension: 0.3,
-            borderColor: 'gray',
+            borderColor: '#8D39A8',
+            pointStyle: chartPoint[1],
+          },
+          {
+            label: '코끼리',
+
+            data: resData.score.map((score: any) => {
+              return score.elephant.score;
+            }),
+            tension: 0.3,
+            borderColor: '#2d8bb2',
             pointStyle: chartPoint[2],
-            pointBorderColor: 'black',
-            pointRadius: 5,
           },
           {
             label: '공룡',
@@ -177,22 +175,8 @@ const PoliticianGraph = (): JSX.Element => {
               return score.lion.score;
             }),
             tension: 0.3,
-            borderColor: '#ff3f9f',
-            pointStyle: chartPoint[3],
-            pointBorderColor: 'black',
-            pointRadius: 5,
-          },
-          {
-            label: '호랑이',
-
-            data: resData.score.map((score: any) => {
-              return score.tiger.score;
-            }),
-            tension: 0.3,
-            borderColor: '#964b00',
+            borderColor: '#C2403D',
             pointStyle: chartPoint[4],
-            pointBorderColor: 'black',
-            pointRadius: 5,
           },
 
           {
@@ -243,24 +227,21 @@ const PoliticianGraph = (): JSX.Element => {
       tooltip: {
         enabled: false,
         maintainAspectRatio: true,
+        position: 'customPositioner' as 'customPositioner',
         external: function (context: any) {
           darwTooltip(context, resData);
         },
       },
 
       title: {
-        display: true,
-        font: {
-          size: 30,
-        },
-        text: `${name}의 그래프`,
+        display: false,
       },
       legend: {
         align: 'center',
         labels: {
           usePointStyle: true,
           font: {
-            size: 30,
+            size: 18,
           },
           padding: 20,
         },
@@ -270,8 +251,6 @@ const PoliticianGraph = (): JSX.Element => {
         onClick: (evt: any, legendItem: any, legend: any) => {
           const index = legendItem.datasetIndex;
           const chart = legend.chart;
-          console.log(legendItem.text);
-          console.log(data);
 
           if (count === 1) {
             legend.chart.data.datasets.forEach((data: any, index: number) => {
@@ -299,14 +278,33 @@ const PoliticianGraph = (): JSX.Element => {
         font: {
           size: 15,
         },
+        anchor: 'end',
+        clamp: true,
+        align: function ({
+          dataIndex,
+          dataset,
+        }: {
+          dataIndex: any;
+          dataset: any;
+        }) {
+          if (dataset.data[dataIndex] > 0) {
+            return 'end';
+          } else if (dataset.data[dataIndex] < 0) {
+            return 'start';
+          }
+        },
+        offset: 0,
+        display: 'auto',
+        backgroundColor: `${theme.colors.lighterColor}`,
+        borderRadius: 20,
+        opacity: 0.7,
       },
     },
     elements: {
       point: {
-        radius: 15,
-        hoverRadius: 15,
-        borderColor: 'transparent',
-        backgroundColor: 'transparent',
+        radius: 0,
+        hitRadius: 15,
+        hoverRadius: 0,
       },
     },
     scales: {
@@ -326,84 +324,163 @@ const PoliticianGraph = (): JSX.Element => {
         },
       },
     },
+    onHover: (event: any, chartElement: any) => {
+      const target = event.native ? event.native.target : event.target;
+      target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+    },
+  };
+
+  Tooltip.positioners.customPositioner = function (
+    this,
+    elements: any,
+    position: any,
+  ) {
+    if (!elements.length) {
+      return false;
+    }
+    var offset = 0;
+    if (((window.innerWidth - 300) / 5) * 3 > position.x) {
+      offset = 10;
+    } else {
+      offset = -340;
+    }
+    return {
+      x: position.x + offset,
+      y: position.y,
+    };
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        height: '700px',
-        marginBottom: '50px',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          width: '100%',
-          margin: '100px 0 30px 0px',
-        }}
-      >
-        {NextPageable === false ? null : (
-          <GraphButton
-            style={{ float: 'left', marginTop: '230px' }}
-            onClick={getNextData}
-          >
-            {'<'}
-          </GraphButton>
-        )}
-
-        <div
-          style={{
-            height: '100%',
-            width: '80%',
+    <GraphContainer>
+      <ManualContainer>
+        <HiQuestionMarkCircle
+          size="25"
+          color={theme.colors.mainColor}
+          onMouseOver={event => {
+            (
+              event.target as HTMLButtonElement
+            ).style.color = `${theme.colors.subColor}`;
+            setIsHovering(true);
           }}
-        >
-          {data && (
-            <Line
-              ref={chartRef}
-              onClick={event => {
-                let point = ClickHander(
-                  getElementAtEvent(chartRef.current, event),
-                );
-                setPoint(point);
-              }}
-              options={options}
-              data={data}
-              plugins={[ChartDataLabels]}
-            />
-          )}
-          {index === 1 ? null : (
-            <GraphButton
-              style={{ marginTop: '-350px', marginRight: '-25px' }}
-              onClick={getPreData}
-            >
-              {'>'}
-            </GraphButton>
-          )}
-          <div>
-            {open && (
-              <Modal
-                setOpen={setOpen}
-                element={point}
-                content={content}
-                issueDate={issueDate}
-                resData={resData}
-              />
-            )}
-          </div>
-        </div>
+          onMouseOut={event => {
+            (
+              event.target as HTMLButtonElement
+            ).style.color = `${theme.colors.mainColor}`;
+            setIsHovering(false);
+          }}
+          overflow="visible"
+          cursor="pointer"
+        ></HiQuestionMarkCircle>
+        {isHovering && (
+          <Manual>
+            - 부족 이름을 클릭하여 각 그래프를 켜거나 끌 수 있습니다.
+            <br />- 스코어에 마우스를 올리면 통계를 볼 수 있으며 클릭하여 투표를
+            진행할 수 있습니다.
+          </Manual>
+        )}
+      </ManualContainer>
+
+      <GraphButton
+        onClick={getNextData}
+        disabled={!NextPageable}
+        pageable={NextPageable}
+      >
+        <HiArrowCircleLeft
+          size="30"
+          color={theme.colors.thirdColor}
+          onMouseOver={event => {
+            if (NextPageable) {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.subColor}`;
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+          onMouseOut={event => {
+            if (NextPageable) {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.thirdColor}`;
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+        />
+      </GraphButton>
+      {data && (
+        <ChartContainer>
+          <Line
+            ref={chartRef}
+            onClick={event => {
+              let point = ClickHandler(
+                getElementAtEvent(chartRef.current, event),
+              );
+              setPoint(point);
+            }}
+            options={options}
+            data={data}
+            plugins={[ChartDataLabels]}
+          />
+        </ChartContainer>
+      )}
+      <div>
+        {open && (
+          <Modal
+            setOpen={setOpen}
+            element={point}
+            content={content}
+            issueDate={issueDate}
+            resData={resData}
+          />
+        )}
       </div>
-    </div>
+
+      <GraphButton
+        onClick={getPreData}
+        disabled={index === 1}
+        pageable={index !== 1}
+      >
+        <HiArrowCircleRight
+          size="30"
+          color={theme.colors.thirdColor}
+          onMouseOver={event => {
+            if (index !== 1) {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.subColor}`;
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+          onMouseOut={event => {
+            if (index !== 1) {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.thirdColor}`;
+            } else {
+              (
+                event.target as HTMLButtonElement
+              ).style.color = `${theme.colors.lighterColor}`;
+            }
+          }}
+        />
+      </GraphButton>
+    </GraphContainer>
   );
 };
 
 export default PoliticianGraph;
 
 function darwTooltip(context: any, resData: ResDataTypes) {
-  const ImgTribe = [dinosaur, elephant, hippo, lion, tiger];
-  const ImgPoll = [Circle, Triangle, X];
+  const ImgTribe = [tiger, hippo, elephant, dinosaur, lion, oxo];
+  const ImgPoll = [ColoredCircle, ColoredTriangle, ColoredX];
   const dataIndex = context.chart.tooltip.dataPoints[0];
   let tooltipEl = document.getElementById('chartjs-tooltip');
   // Create element on first render
@@ -439,7 +516,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       return Object.values(body);
     });
     const tableHead = document.createElement('div');
-    const br = document.createElement('br');
 
     function drow(div: Element, body: pollDeep, index: number) {
       const Title = CreateTitle();
@@ -494,23 +570,23 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 
   const position = context.chart.canvas.getBoundingClientRect();
 
-  tooltipEl.style.opacity = '1';
   tooltipEl.style.position = 'absolute';
   tooltipEl.style.left =
-    position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+    position.left + window.pageXOffset + tooltipModel.caretX + 15 + 'px';
   tooltipEl.style.top =
     position.top + window.pageYOffset + tooltipModel.caretY + 'px';
-  // tooltipEl.style.font = bodyFont.string;
 
   tooltipEl.style.pointerEvents = 'none';
-  tooltipEl.style.background = '#f5f5dc';
-  tooltipEl.style.borderRadius = '5px';
+  tooltipEl.style.background = `${theme.colors.lighterColor}`;
+  tooltipEl.style.borderRadius = '10px';
+  tooltipEl.style.boxShadow = 'rgba(17, 12, 46, 0.75) 0px 48px 100px 0px;';
+  tooltipEl.style.opacity = '0.92';
   if (dataIndex.datasetIndex === 5) {
-    tooltipEl.style.width = '500px';
-    tooltipEl.style.height = '560px';
+    tooltipEl.style.width = '300px';
+    tooltipEl.style.height = 'auto';
   } else {
-    tooltipEl.style.width = '500px';
-    tooltipEl.style.height = '150px';
+    tooltipEl.style.width = '300px';
+    tooltipEl.style.height = 'auto';
   }
 
   function CreateTitle() {
@@ -518,16 +594,15 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     const TitleText = document.createTextNode(
       resData.title[tooltipModel.dataPoints[0].dataIndex],
     );
-    Title.style.whiteSpace = 'nowrap';
-    Title.style.overflow = 'hidden';
-    Title.style.textOverflow = 'ellipsis';
-    Title.style.width = '500px';
-    Title.style.height = '30px';
+    Title.style.whiteSpace = 'wrap';
+    Title.style.width = '300px';
     Title.style.textAlign = 'center';
     Title.style.fontWeight = '700';
-    Title.style.fontSize = '23px';
-    Title.style.backgroundColor = '#f1f1f1';
-    Title.style.paddingBottom = '40px';
+    Title.style.fontSize = '20px';
+    Title.style.backgroundColor = `${theme.colors.mainColor}`;
+    Title.style.padding = '5px';
+    Title.style.borderTopLeftRadius = '10px';
+    Title.style.borderTopRightRadius = '10px';
     Title.appendChild(TitleText);
     return Title;
   }
@@ -542,11 +617,12 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     } else {
       imageTribe.src = ImgTribe[dataIndex.datasetIndex];
     }
-    imageTribe.height = 80;
-    imageTribe.width = 80;
+    imageTribe.height = 40;
+    imageTribe.width = 40;
     imageTh.appendChild(imageTribe);
-    imageTh.style.marginLeft = '70px';
-    imageTh.style.fontSize = '25px';
+    imageTh.style.fontSize = '17px';
+    imageTh.style.padding = '5px';
+    imageTh.style.textAlign = 'center';
     const img = [imageCircle, imageTriangle, imageX];
     for (let i = 0; i <= 2; i++) {
       const tempDiv = document.createElement('div');
@@ -555,18 +631,16 @@ function darwTooltip(context: any, resData: ResDataTypes) {
       img[i].width = 25;
       const count =
         i === 0
-          ? document.createTextNode(': ' + body.pro)
+          ? document.createTextNode(' ' + body.pro)
           : i === 1
-          ? document.createTextNode(': ' + body.neu)
-          : document.createTextNode(': ' + body.con);
-      img[i].style.marginTop = '30px';
+          ? document.createTextNode(' ' + body.neu)
+          : document.createTextNode(' ' + body.con);
       img[i].style.position = 'relative';
       img[i].style.top = '5px';
       tempDiv.style.display = 'inline';
-      tempDiv.style.flexDirection = 'row';
-      tempDiv.style.marginRight = '10px';
+      tempDiv.style.marginLeft = '10px';
       tempDiv.style.position = 'relative';
-      tempDiv.style.bottom = '20px';
+      tempDiv.style.top = '-9px';
       tempDiv.appendChild(img[i]);
       tempDiv.appendChild(count);
       imageTh.appendChild(tempDiv);
@@ -575,20 +649,32 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   }
 }
 
-const GraphButton = styled.button`
-  height: 3rem;
-  width: 3rem;
-  font-size: 30px;
-  font-weight: bolder;
-  border-radius: 30px;
-  border-width: 0.5px;
-  float: right;
-  opacity: 0.9;
-  transition-duration: 0.4s;
-  background-color: #babbbd;
-  &:hover {
-    color: white;
-    background-color: #676168;
+const GraphContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 30px 0 70px 0;
+  position: relative;
+`;
+const ChartContainer = styled.div`
+  position: relative;
+  height: 65vh;
+  width: 60vw;
+  min-width: 600px;
+  margin: 0 10px;
+`;
+const ManualContainer = styled.div`
+  position: absolute;
+  right: 8%;
+  top: -2%;
+  z-index: 2;
+  overflow: visible;
+`;
+const ManualFade = keyframes`
+  from {
+    width: 0
+  }
+  to {
+    width: 250
   }
 `;
 const Manual = styled.div`
