@@ -140,7 +140,10 @@ const Modal = ({
               {resData.content[element.$context.dataIndex]}
             </ContentText>
             {resData?.link && (
-              <Link href={resData.link[element.$context.dataIndex]}>
+              <Link
+                href={resData.link[element.$context.dataIndex]}
+                target="_blank"
+              >
                 {resData.link[element.$context.dataIndex]}
               </Link>
             )}
