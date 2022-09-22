@@ -6,12 +6,11 @@ const PoliticanDetailState = selector({
   get: ({ get }) => {
     const Politicians = get(PoliticansState);
     return Politicians.map((politician: any) => {
-      const detail = politician.politicianInfo[0];
       return {
         [politician._id]: {
-          name: detail.name,
-          img: detail.image,
-          party: detail.party,
+          name: politician.name,
+          img: politician.image,
+          party: politician.party,
         },
       };
     });

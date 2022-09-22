@@ -8,10 +8,14 @@ import theme from '@/styles/theme';
 import ServiceFooter from './ServiceFooter';
 
 const SlideFullPage = () => {
-  const fetchedPoliticans = useRecoilValue(PoliticiansState);
-  const politicansName = fetchedPoliticans.map(
-    (politician: PoliticiansTypes) => {
-      return politician.name;
+  const InfoContent = [
+    {
+      imageSrc: PoliticianGraph,
+      title: '정치인 그래프',
+      description:
+        '정치인의 사건·사고에 대한 여론 투표 결과를 그래프로 확인해보세요.',
+      backgroundColor: theme.colors?.lighterColor,
+      imagePosition: 'right',
     },
     {
       imageSrc: PoliticianGraphModal,
