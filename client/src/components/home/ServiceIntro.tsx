@@ -3,19 +3,27 @@ import laptop from '@/assets/Laptop.png';
 import { HiArrowSmRight } from 'react-icons/hi';
 import { loginModalState, LoginModalState } from '@/store/LoginModalState';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isLogined } from '@/store/AuthTokenState';
+import { useNavigate } from 'react-router-dom';
 
 const ServiceIntro = (): JSX.Element => {
+  const navigate = useNavigate();
+  const isLoginState = useRecoilValue(isLogined);
   const setLoginModalState = useSetRecoilState(loginModalState);
   const handleIntoButtonClick = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
-    setLoginModalState((prev: LoginModalState) => {
-      return {
-        ...prev,
-        isOpen: true,
-      };
-    });
+    if (!isLoginState) {
+      setLoginModalState((prev: LoginModalState) => {
+        return {
+          ...prev,
+          isOpen: true,
+        };
+      });
+    } else {
+      navigate('/politician');
+    }
   };
 
   return (
