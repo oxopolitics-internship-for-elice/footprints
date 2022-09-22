@@ -11,6 +11,16 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi, link } = issue;
   const issuedDate = dateFormatter(issueDate, '년월일');
 
+  const customFetcher = async (url: string) => {
+    if (url) {
+      const response = await fetch(
+        `https://rlp-proxy.herokuapp.com/v2?url=${url}`,
+      );
+      const json = await response.json();
+      return json.metadata;
+    }
+  };
+
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
     try {
@@ -90,7 +100,14 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
           </LighterDiv>
         </div>
       </SubContainer>
-      {link && <LinkPreview url={link} />}
+      {link && (
+        <LinkPreview
+          url={link}
+          fetcher={customFetcher}
+          fallback={null}
+          showLoader={false}
+        />
+      )}
       <Title>{title}</Title>
       <Content>{content}</Content>
 
