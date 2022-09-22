@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  ChartOptions,
 } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import styled from '@emotion/styled';
@@ -32,7 +33,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
 
   const issueDates = issues.map(issue => dateFormatter(issue.issueDate, '.'));
 
-  const options = {
+  const options: ChartOptions<'line'> = {
     maintainAspectRatio: false,
     plugins: {
       legend: {

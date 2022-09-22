@@ -10,6 +10,7 @@ import {
   Legend,
   Filler,
   InteractionItem,
+  ChartOptions,
 } from 'chart.js';
 import ColoredCircle from '@/assets/selection/ColoredCircle.svg';
 import ColoredTriangle from '@/assets/selection/ColoredTriangle.svg';
@@ -218,7 +219,7 @@ const PoliticianGraph = (): JSX.Element => {
   }, [isFirst]);
 
   let count = 1;
-  const options = {
+  const options: ChartOptions<'line'> = {
     animation: {
       duration: 0,
     },
@@ -226,8 +227,7 @@ const PoliticianGraph = (): JSX.Element => {
     plugins: {
       tooltip: {
         enabled: false,
-        maintainAspectRatio: true,
-        position: 'customPositioner' as 'customPositioner',
+        position: 'customPositioner' as 'average',
         external: function (context: any) {
           darwTooltip(context, resData);
         },
@@ -291,6 +291,8 @@ const PoliticianGraph = (): JSX.Element => {
             return 'end';
           } else if (dataset.data[dataIndex] < 0) {
             return 'start';
+          } else {
+            return 'end';
           }
         },
         offset: 0,
