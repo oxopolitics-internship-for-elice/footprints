@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React from 'react';
-import { removeCookie } from '@/utils/Cookie';
+import { getCookie, removeCookie } from '@/utils/Cookie';
 import { useNavigate } from 'react-router-dom';
 import { Alert } from '@components/base/Alert';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -12,7 +12,7 @@ import {
 import { loginModalState, LoginModalState } from '@/store/LoginModalState';
 
 const AuthButton = () => {
-  // const accessToken = getCookie('access_token');
+  const accessToken = getCookie('access_token');
   const isLoginState = useRecoilValue(isLogined);
   const setAuthTokenState = useSetRecoilState(authTokenState);
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const AuthButton = () => {
 
   return (
     <>
-      {isLoginState ? (
+      {isLoginState || accessToken ? (
         <Button onClick={handleLogout}>로그아웃</Button>
       ) : (
         <Button onClick={handleLogin}>로그인</Button>
