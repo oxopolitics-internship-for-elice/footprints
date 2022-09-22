@@ -26,9 +26,9 @@ export class IssueService {
     const week = 7 * 24 * 60 * 60 * 1000;
     const regiDueDate = new Date(Date.now() + week);
 
-    const { targetPolitician, issueDate, content, title } = body;
+    const { targetPolitician, issueDate, content, title, link } = body;
 
-    const issueData = { targetPolitician, regiUser, issueDate, content, title, regiDueDate };
+    const issueData = { targetPolitician, regiUser, issueDate, content, title, link, regiDueDate };
     const instance = await new this.issueModel(issueData);
     const save = await instance.save();
 
