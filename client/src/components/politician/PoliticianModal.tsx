@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import GraphAPI from '@/api/GraphAPI';
-import BasicCircle from '@/assets/selection/BasicCircle.svg';
-import BasicTriangle from '@/assets/selection/BasicTriangle.svg';
-import BasicX from '@/assets/selection/BasicX.svg';
+import Circle from '@/assets/img/circle.png';
+import Triangle from '@/assets/img/triangle.png';
+import X from '@/assets/img/x.png';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { ResDataTypes } from '@/types/GraphTypes';
 import errorHandler from '@/api/ErrorHandler';
@@ -36,7 +36,7 @@ const Modal = ({
   const accessToken = getCookie('access_token');
 
   const ref = useRef<null | HTMLDivElement>(null);
-  const Imgsrc = [BasicCircle, BasicTriangle, BasicX];
+  const Imgsrc = [Circle, Triangle, X];
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
@@ -123,16 +123,18 @@ const Modal = ({
       <Background>
         <Container {...element} ref={ref}>
           <Header ref={ref}>
-            <div />
-            <HeaderText>{resData.title[element.$context.dataIndex]}</HeaderText>
-            <CloseButton
-              onClick={() => {
-                setOpen(false);
-                document.body.style.overflow = 'unset';
-              }}
-            >
-              <IoCloseCircleOutline size="25" />
-            </CloseButton>
+            <HeaderText>
+              {resData.title[element.$context.dataIndex]}
+              <CloseButton
+                style={{}}
+                onClick={() => {
+                  setOpen(false);
+                  document.body.style.overflow = 'unset';
+                }}
+              >
+                <IoCloseCircleOutline size="50" />
+              </CloseButton>
+            </HeaderText>
           </Header>
           <Content>
             <ContentText>
@@ -156,7 +158,6 @@ const Modal = ({
                     ClickHandler(index);
                   }}
                   clicked={pollHandler(index)}
-                  btnType={src}
                 >
                   <img src={src} width="30px" />
                 </ChooseItem>
@@ -190,9 +191,9 @@ const Background = styled.div`
 `;
 const Container = styled.div<ContainerProps>`
   width: 600px;
-  overflow-y: initial !important;
+  height: 400px;
   position: relative;
-  top: 55vh;
+  top: 550px;
   right: 0px;
   bottom: 0px;
   left: 50%;
@@ -205,27 +206,12 @@ const Container = styled.div<ContainerProps>`
   transform: translate(-50%, -50%);
   z-index: 1001;
 `;
-const HeaderText = styled.div`
-  font-size: 25px;
-  display: flex;
-  padding-right: 10px;
-`;
-const CloseButton = styled.div`
-  cursor: pointer;
-  padding: 10px 10px 0 0;
-`;
-const Header = styled.div`
-  text-align: center;
-  position: relative;
-  background-color: ${theme.colors.lighterColor};
-  border-radius: 20px 20px 0 0;
-  font-weight: 700;
-  display: flex;
-  padding: 10px;
-  justify-content: space-between;
-`;
 const Content = styled.div`
+  text-align: center;
+  margin-top: 30px;
   background-color: #fff;
+  font-size: 30px;
+  overflow: hidden;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-name: slideUp;
@@ -245,6 +231,27 @@ const ContentText = styled.div`
   overflow: hidden;
   display: flex;
 `;
+
+const HeaderText = styled.div`
+  font-size: 45px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-top: 10px;
+  display: block;
+  height: 80px;
+`;
+const CloseButton = styled.div`
+  float: right;
+`;
+const Header = styled.div`
+  text-align: center;
+  position: relative;
+  background-color: #f1f1f1;
+  font-weight: 700;
+  height: 80px;
+  over-flow: hidden;
+`;
 const ChooseBox = styled.div`
   display: flex;
   justify-content: center;
@@ -253,8 +260,8 @@ const ChooseBox = styled.div`
   bottom: 0px;
   width: 100%;
   background-color: #dedcdc;
-  border-radius: 20px;
-  height: 70px;
+  border-radius: 5px;
+  height: 80px;
 `;
 
 const Link = styled.a`
@@ -265,24 +272,14 @@ const Link = styled.a`
 
 interface ChooseItemProps {
   clicked: boolean;
-  btnType: string;
 }
 
 const ChooseItem = styled.button<ChooseItemProps>`
   border: none;
   height: 100%;
   flex-grow: 1;
-  border-radius: ${({ btnType }) => {
-    if (btnType.includes('BasicCircle')) {
-      return '0 0 0 20px';
-    } else if (btnType.includes('BasicX')) {
-      return '0 0 20px 0';
-    } else {
-      return '0 0 0 0';
-    }
-  }};
   background-color: ${props =>
-    props.clicked ? theme.colors.mainColor : theme.colors.lighterColor};
+    props.clicked ? props.theme.colors.mainColor : '#fff'};
   &:hover {
     color: white;
     background-color: #868387;

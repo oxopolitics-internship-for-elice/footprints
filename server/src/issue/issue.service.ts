@@ -26,9 +26,9 @@ export class IssueService {
     const week = 7 * 24 * 60 * 60 * 1000;
     const regiDueDate = new Date(Date.now() + week);
 
-    const { targetPolitician, issueDate, content, title } = body;
+    const { targetPolitician, issueDate, content, title, link } = body;
 
-    const issueData = { targetPolitician, regiUser, issueDate, content, title, regiDueDate };
+    const issueData = { targetPolitician, regiUser, issueDate, content, title, link, regiDueDate };
     const instance = await new this.issueModel(issueData);
     const save = await instance.save();
 
@@ -115,7 +115,7 @@ export class IssueService {
     const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'inactive' })
-      .sort({ issueDate: 'asc' })
+      .sort({ createdAt: -1 })
       .skip(pageOptions.skip)
       .limit(pageOptions.perPage);
     return { data: issues, meta: pageMeta };

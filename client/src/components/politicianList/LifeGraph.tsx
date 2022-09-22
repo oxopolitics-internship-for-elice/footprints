@@ -30,9 +30,7 @@ interface lifeGraphProps {
 const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   const graphData = issues.map((issue: any) => issue.score);
 
-  const issueDates = issues.map(issue =>
-    dateFormatter(issue.issueDate, '년월일'),
-  );
+  const issueDates = issues.map(issue => dateFormatter(issue.issueDate));
 
   const options = {
     maintainAspectRatio: false,

@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthButton from '@components/base/AuthButton';
-import MainLogo from '@/assets/MainLogo.gif';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -48,7 +47,7 @@ const Header = () => {
       <HeaderBlock istransparent={isMainFirstPage}>
         <InnerHeader>
           <Title fontWhite={isMainFirstPage} onClick={() => navigate('/')}>
-            <img src={MainLogo} width="140px" />
+            정치 발자국
           </Title>
           <NavContainer>
             {/* <NavItem>About</NavItem> */}
@@ -73,8 +72,7 @@ const HeaderBlock = styled.header<HeaderBlockProps>`
   right: 0;
   top: 0;
   z-index: 2;
-  background-color: ${props => (props.istransparent ? '#fff' : '#fff')};
-  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  background-color: ${props => (props.istransparent ? 'transparent' : '#fff')};
   transition: all 0.5s ease 0s;
 `;
 
@@ -83,7 +81,7 @@ const InnerHeader = styled.section`
   min-width: 700px;
   max-width: 900px;
   height: 72px;
-  padding: 19px 20px;
+  padding: 19px 0;
   margin: 0 auto;
   background-color:transparent
   text-align: center;

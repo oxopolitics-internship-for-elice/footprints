@@ -60,6 +60,9 @@ export class Issue {
 
   @Prop({ default: true })
   isPollActive: boolean;
+
+  @Prop()
+  link: string;
 }
 
 export const issueSchema = SchemaFactory.createForClass(Issue);
