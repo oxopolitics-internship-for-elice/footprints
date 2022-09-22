@@ -1,70 +1,120 @@
 import styled from '@emotion/styled';
-import React from 'react';
-import ChartVideo from '@/assets/ChartVideo.mp4';
+import { AnimationOnScroll } from 'react-animation-on-scroll';
 
-const ServiceInfo = () => {
+interface ServiceInfoProps {
+  index: number;
+  imageSrc: string;
+  imagePosition: string;
+  title: string;
+  description: string;
+  backgroundColor?: string;
+}
+
+const ServiceInfo = ({
+  index,
+  imageSrc,
+  imagePosition,
+  title,
+  description,
+  backgroundColor,
+}: ServiceInfoProps) => {
+  const animationStyle = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: '0 20px',
+  };
   return (
     <>
-      <Overlay />
-      <Video src={ChartVideo} autoPlay loop muted></Video>
-      <Content>
-        <h2>{'정치인의 발자취를 한눈에 볼 수 있는\n정치 참여 커뮤니티'}</h2>
-      </Content>
+      <Container backgroundColor={backgroundColor}>
+        <AnimationOnScroll animateIn="animate__fadeIn" style={animationStyle}>
+          <ImageContainer imagePosition={imagePosition}>
+            {imageSrc === '' ? (
+              <div>이미지 준비중입니다.</div>
+            ) : (
+              <Image src={imageSrc} />
+            )}
+          </ImageContainer>
+          <TextContainer>
+            <InfoIndex>{`기능 ${index}`}</InfoIndex>
+            <h2>{title}</h2>
+            <p>{description}</p>
+          </TextContainer>
+        </AnimationOnScroll>
+      </Container>
     </>
   );
 };
 
 export default ServiceInfo;
 
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #000000cc;
-`;
+interface ContainerProps {
+  backgroundColor?: string;
+}
 
-const Video = styled.video`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: -1;
-`;
-
-const Content = styled.div`
-  width: 100%;
-  height: 100%;
+const Container = styled.div<ContainerProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #fff;
-  font-size: 1.5em;
-  font-weight: bold;
-  text-align: center;
-  padding: 1rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: ${({ backgroundColor }) => backgroundColor || '#fff'};
+  padding-top: 36px;
+`;
+
+interface ImageContainerProps {
+  imagePosition: string;
+}
+
+const ImageContainer = styled.div<ImageContainerProps>`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: ${({ imagePosition }) =>
+    imagePosition === 'left' ? 'flex-start' : 'flex-end'};
+  order: ${({ imagePosition }) => (imagePosition === 'left' ? 0 : 1)};
+`;
+
+const Image = styled.img`
+  width: 90%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 10px !important;
+`;
+
+const TextContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 45%;
+  align-items: flex-start;
+  justify-content: center;
 
   h2 {
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    transform: translate(-50%, -50%);
-    font-size: 3rem;
-    line-height: 8.4rem;
-    letter-spacing: -1.5px;
-    color: #fff;
-    font-weight: 800;
-    text-align: center;
-    white-space: pre-line;
+    font-size: 30px;
+    line-height: 1.36;
+    font-weight: 600;
   }
+  p {
+    word-break: keep-all;
+    padding-top: 1em;
+    font-size: 1.2rem;
+    line-height: 1.55;
+  }
+`;
+
+const InfoIndex = styled.h6`
+  font-size: 1.2vw;
+  background-color: ${({ theme }) => theme.colors.subColor};
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  width: fit-content;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  align-self: flex-start;
 `;

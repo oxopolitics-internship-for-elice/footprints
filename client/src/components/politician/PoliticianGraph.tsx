@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -27,11 +27,9 @@ import oxo from '@/assets/tribe/oxo.png';
 
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import { useRecoilValue } from 'recoil';
 import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import PoliticianNameState from '@/store/PoliticianNameState';
 import MinMax from '@/utils/MinMax';
 ChartJS.register(
   CategoryScale,
@@ -43,6 +41,9 @@ ChartJS.register(
   Legend,
   Filler,
 );
+interface Params {
+  politicianID: string;
+}
 
 const PoliticianGraph = (): JSX.Element => {
   const chartRef = useRef<any>(null);
@@ -103,7 +104,7 @@ const PoliticianGraph = (): JSX.Element => {
 
     isNextPageable(res.data.meta.hasNextPage);
   };
-  const Img = [dinosaur, elephant, hippo, lion, tiger, oxo];
+  const Img = [tiger, hippo, elephant, dinosaur, lion, oxo];
   const chartPoint = Img.map(img => {
     const chartPoint = new Image();
     chartPoint.src = img;
@@ -137,7 +138,7 @@ const PoliticianGraph = (): JSX.Element => {
             label: '코끼리',
 
             data: resData.score.map((score: any) => {
-              return score.elephant.score;
+              return score.tiger.score;
             }),
             tension: 0.3,
             borderColor: 'skyblue',
@@ -157,6 +158,16 @@ const PoliticianGraph = (): JSX.Element => {
             pointBorderColor: 'black',
             pointRadius: 5,
           },
+          {
+            label: '공룡',
+            data: resData.score.map((score: any) => {
+              return score.dinosaur.score;
+            }),
+            tension: 0.3,
+            borderColor: '#91A401',
+            pointStyle: chartPoint[3],
+          },
+
           {
             label: '사자',
 
@@ -181,6 +192,7 @@ const PoliticianGraph = (): JSX.Element => {
             pointBorderColor: 'black',
             pointRadius: 5,
           },
+
           {
             label: '합계',
 
@@ -242,11 +254,16 @@ const PoliticianGraph = (): JSX.Element => {
         text: `${name}의 그래프`,
       },
       legend: {
+        align: 'center',
         labels: {
           usePointStyle: true,
           font: {
             size: 30,
           },
+          padding: 20,
+        },
+        onHover: function (event: any) {
+          event.native.target.style.cursor = 'pointer';
         },
         onClick: (evt: any, legendItem: any, legend: any) => {
           const index = legendItem.datasetIndex;
@@ -297,6 +314,9 @@ const PoliticianGraph = (): JSX.Element => {
         },
         min: minmax[1] - 30,
         max: minmax[0] + 30,
+        afterFit: (axis: any) => {
+          axis.paddingRight = 12;
+        },
       },
       x: {
         grid: {
@@ -429,6 +449,13 @@ function darwTooltip(context: any, resData: ResDataTypes) {
             if (index === 5) {
             } else {
               const imageTh = CreateImg(body, total, index);
+              for (let i = 1; i < 4; i++) {
+                const elements =
+                  imageTh.children as HTMLCollectionOf<HTMLElement>;
+                elements[i].style.display = 'inline-block';
+                elements[i].style.width = '60px';
+              }
+
               div.appendChild(imageTh);
             }
           },
@@ -561,4 +588,23 @@ const GraphButton = styled.button`
     color: white;
     background-color: #676168;
   }
+`;
+const Manual = styled.div`
+  background-color: ${theme.colors.lighterColor};
+  border-radius: 10px;
+  padding: 10px;
+  width: 250px;
+  position: absolute;
+  right: -10px;
+  top: -135px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  animation: ${ManualFade} 1s 1s linear;
+`;
+interface GraphButtonProps {
+  pageable: boolean;
+}
+const GraphButton = styled.button<GraphButtonProps>`
+  opacity: 0.9;
+  transition-duration: 0.4s;
+  cursor: ${props => (props.pageable ? 'pointer' : 'none')};
 `;

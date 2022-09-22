@@ -1,5 +1,3 @@
-import errorHandler from '@/api/ErrorHandler';
-import UserAPI from '@/api/UserAPI';
 import styled from '@emotion/styled';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -7,7 +5,6 @@ import AuthButton from '@components/base/AuthButton';
 
 const Header = () => {
   const navigate = useNavigate();
-  const [isLogined, setIsLogined] = React.useState(false); // 로그인 전역변수 대체
   const [isMainFirstPage, setIsMainFirstPage] = React.useState(true);
 
   const handleScroll = () => {
@@ -17,6 +14,10 @@ const Header = () => {
     } else {
       setIsMainFirstPage(true);
     }
+  };
+
+  const handleClickPoliticianList = () => {
+    navigate('/politician');
   };
 
   React.useEffect(() => {
@@ -48,9 +49,11 @@ const Header = () => {
           <Title fontWhite={isMainFirstPage} onClick={() => navigate('/')}>
             정치 발자국
           </Title>
-          <AuthContainer>
+          <NavContainer>
+            {/* <NavItem>About</NavItem> */}
+            <NavItem onClick={handleClickPoliticianList}>정치인 목록</NavItem>
             <AuthButton />
-          </AuthContainer>
+          </NavContainer>
         </InnerHeader>
       </HeaderBlock>
     </>
@@ -75,7 +78,8 @@ const HeaderBlock = styled.header<HeaderBlockProps>`
 
 const InnerHeader = styled.section`
   position: relative;
-  width: 1296px;
+  min-width: 700px;
+  max-width: 900px;
   height: 72px;
   padding: 19px 0;
   margin: 0 auto;
@@ -100,8 +104,29 @@ const Title = styled.h1<TitleProps>`
   cursor: pointer;
 `;
 
-const AuthContainer = styled.div`
+const NavContainer = styled.div`
   display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
-  margin-right: 1rem;
+  width: 100%;
+  height: 100%;
+`;
+
+const NavItem = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #000;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-left: 40px;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.mainColor};
+  }
 `;

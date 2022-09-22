@@ -31,6 +31,7 @@ const Modal = ({
   resData,
 }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
+  const accessToken = getCookie('access_token');
 
   const ref = useRef<null | HTMLDivElement>(null);
   const Imgsrc = [Circle, Triangle, X];
@@ -80,7 +81,7 @@ const Modal = ({
           };
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error);
     }
   }
@@ -109,7 +110,9 @@ const Modal = ({
         });
       }
     };
-    fetchPollInfo();
+    if (accessToken) {
+      fetchPollInfo();
+    }
   }, []);
 
   return (
@@ -130,7 +133,11 @@ const Modal = ({
               </CloseButton>
             </HeaderText>
           </Header>
-          <Content>{resData.content[element.$context.dataIndex]}</Content>
+          <Content>
+            <ContentText>
+              {resData.content[element.$context.dataIndex]}
+            </ContentText>
+          </Content>
           <ChooseBox>
             {Imgsrc.map((src, index) => {
               return (
@@ -169,6 +176,7 @@ const Background = styled.div`
   animation-timing-function: ease-out;
   animation-name: fadeIn;
   animation-fill-mode: forwards;
+  z-index: 1000;
 `;
 const Container = styled.div<ContainerProps>`
   width: 600px;
@@ -178,12 +186,14 @@ const Container = styled.div<ContainerProps>`
   right: 0px;
   bottom: 0px;
   left: 50%;
+  border-radius: 20px;
   background-color: #fff;
   animation-duration: 0.25s;
   animation-timing-function: ease-out;
   animation-name: fadeIn;
   animation-fill-mode: forwards;
   transform: translate(-50%, -50%);
+  z-index: 1001;
 `;
 const Content = styled.div`
   text-align: center;
@@ -195,6 +205,20 @@ const Content = styled.div`
   animation-timing-function: ease-out;
   animation-name: slideUp;
   animation-fill-mode: forwards;
+  min-height: 250px;
+  flex-wrap: wrap;
+  display: flex;
+  flex-direction: row;
+  border-radius: 20px;
+  padding: 20px 20px 100px 20px;
+  max-height: 500px;
+  overflow: auto;
+`;
+const ContentText = styled.div`
+  font-size: 20px;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
 `;
 
 const HeaderText = styled.div`

@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dhaiwat10/react-link-preview": "^1.14.2",
     "@emotion/css": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@faker-js/faker": "^7.4.0",
@@ -34,7 +35,6 @@
   },
   "devDependencies": {
     "@emotion/react": "^11.10.0",
-    "@types/faker": "^6.6.9",
     "@types/node": "^18.7.4",
     "@types/react": "^18.0.18",
     "@types/react-datepicker": "^4.4.2",

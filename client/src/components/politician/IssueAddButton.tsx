@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { HiPlus } from 'react-icons/hi';
+import theme from '@/styles/theme';
 
 interface IssueAddButtonProps {
   onClickToggleModal: () => void;
@@ -11,8 +12,7 @@ const IssueAddButton = ({ onClickToggleModal }: IssueAddButtonProps) => {
     <>
       <Div>
         <button onClick={onClickToggleModal}>
-          <HiPlus size={22} />
-          <span>이슈 등록하기</span>
+          <HiPlus size={45} />
         </button>
       </Div>
     </>
@@ -22,11 +22,14 @@ const IssueAddButton = ({ onClickToggleModal }: IssueAddButtonProps) => {
 export default IssueAddButton;
 
 const Div = styled.div`
-  position: fixed;
-  bottom: 5%;
-  right: 3%;
+  position: sticky;
+  width: 50px;
+  height: 50px;
+  bottom: 20px;
+  margin-right: -100px;
   background: none;
   z-index: 999;
+  align-self: flex-end;
   button {
     background: grey;
     border: none;
@@ -39,10 +42,9 @@ const Div = styled.div`
     padding: 0.7vw;
     width: 100%;
     height: 100%;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: rgba(0, 0, 0, 0.25) 3px 3px 4px;
     &:hover {
-      background: white;
-      color: black;
+      background: ${theme.colors.mainColor};
     }
     span {
       margin-left: 0.5vw;
