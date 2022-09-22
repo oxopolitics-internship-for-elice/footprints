@@ -29,7 +29,8 @@ interface ModalProps {
 const Modal = ({
   setOpen,
   element,
-
+  content,
+  issueDate,
   resData,
 }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
