@@ -29,6 +29,7 @@ export interface ResTypes {
   updatedAt: Date;
   score: number;
   title: string;
+  link?: string;
 }
 
 export interface ResDataTypes {
@@ -47,4 +48,5 @@ export interface ResDataTypes {
   updatedAt: Date;
   score: any;
   title: string;
+  link?: string;
 }

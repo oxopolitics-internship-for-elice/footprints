@@ -7,6 +7,9 @@ import X from '@/assets/img/x.png';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { ResDataTypes } from '@/types/GraphTypes';
 import errorHandler from '@/api/ErrorHandler';
+import theme from '@/styles/theme';
+import { getCookie } from '@/utils/Cookie';
+
 type Element = {
   $context: Object;
   x: number;
@@ -26,8 +29,7 @@ interface ModalProps {
 const Modal = ({
   setOpen,
   element,
-  content,
-  issueDate,
+
   resData,
 }: ModalProps) => {
   const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
@@ -113,6 +115,7 @@ const Modal = ({
     if (accessToken) {
       fetchPollInfo();
     }
+    console.log(resData);
   }, []);
 
   return (
@@ -137,6 +140,14 @@ const Modal = ({
             <ContentText>
               {resData.content[element.$context.dataIndex]}
             </ContentText>
+            {resData?.link && (
+              <Link
+                href={resData.link[element.$context.dataIndex]}
+                target="_blank"
+              >
+                {resData.link[element.$context.dataIndex]}
+              </Link>
+            )}
           </Content>
           <ChooseBox>
             {Imgsrc.map((src, index) => {
@@ -210,7 +221,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: row;
   border-radius: 20px;
-  padding: 20px 20px 100px 20px;
+  padding: 20px 20px 20px 20px;
   max-height: 500px;
   overflow: auto;
 `;
@@ -251,6 +262,12 @@ const ChooseBox = styled.div`
   background-color: #dedcdc;
   border-radius: 5px;
   height: 80px;
+`;
+
+const Link = styled.a`
+  color: ${theme.colors.mainColor};
+  font-size: 14px;
+  text-decoration: underline;
 `;
 
 interface ChooseItemProps {
