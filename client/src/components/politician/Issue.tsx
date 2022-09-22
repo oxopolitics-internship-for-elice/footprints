@@ -6,21 +6,10 @@ import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import errorHandler from '@/api/ErrorHandler';
 import { Alert, errorAlert } from '../base/Alert';
-import { LinkPreview } from '@dhaiwat10/react-link-preview';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi } = issue;
   const issuedDate = dateFormatter(issueDate);
-
-  const customFetcher = async (url: string) => {
-    if (url) {
-      const response = await fetch(
-        `https://rlp-proxy.herokuapp.com/v2?url=${url}`,
-      );
-      const json = await response.json();
-      return json.metadata;
-    }
-  };
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
@@ -101,33 +90,31 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
           </LighterDiv>
         </div>
       </SubContainer>
-      {link && (
-        <LinkPreview
-          url={link}
-          fetcher={customFetcher}
-          fallback={null}
-          showLoader={false}
-        />
-      )}
       <Title>{title}</Title>
       <Content>{content}</Content>
-
-      <RegiProButton
-        data-id={_id}
-        onClick={regiHandler}
-        onMouseDown={mouseDownHandler}
-        onMouseUp={mouseUpHandler}
-      >
-        찬성
-      </RegiProButton>
-      <RegiConButton
-        data-id={_id}
-        onClick={regiHandler}
-        onMouseDown={mouseDownHandler}
-        onMouseUp={mouseUpHandler}
-      >
-        반대
-      </RegiConButton>
+      {link && (
+        <Link href={link} target="_blank">
+          {link}
+        </Link>
+      )}
+      <RegiContainer>
+        <RegiProButton
+          data-id={_id}
+          onClick={regiHandler}
+          onMouseDown={mouseDownHandler}
+          onMouseUp={mouseUpHandler}
+        >
+          찬성
+        </RegiProButton>
+        <RegiConButton
+          data-id={_id}
+          onClick={regiHandler}
+          onMouseDown={mouseDownHandler}
+          onMouseUp={mouseUpHandler}
+        >
+          반대
+        </RegiConButton>
+      </RegiContainer>
     </IssueContainer>
   );
 };
@@ -139,7 +126,8 @@ const IssueContainer = styled.article`
   border-radius: 15px;
   padding: 20px;
   margin-bottom: 20px;
-  display: flex-column;
+  display: flex;
+  flex-direction: column;
 `;
 const SubContainer = styled.div`
   display: flex;
@@ -167,6 +155,11 @@ const Content = styled.div`
   padding: 5px 0 30px 0;
 `;
 
+const RegiContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+`;
+
 const RegiProButton = styled.button`
   background-color: ${theme.colors.mainColor};
   color: 'black';
@@ -192,4 +185,11 @@ const RegiConButton = styled.button`
     position: relative;
     top: 2px;
   }
+`;
+
+const Link = styled.a`
+  color: ${theme.colors.mainColor};
+  text-decoration: underline;
+  font-size: 14px;
+  padding-bottom: 10px;
 `;

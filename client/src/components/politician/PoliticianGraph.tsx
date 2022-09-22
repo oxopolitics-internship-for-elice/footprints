@@ -87,8 +87,9 @@ const PoliticianGraph = (): JSX.Element => {
           const score = [tempScore];
           const id = [res._id];
           const title = [res.title];
+          const link = [res.link];
 
-          return { issueDate, poll, content, score, id, title };
+          return { issueDate, poll, content, score, id, title, link };
         } else {
           const issueDate = [tempData, ...current.issueDate];
           const poll = [tempPoll, ...current.poll];
@@ -96,8 +97,9 @@ const PoliticianGraph = (): JSX.Element => {
           const score = [tempScore, ...current.score];
           const id = [res._id, ...current.id];
           const title = [res.title, ...current.title];
+          const link = [res.link, ...current.link];
 
-          return { issueDate, poll, content, score, id, title };
+          return { issueDate, poll, content, score, id, title, link };
         }
       });
     });
