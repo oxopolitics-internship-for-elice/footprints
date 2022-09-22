@@ -4,8 +4,12 @@ import { removeCookie } from '@/utils/Cookie';
 import { useNavigate } from 'react-router-dom';
 import { Alert } from '@components/base/Alert';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLogined, authTokenState } from '@/store/AuthTokenState';
-import { loginModalState } from '@/store/LoginModalState';
+import {
+  isLogined,
+  authTokenState,
+  AuthTokenState,
+} from '@/store/AuthTokenState';
+import { loginModalState, LoginModalState } from '@/store/LoginModalState';
 
 const AuthButton = () => {
   // const accessToken = getCookie('access_token');
@@ -15,11 +19,21 @@ const AuthButton = () => {
   const setLoginModalState = useSetRecoilState(loginModalState);
 
   const handleLogin = () => {
-    setLoginModalState(prev => (prev = { isOpen: true }));
+    setLoginModalState((prev: LoginModalState) => {
+      return {
+        ...prev,
+        isOpen: true,
+      };
+    });
   };
 
   const handleLogout = () => {
-    setAuthTokenState(prev => (prev = { access_token: '' }));
+    setAuthTokenState((prev: AuthTokenState) => {
+      return {
+        ...prev,
+        access_token: '',
+      };
+    });
     removeCookie('access_token');
     navigate('/');
     Alert.fire({

@@ -1,8 +1,23 @@
 import styled from '@emotion/styled';
 import laptop from '@/assets/Laptop.png';
 import { HiArrowSmRight } from 'react-icons/hi';
+import { loginModalState, LoginModalState } from '@/store/LoginModalState';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 const ServiceIntro = (): JSX.Element => {
+  const setLoginModalState = useSetRecoilState(loginModalState);
+  const handleIntoButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+    setLoginModalState((prev: LoginModalState) => {
+      return {
+        ...prev,
+        isOpen: true,
+      };
+    });
+  };
+
   return (
     <>
       <Content>
@@ -12,7 +27,7 @@ const ServiceIntro = (): JSX.Element => {
           <br />
           투표로 발자국에 참여할 수 있습니다.
         </p>
-        <button>
+        <button onClick={handleIntoButtonClick}>
           무료로 시작하기
           <HiArrowSmRight size="25" style={{ verticalAlign: 'bottom' }} />
         </button>

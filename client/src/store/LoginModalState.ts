@@ -1,6 +1,6 @@
 import { atom, selector } from 'recoil';
 
-interface LoginModalState {
+export interface LoginModalState {
   isOpen: boolean;
 }
 

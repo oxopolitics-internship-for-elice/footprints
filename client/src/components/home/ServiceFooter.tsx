@@ -4,8 +4,10 @@ import FooterGraph from '@/assets/FooterGraph.svg';
 import MainLogo from '@/assets/MainLogo.gif';
 
 import { RiFootprintFill, RiGithubFill, RiDiscordFill } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 
 const ServiceFooter = () => {
+  const navigate = useNavigate();
   const [isMouseOver, setIsMouseOver] = React.useState(false);
 
   const handleMouseOver = () => {
@@ -14,6 +16,9 @@ const ServiceFooter = () => {
 
   const handleMouseOut = () => {
     setIsMouseOver(false);
+  };
+  const handlePoliticianButtonClick = () => {
+    navigate('/politician');
   };
 
   const handleGithubClick = () => {
@@ -36,10 +41,10 @@ const ServiceFooter = () => {
           FooterImage"
         />
         <NavigatePoliticianButton
-          isMouseOver={isMouseOver}
+          onClick={handlePoliticianButtonClick}
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          isMouseOver={isMouseOver}
         >
           <RiFootprintFill />
           <span>발자국 남기러 가기</span>

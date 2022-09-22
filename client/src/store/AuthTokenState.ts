@@ -1,6 +1,6 @@
 import { atom, selector } from 'recoil';
 
-interface AuthTokenState {
+export interface AuthTokenState {
   access_token: string;
 }
 
