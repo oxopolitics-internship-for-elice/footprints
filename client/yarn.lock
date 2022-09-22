@@ -252,13 +252,6 @@
   resolved "https://registry.npmjs.org/@cush/relative/-/relative-1.0.0.tgz"
   integrity sha512-RpfLEtTlyIxeNPGKcokS+p3BZII/Q3bYxryFRglh5H3A3T8q9fsLYm72VYAMEOOIBLEa8o93kFLiBDUWKrwXZA==
 
-"@dhaiwat10/react-link-preview@^1.14.2":
-  version "1.14.2"
-  resolved "https://registry.yarnpkg.com/@dhaiwat10/react-link-preview/-/react-link-preview-1.14.2.tgz#feccde9de29ffb64b15f8b68c25d016a52d0e32c"
-  integrity sha512-3xrlcPwGN7la36D5K98fzPXKZPkP+KbSQ8L1XN09rEzcxo/SKujGJfhGhoniFTcVcfHfDOFUtx1afuwxGzniLg==
-  dependencies:
-    react-loading-skeleton "^3.1.0"
-
 "@emotion/babel-plugin@^11.10.0":
   version "11.10.2"
   resolved "https://registry.npmjs.org/@emotion/babel-plugin/-/babel-plugin-11.10.2.tgz"
@@ -376,11 +369,6 @@
   resolved "https://registry.yarnpkg.com/@esbuild/linux-loong64/-/linux-loong64-0.14.54.tgz#de2a4be678bd4d0d1ffbb86e6de779cde5999028"
   integrity sha512-bZBrLAIX1kpWelV0XemxBZllyRmM6vgFQQG2GdNb+r3Fkp0FOh1NJSvekXDs7jq70k4euu1cryLMfU+mTXlEpw==
 
-"@faker-js/faker@^7.4.0":
-  "integrity" "sha512-xDd3Tvkt2jgkx1LkuwwxpNBy/Oe+LkZBTwkgEFTiWpVSZgQ5sc/LenbHKRHbFl0dq/KFeeq/szyyPtpJRKY0fg=="
-  "resolved" "https://registry.npmjs.org/@faker-js/faker/-/faker-7.4.0.tgz"
-  "version" "7.4.0"
-
 "@jridgewell/gen-mapping@^0.1.0":
   version "0.1.1"
   resolved "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.1.1.tgz"
@@ -430,13 +418,6 @@
   version "0.3.3"
   resolved "https://registry.npmjs.org/@types/cookie/-/cookie-0.3.3.tgz"
   integrity sha512-LKVP3cgXBT9RYj+t+9FDKwS5tdI+rPBXaNSkma7hvqy35lc7mAokC2zsqWJH0LaqIt3B962nuYI77hsJoT1gow==
-
-"@types/faker@^6.6.9":
-  "integrity" "sha512-Y9YYm5L//8ooiiknO++4Gr539zzdI0j3aXnOBjo1Vk+kTvffY10GuE2wn78AFPECwZ5MYGTjiDVw1naLLdDimw=="
-  "resolved" "https://registry.npmjs.org/@types/faker/-/faker-6.6.9.tgz"
-  "version" "6.6.9"
-  dependencies:
-    "faker" "*"
 
 "@types/hoist-non-react-statics@*", "@types/hoist-non-react-statics@^3.0.1":
   version "3.3.1"
@@ -831,11 +812,6 @@ escape-string-regexp@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz"
   integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
-
-"faker@*", "faker@^5.5.3":
-  "integrity" "sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g=="
-  "resolved" "https://registry.npmjs.org/faker/-/faker-5.5.3.tgz"
-  "version" "5.5.3"
 
 "find-root@^1.1.0":
   "integrity" "sha512-NKfW6bec6GfKc0SGx1e07QZY9PE99u0Bft/0rzSD5k3sO/vwkVUpDUKVm5Gpp5Ue3YfShPFTX2070tDs5kB9Ng=="
