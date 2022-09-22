@@ -9,7 +9,6 @@ import { ResDataTypes } from '@/types/GraphTypes';
 import errorHandler from '@/api/ErrorHandler';
 import theme from '@/styles/theme';
 import { getCookie } from '@/utils/Cookie';
-import { LinkPreview } from '@dhaiwat10/react-link-preview';
 
 type Element = {
   $context: Object;
@@ -117,6 +116,7 @@ const Modal = ({
     if (accessToken) {
       fetchPollInfo();
     }
+    console.log(resData);
   }, []);
 
   return (
@@ -139,6 +139,11 @@ const Modal = ({
             <ContentText>
               {resData.content[element.$context.dataIndex]}
             </ContentText>
+            {resData?.link && (
+              <Link href={resData.link[element.$context.dataIndex]}>
+                {resData.link[element.$context.dataIndex]}
+              </Link>
+            )}
           </Content>
           <ChooseBox>
             {Imgsrc.map((src, index) => {
@@ -228,7 +233,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: row;
   border-radius: 20px;
-  padding: 20px 20px 100px 20px;
+  padding: 20px 20px 20px 20px;
   max-height: 500px;
   overflow: auto;
 `;
@@ -248,6 +253,12 @@ const ChooseBox = styled.div`
   background-color: #dedcdc;
   border-radius: 20px;
   height: 70px;
+`;
+
+const Link = styled.a`
+  color: ${theme.colors.mainColor};
+  font-size: 14px;
+  text-decoration: underline;
 `;
 
 interface ChooseItemProps {
