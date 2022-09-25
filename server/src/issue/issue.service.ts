@@ -6,10 +6,10 @@ import { Issue, IssueDocument } from '../schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
-import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
-import { validateTribe } from 'src/common/validateTribe';
+import { PageOptionsDto, PageMetaDto, PageDto } from '../common/pagination.dto';
+import { validateTribe } from '../common/validateTribe';
 import { Politician, PoliticianDocument } from '../schemas/politician.schema';
-import { User, UserDocument } from 'src/schemas/user.schema';
+import { User, UserDocument } from '../schemas/user.schema';
 
 @Injectable()
 export class IssueService {

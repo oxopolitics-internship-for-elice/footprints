@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { User } from 'src/schemas/user.schema';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as CryptoJS from 'crypto-js';
-import { CreateUserDto } from 'src/user/dto/add.user.dto';
+import { CreateUserDto } from '../user/dto/add.user.dto';
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
