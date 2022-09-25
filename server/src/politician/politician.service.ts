@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Politician, PoliticianDocument } from 'src/schemas/politician.schema';
+import { Politician, PoliticianDocument } from '../schemas/politician.schema';
+import { PoliticianDto } from './dto/politician.dto';
 
 @Injectable()
 export class PoliticianService {
@@ -49,11 +50,6 @@ export class PoliticianService {
                 score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
               },
             },
-            // {
-            //   $facet: {
-            //     counts: [{ $count: 'counts' }],
-            //   },
-            // },
             { $sort: { totalPolls: -1 } },
             { $limit: 40 },
             { $sort: { issueDate: 1 } },
@@ -71,5 +67,15 @@ export class PoliticianService {
     }
 
     return politicians;
+  }
+
+  async addPolitician(politician: PoliticianDto): Promise<boolean> {
+    const result = await new this.politicianModel(politician).save();
+
+    if (!result) {
+      throw new Error('생성 오류');
+    } else {
+      return true;
+    }
   }
 }
