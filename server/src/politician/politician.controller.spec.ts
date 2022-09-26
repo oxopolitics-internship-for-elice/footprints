@@ -9,7 +9,7 @@ import { PoliticianService } from './politician.service';
 import { User, userSchema } from '../schemas/user.schema';
 import { addStub, getStub } from './dto/politician.dto';
 
-describe('PoliticianController', () => {
+describe('Politician controller unit test', () => {
   let controller: PoliticianController;
   let mongoConnection: Connection;
   let politicianModel: Model<Politician>;
@@ -40,22 +40,18 @@ describe('PoliticianController', () => {
     controller = module.get<PoliticianController>(PoliticianController);
   });
 
-  describe('addPolitician', () => {
-    it('should return true when it successs or throw error', async () => {
+  describe('/politician POST', () => {
+    it('addPolitician', async () => {
       const result = await controller.addPolitician(addStub);
       id = await (await mongoConnection.collections['politicians'].findOne({ name: 'test' }))._id;
       expect(result.message).toBe('success');
     });
   });
 
-  describe('getAllPoliticians', () => {
-    it('should return an array of politicians', async () => {
+  describe('/politician GET', () => {
+    it('getAllPoliticians', async () => {
       expect(await controller.getAllPoliticians()).toEqual([getStub(id)]);
     });
-  });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
   });
 
   afterAll(async () => {
