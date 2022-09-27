@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class PoliticianDto {
   @IsString()
@@ -18,20 +18,20 @@ export class PoliticianDto {
   @IsOptional()
   @IsArray()
   readonly issues?: Array<any>;
+
+  @IsNotEmpty()
+  @IsOptional()
+  @IsInt()
+  public count?: number;
+
+  constructor(get?: boolean) {
+    if (get === true) {
+      this._id = '1';
+      this.count = 1;
+      this.issues = [];
+    }
+    this.image = 'test';
+    this.name = 'test';
+    this.party = 'test';
+  }
 }
-
-export const addStub: PoliticianDto = {
-  name: 'test',
-  image: 'test',
-  party: 'test',
-};
-
-export const getStub = (_id: string): PoliticianDto => {
-  return {
-    _id,
-    name: 'test',
-    image: 'test',
-    party: 'test',
-    issues: [],
-  };
-};

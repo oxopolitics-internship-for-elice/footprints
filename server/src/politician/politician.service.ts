@@ -58,24 +58,24 @@ export class PoliticianService {
       },
     ]);
 
-    politicians.sort((a, b) => {
+    return politicians;
+  }
+
+  sortPoliticians(politicians: Array<PoliticianDto>): Array<PoliticianDto> {
+    return politicians.sort((a, b) => {
       return b.count[0].count - a.count[0].count;
     });
+  }
 
+  deleteProperty(politicians: Array<PoliticianDto>): Array<PoliticianDto> {
     for (const politician of politicians) {
       delete politician.count;
     }
-
     return politicians;
   }
 
   async addPolitician(politician: PoliticianDto): Promise<boolean> {
     const result = await new this.politicianModel(politician).save();
-
-    if (!result) {
-      throw new Error('생성 오류');
-    } else {
-      return true;
-    }
+    return result && true;
   }
 }

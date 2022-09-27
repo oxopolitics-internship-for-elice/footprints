@@ -7,15 +7,13 @@ import { UserService } from 'src/user/user.service';
 import { PoliticianController } from './politician.controller';
 import { PoliticianService } from './politician.service';
 import { User, userSchema } from 'src/schemas/user.schema';
-import { addStub, getStub } from './dto/politician.dto';
+import { addStub, getStub, PoliticianDto } from './dto/politician.dto';
 
-describe('Politician controller unit test', () => {
+describe('PoliticianController', () => {
   let controller: PoliticianController;
   let mongoConnection: Connection;
   let politicianModel: Model<Politician>;
   let userModel: Model<User>;
-
-  let id;
 
   beforeAll(async () => {
     mongoConnection = (await connect('mongodb://127.0.0.1:27017')).connection;
@@ -43,14 +41,13 @@ describe('Politician controller unit test', () => {
   describe('/politician POST', () => {
     it('addPolitician', async () => {
       const result = await controller.addPolitician(addStub);
-      id = await (await mongoConnection.collections['politicians'].findOne({ name: 'test' }))._id;
       expect(result.message).toBe('success');
     });
   });
 
   describe('/politician GET', () => {
     it('getAllPoliticians', async () => {
-      expect(await controller.getAllPoliticians()).toEqual([getStub(id)]);
+      expect(await controller.getAllPoliticians()).toEqual([getStub]);
     });
   });
 
