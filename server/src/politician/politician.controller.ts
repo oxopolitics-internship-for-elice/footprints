@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
 import { PoliticianDto } from './dto/politician.dto';
 import { PoliticianService } from './politician.service';
 

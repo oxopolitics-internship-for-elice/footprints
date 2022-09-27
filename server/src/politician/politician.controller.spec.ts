@@ -2,11 +2,11 @@ import { getModelToken } from '@nestjs/mongoose';
 import * as dotenv from 'dotenv';
 import { Test, TestingModule } from '@nestjs/testing';
 import { connect, Connection, Model } from 'mongoose';
-import { Politician, politicianSchema } from '../schemas/politician.schema';
-import { UserService } from '../user/user.service';
+import { Politician, politicianSchema } from 'src/schemas/politician.schema';
+import { UserService } from 'src/user/user.service';
 import { PoliticianController } from './politician.controller';
 import { PoliticianService } from './politician.service';
-import { User, userSchema } from '../schemas/user.schema';
+import { User, userSchema } from 'src/schemas/user.schema';
 import { addStub, getStub } from './dto/politician.dto';
 
 describe('Politician controller unit test', () => {

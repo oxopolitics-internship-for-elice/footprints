@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { scheduleJob } from 'node-schedule';
-import { Issue, IssueDocument } from '../schemas/issue.schema';
+import { Issue, IssueDocument } from 'src/schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
-import { PageOptionsDto, PageMetaDto, PageDto } from '../common/pagination.dto';
+import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
 import { validateTribe } from '../common/validateTribe';
-import { Politician, PoliticianDocument } from '../schemas/politician.schema';
-import { User, UserDocument } from '../schemas/user.schema';
+import { Politician, PoliticianDocument } from 'src/schemas/politician.schema';
+import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class IssueService {
