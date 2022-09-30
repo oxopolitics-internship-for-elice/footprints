@@ -109,7 +109,7 @@ const PoliticianGraph = (): JSX.Element => {
 
     isNextPageable(res.data.meta.hasNextPage);
   };
-  const Img = [tiger, hippo, elephant, dinosaur, lion, oxo];
+  const Img = [oxo, tiger, hippo, elephant, dinosaur, lion];
   const chartPoint = Img.map(img => {
     const chartPoint = new Image();
     chartPoint.src = img;
@@ -129,6 +129,15 @@ const PoliticianGraph = (): JSX.Element => {
         labels: resData.issueDate,
         datasets: [
           {
+            label: '합계',
+
+            data: resData.score.map((score: any) => {
+              return score.total.score;
+            }),
+            pointStyle: chartPoint[0],
+            tension: 0.3,
+          },
+          {
             label: '호랑이',
 
             data: resData.score.map((score: any) => {
@@ -137,7 +146,7 @@ const PoliticianGraph = (): JSX.Element => {
             tension: 0.3,
             borderColor: '#E48F05',
             backgroundColor: 'transparent',
-            pointStyle: chartPoint[0],
+            pointStyle: chartPoint[1],
           },
           {
             label: '하마',
@@ -147,7 +156,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#8D39A8',
-            pointStyle: chartPoint[1],
+            pointStyle: chartPoint[2],
           },
           {
             label: '코끼리',
@@ -157,7 +166,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#2d8bb2',
-            pointStyle: chartPoint[2],
+            pointStyle: chartPoint[3],
           },
           {
             label: '공룡',
@@ -166,7 +175,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#91A401',
-            pointStyle: chartPoint[3],
+            pointStyle: chartPoint[4],
           },
 
           {
@@ -177,17 +186,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#C2403D',
-            pointStyle: chartPoint[4],
-          },
-
-          {
-            label: '합계',
-
-            data: resData.score.map((score: any) => {
-              return score.total.score;
-            }),
             pointStyle: chartPoint[5],
-            tension: 0.3,
           },
         ],
       });
@@ -481,7 +480,7 @@ const PoliticianGraph = (): JSX.Element => {
 export default PoliticianGraph;
 
 function darwTooltip(context: any, resData: ResDataTypes) {
-  const ImgTribe = [tiger, hippo, elephant, dinosaur, lion, oxo];
+  const ImgTribe = [oxo, tiger, hippo, elephant, dinosaur, lion];
   const ImgPoll = [ColoredCircle, ColoredTriangle, ColoredX];
   const dataIndex = context.chart.tooltip.dataPoints[0];
   let tooltipEl = document.getElementById('chartjs-tooltip');
