@@ -3,10 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { scheduleJob } from 'node-schedule';
 import { Issue, IssueDocument } from 'src/schemas/issue.schema';
-import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
 import { validateTribe } from 'src/common/validateTribe';
+import { AddIssueDto } from './dto/issue.addIssue.dto';
+import { SetIssueRegiStatusDto } from './dto/issue.setIssueRegiStatus.dto';
 
 @Injectable()
 export class IssueService {
@@ -15,25 +16,17 @@ export class IssueService {
     private readonly issueModel: Model<IssueDocument>,
   ) {}
 
-  async addIssue(body: AddIssueDto, regiUser: string): Promise<boolean> {
-    const week = 7 * 24 * 60 * 60 * 1000;
-    const regiDueDate = new Date(Date.now() + week);
+  async addIssue(body: AddIssueDto, regiUser: string): Promise<Issue> {
+    // const week = 7 * 24 * 60 * 60 * 1000;
+    // const regiDueDate = new Date(Date.now() + week);
 
-    const { targetPolitician, issueDate, content, title, link } = body;
+    const result = await new this.issueModel({ ...body, regiUser }).save();
 
-    const issueData = { targetPolitician, regiUser, issueDate, content, title, link, regiDueDate };
-    const instance = await new this.issueModel(issueData);
-    const save = await instance.save();
+    // const setRegiStatusInactiveJob = scheduleJob(regiDueDate, () => {
+    //   this.setRegiStatus(save._id, 'expired');
+    // });
 
-    const setRegiStatusInactiveJob = scheduleJob(regiDueDate, () => {
-      this.setRegiStatus(save._id, 'expired');
-    });
-
-    if (!save) {
-      throw new Error('생성 오류');
-    } else {
-      return true;
-    }
+    return result;
   }
 
   // async getAllIssues() {
@@ -77,7 +70,9 @@ export class IssueService {
   //   return allIssues;
   // }
 
-  async getIssueCount(registatus) {}
+  async getIssuesCount(registatus: SetIssueRegiStatusDto) {
+    return await this.issueModel.find({ })
+  }
 
   async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
     const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
-import { AddIssueDto } from './dto/issue.dto';
+import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { QueryIssueDto } from './dto/issue.paginationQuery.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';

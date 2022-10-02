@@ -51,11 +51,11 @@ describe('PoliticianService', () => {
   });
 
   afterAll(async () => {
-    const { collections } = mongoConnection;
-    for (const key in collections) {
-      const collection = collections[key];
-      await collection.deleteMany({});
-    }
+    // const { collections } = mongoConnection;
+    // for (const key in collections) {
+    //   const collection = collections[key];
+    //   await collection.deleteMany({});
+    // }
     await mongoConnection.close();
   });
 });

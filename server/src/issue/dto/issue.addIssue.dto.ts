@@ -1,6 +1,5 @@
 import { Type } from 'class-transformer';
 import { IsDate, IsString, IsFQDN } from 'class-validator';
-import { Date } from 'mongoose';
 
 export class AddIssueDto {
   @IsString()
