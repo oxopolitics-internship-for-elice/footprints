@@ -36,46 +36,48 @@ export class IssueService {
     }
   }
 
-  async getAllIssues() {
-    const allIssues = await this.issueModel.aggregate([
-      {
-        $project: {
-          _id: 1,
-          targetPolitician: 1,
-          issueDate: 1,
-          totalPolls: { $add: ['$poll.total.pro', '$poll.total.neu', '$poll.total.con'] },
-          score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
-        },
-      },
-      { $sort: { totalPolls: -1 } },
-      { $limit: 40 },
-      { $sort: { issueDate: 1 } },
-      {
-        $group: { _id: '$targetPolitician', issues: { $push: '$$ROOT' } },
-      },
-      {
-        $lookup: {
-          from: 'politicians',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'politicianInfo',
-          pipeline: [
-            {
-              $project: {
-                issues: 0,
-                _id: 0,
-                createdAt: 0,
-                updatedAt: 0,
-                __v: 0,
-              },
-            },
-          ],
-        },
-      },
-    ]);
+  // async getAllIssues() {
+  //   const allIssues = await this.issueModel.aggregate([
+  //     {
+  //       $project: {
+  //         _id: 1,
+  //         targetPolitician: 1,
+  //         issueDate: 1,
+  //         totalPolls: { $add: ['$poll.total.pro', '$poll.total.neu', '$poll.total.con'] },
+  //         score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
+  //       },
+  //     },
+  //     { $sort: { totalPolls: -1 } },
+  //     { $limit: 40 },
+  //     { $sort: { issueDate: 1 } },
+  //     {
+  //       $group: { _id: '$targetPolitician', issues: { $push: '$$ROOT' } },
+  //     },
+  //     {
+  //       $lookup: {
+  //         from: 'politicians',
+  //         localField: '_id',
+  //         foreignField: '_id',
+  //         as: 'politicianInfo',
+  //         pipeline: [
+  //           {
+  //             $project: {
+  //               issues: 0,
+  //               _id: 0,
+  //               createdAt: 0,
+  //               updatedAt: 0,
+  //               __v: 0,
+  //             },
+  //           },
+  //         ],
+  //       },
+  //     },
+  //   ]);
 
-    return allIssues;
-  }
+  //   return allIssues;
+  // }
+
+  async getIssueCount(registatus) {}
 
   async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
     const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
