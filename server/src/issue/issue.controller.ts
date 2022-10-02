@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt.auth.guard';
-import { AddIssueDto } from './dto/issue.addIssue.dto';
+import { AddIssueDto } from './dto/issue.dto';
 import { QueryIssueDto } from './dto/issue.paginationQuery.dto';
 import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
@@ -33,10 +33,10 @@ export class IssueController {
       const { targetPolitician, regiStatus, ranked, pageOptions } = issueQuery;
 
       // 메인페이지 모든 정치인, 인생 전체 그래프
-      if (!targetPolitician) {
-        const issues = await this.issueService.getAllIssues();
-        return response.json(issues);
-      }
+      // if (!targetPolitician) {
+      //   const issues = await this.issueService.getAllIssues();
+      //   return response.json(issues);
+      // }
 
       // 등록된 이슈
       if (regiStatus && !ranked) {
