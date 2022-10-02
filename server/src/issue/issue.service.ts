@@ -5,21 +5,14 @@ import { scheduleJob } from 'node-schedule';
 import { Issue, IssueDocument } from 'src/schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
-import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
 import { validateTribe } from '../common/validateTribe';
-import { Politician, PoliticianDocument } from 'src/schemas/politician.schema';
-import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class IssueService {
   constructor(
     @InjectModel(Issue.name)
     private readonly issueModel: Model<IssueDocument>,
-    @InjectModel(Politician.name)
-    private readonly politicianModel: Model<PoliticianDocument>,
-    @InjectModel(User.name)
-    private readonly userModel: Model<UserDocument>,
   ) {}
 
   async addIssue(body: AddIssueDto, regiUser: string): Promise<boolean> {
