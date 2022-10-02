@@ -6,7 +6,7 @@ import { Issue, IssueDocument } from 'src/schemas/issue.schema';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
-import { validateTribe } from '../common/validateTribe';
+import { validateTribe } from 'src/common/validateTribe';
 
 @Injectable()
 export class IssueService {

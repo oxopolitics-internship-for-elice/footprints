@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsDate, IsString } from 'class-validator';
+import { IsDate, IsString, IsFQDN } from 'class-validator';
 import { Date } from 'mongoose';
 
 export class AddIssueDto {
@@ -16,6 +16,6 @@ export class AddIssueDto {
   @IsString()
   readonly title: string;
 
-  @IsString()
+  @IsFQDN()
   readonly link: string;
 }
