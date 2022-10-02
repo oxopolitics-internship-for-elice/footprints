@@ -74,8 +74,8 @@ export class PoliticianService {
     return politicians;
   }
 
-  async addPolitician(politician: PoliticianDto): Promise<boolean> {
+  async addPolitician(politician: PoliticianDto): Promise<Politician> {
     const result = await new this.politicianModel(politician).save();
-    return result && true;
+    return result;
   }
 }

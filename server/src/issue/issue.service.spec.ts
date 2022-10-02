@@ -26,7 +26,7 @@ describe('IssueService', () => {
   });
 
   describe('addIssue', () => {
-    it('should return true', async () => {
+    it('should return issue instance', async () => {
       const stub = {
         targetPolitician: '6339419e0af61ab9ba0ef870',
         issueDate: new Date(),

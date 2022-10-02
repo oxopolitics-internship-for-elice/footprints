@@ -28,10 +28,11 @@ describe('PoliticianService', () => {
   });
 
   describe('addPolitician', () => {
-    it('should return true', async () => {
+    it('should return politician instance', async () => {
       const stub = new PoliticianDto();
       const result = await service.addPolitician(stub);
-      expect(result).toBe(true);
+      expect(result).toBeInstanceOf(politicianModel);
+      expect(result.name === 'test');
     });
 
     // validation은 어차피 DTO에서 발생하고, controller에서 error handling 하면 됨
