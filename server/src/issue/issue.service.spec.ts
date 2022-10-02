@@ -2,6 +2,7 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { connect, Connection, Model } from 'mongoose';
 import { Issue, issueSchema } from 'src/schemas/issue.schema';
+import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { IssueService } from './issue.service';
 
 describe('IssueService', () => {
@@ -32,16 +33,20 @@ describe('IssueService', () => {
         issueDate: new Date(),
         content: 'test',
         title: 'test',
-        link: 'http://www.naver.com'
+        link: 'http://www.naver.com',
+        regi: {
+          pro: 74,
+          con: 1,
+        },
       };
-      const regiUser = '63393d09013cf197ef46eb5e'
-      
-      const result = await service.addIssue(stub, regiUser)
+      const regiUser = '63393d09013cf197ef46eb5e';
+
+      const result = await service.addIssue(stub, regiUser);
       expect(result).toBeInstanceOf(issueModel);
       expect(result.regiStatus === 'incative');
-      expect(result.title === 'test');
-    })
-  })
+      expect(result.regi.pro === 0);
+    });
+  });
 
   afterAll(async () => {
     await mongoConnection.close();
