@@ -7,7 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { PoliticianController } from './politician.controller';
 import { PoliticianService } from './politician.service';
 import { User, userSchema } from 'src/schemas/user.schema';
-import { addStub, getStub, PoliticianDto } from './dto/politician.dto';
+import { PoliticianDto } from './dto/politician.dto';
 
 describe('PoliticianController', () => {
   let controller: PoliticianController;
@@ -39,15 +39,17 @@ describe('PoliticianController', () => {
   });
 
   describe('/politician POST', () => {
+    const stub = new PoliticianDto();
     it('addPolitician', async () => {
-      const result = await controller.addPolitician(addStub);
+      const result = await controller.addPolitician(stub);
       expect(result.message).toBe('success');
     });
   });
 
   describe('/politician GET', () => {
+    const stub = new PoliticianDto(true);
     it('getAllPoliticians', async () => {
-      expect(await controller.getAllPoliticians()).toEqual([getStub]);
+      expect(await controller.getAllPoliticians()).toEqual([stub]);
     });
   });
 

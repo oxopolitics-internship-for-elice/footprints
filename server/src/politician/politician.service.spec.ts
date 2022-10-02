@@ -9,7 +9,6 @@ describe('PoliticianService', () => {
   let mongoConnection: Connection;
   let service: PoliticianService;
   let politicianModel: Model<Politician>;
-  let id;
 
   beforeAll(async () => {
     mongoConnection = (await connect('mongodb://127.0.0.1:27017')).connection;
