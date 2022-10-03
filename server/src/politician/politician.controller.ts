@@ -17,7 +17,7 @@ export class PoliticianController {
       return res.json(politicians);
 
     } catch (err) {
-      throw new HttpException(`undefined error: ${err.message}`, 500);
+      console.log(err.message)
     }
   }
 
@@ -33,7 +33,7 @@ export class PoliticianController {
       return res.status(HttpStatus.CREATED).json(politician);
 
     } catch (err) {
-      throw new HttpException(`undefined error: ${err.message}`, 500);
+      console.log(err.message)
     }
   }
 }
