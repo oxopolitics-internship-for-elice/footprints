@@ -4,11 +4,10 @@ import { Model } from 'mongoose';
 import { scheduleJob } from 'node-schedule';
 import { Issue, IssueDocument } from 'src/schemas/issue.schema';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
-import { PageOptionsDto, PageMetaDto, PageDto } from 'src/utils/pagination.dto';
+import { PageOptionsDto } from 'src/utils/pagination.dto';
 import { validateTribe } from 'src/utils/validateTribe';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
-import { SetIssueRegiStatusDto } from './dto/issue.setIssueRegiStatus.dto';
-
+import { DateTime } from 'luxon';
 @Injectable()
 export class IssueService {
   constructor(
@@ -19,8 +18,11 @@ export class IssueService {
   async addIssue(body: AddIssueDto, regiUser: string): Promise<Issue> {
     // const week = 7 * 24 * 60 * 60 * 1000;
     // const regiDueDate = new Date(Date.now() + week);
-    const { targetPolitician, issueDate, content, title, link } = body;
-    const result = await new this.issueModel({ targetPolitician, issueDate, content, title, link, regiUser }).save();
+    // const { targetPolitician, issueDate, content, title, link } = body;
+    // const result = await new this.issueModel({ targetPolitician, issueDate, content, title, link, regiUser }).save();
+
+    // test case 만들기 위한 임시
+    const result = await new this.issueModel({ ...body, regiUser }).save();
 
     // const setRegiStatusInactiveJob = scheduleJob(regiDueDate, () => {
     //   this.setRegiStatus(save._id, 'expired');
@@ -70,22 +72,27 @@ export class IssueService {
   //   return allIssues;
   // }
 
-  async getIssuesCount(registatus: SetIssueRegiStatusDto) {
-    return await this.issueModel.find({});
+  // regiStatus type needed
+  async getAllIssuesCount(regiStatus): Promise<number> {
+    return await this.issueModel.find({ regiStatus }).count();
   }
 
-  async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
-    const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
-    const pageMeta = new PageMetaDto({ pageOptions, itemCount });
+  // return type needed
+  async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto) {
+    // const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
+    // const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'active' })
       .sort({ issueDate: -1 })
       .skip(pageOptions.skip)
       .limit(pageOptions.perPage);
-    return { data: issues, meta: pageMeta };
+    return issues;
   }
 
+  // return type needed
   async getIssueNotRegisteredRanked(id: string): Promise<Issue[]> {
+    const due = DateTime.now().minus({ weeks: 1 }).toBSON();
+    
     const issues = await this.issueModel.aggregate([
       {
         $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
@@ -93,6 +100,7 @@ export class IssueService {
       {
         $match: { regiStatus: 'inactive' },
       },
+      { $match: { createdAt: { $gt: due } } },
       { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
       { $sort: { score: -1 } },
       { $limit: 3 },
@@ -100,15 +108,30 @@ export class IssueService {
     return issues;
   }
 
-  async getIssueNotRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
-    const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'inactive' }).count();
-    const pageMeta = new PageMetaDto({ pageOptions, itemCount });
-    const issues = await this.issueModel
-      .find({ targetPolitician, regiStatus: 'inactive' })
-      .sort({ createdAt: -1 })
-      .skip(pageOptions.skip)
-      .limit(pageOptions.perPage);
-    return { data: issues, meta: pageMeta };
+  // return type needed
+  async getIssueNotRegistered(id: string, pageOptions: PageOptionsDto, total: number) {
+    const due = DateTime.now().minus({ weeks: 1 }).toBSON();
+    
+    if (total <= 3) {
+      throw new Error('이슈 개수가 부족합니다.')
+    }
+
+    const issues = await this.issueModel.aggregate([
+      {
+        $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
+      },
+      {
+        $match: { regiStatus: 'inactive' },
+      },
+      { $match: { createdAt: { $gt: due } } },
+      { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
+      { $sort: { score: 1 } },
+      { $limit: total },
+      { $sort: { createdAt: 1 } },
+      { $skip: pageOptions.skip },
+      { $limit: pageOptions.perPage },
+    ]);
+    return issues;
   }
 
   // regi pro 개수 확인 함수
