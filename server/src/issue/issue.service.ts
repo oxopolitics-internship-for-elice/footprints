@@ -4,8 +4,8 @@ import { Model } from 'mongoose';
 import { scheduleJob } from 'node-schedule';
 import { Issue, IssueDocument } from 'src/schemas/issue.schema';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
-import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
-import { validateTribe } from 'src/common/validateTribe';
+import { PageOptionsDto, PageMetaDto, PageDto } from 'src/utils/pagination.dto';
+import { validateTribe } from 'src/utils/validateTribe';
 import { AddIssueDto } from './dto/issue.addIssue.dto';
 import { SetIssueRegiStatusDto } from './dto/issue.setIssueRegiStatus.dto';
 
