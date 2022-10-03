@@ -1,34 +1,39 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Res, UseFilters } from '@nestjs/common';
+import { HttpExceptionFilter } from 'src/utils/http-exception.filter';
 import { PoliticianDto } from './dto/politician.dto';
 import { PoliticianService } from './politician.service';
 
 @Controller('politicians')
+@UseFilters(HttpExceptionFilter)
 export class PoliticianController {
   constructor(private readonly politicianService: PoliticianService) {}
 
   // 메인페이지(모든 정치인 인생 전체 그래프)
   @Get()
-  @HttpCode(200)
-  async getAllPoliticians(): Promise<Array<any>> {
+  async getAllPoliticians(@Res() res): Promise<Array<any>> {
     try {
-      const result = await this.politicianService.getAllPoliticians();
-      return result;
+      const politicians = await this.politicianService.getAllPoliticians();
+    
+      return res.json(politicians);
+
     } catch (err) {
-      console.log(err);
+      throw new HttpException(`undefined error: ${err.message}`, 500);
     }
   }
 
   // 정치인 추가
   @Post()
-  @HttpCode(201)
-  async addPolitician(@Body() body: PoliticianDto): Promise<Record<string, unknown>> {
+  async addPolitician(@Body() body: PoliticianDto, @Res() res): Promise<Record<string, unknown>> {
     try {
-      const result = await this.politicianService.addPolitician(body);
-      if (result) {
-        return { message: 'success' };
+      const politician = await this.politicianService.addPolitician(body);
+      
+      if (!politician) {
+        throw new HttpException('create failed', 400)
       }
+      return res.status(HttpStatus.CREATED).json(politician);
+
     } catch (err) {
-      console.log(err);
+      throw new HttpException(`undefined error: ${err.message}`, 500);
     }
   }
 }
