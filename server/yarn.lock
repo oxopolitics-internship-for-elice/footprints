@@ -3514,6 +3514,11 @@
   "resolved" "https://registry.npmjs.org/luxon/-/luxon-1.28.0.tgz"
   "version" "1.28.0"
 
+"luxon@^3.0.4":
+  "integrity" "sha512-aV48rGUwP/Vydn8HT+5cdr26YYQiUZ42NM6ToMoaGKwYfWbfLeRkEu1wXWMHBZT6+KyLfcbbtVcoQFCbbPjKlw=="
+  "resolved" "https://registry.npmjs.org/luxon/-/luxon-3.0.4.tgz"
+  "version" "3.0.4"
+
 "macos-release@^2.5.0":
   "integrity" "sha512-EIgv+QZ9r+814gjJj0Bt5vSLJLzswGmSUbUpbi9AIr/fsN2IWFBl2NucV9PAiek+U1STK468tEkxmVYUtuAN3g=="
   "resolved" "https://registry.npmjs.org/macos-release/-/macos-release-2.5.0.tgz"
