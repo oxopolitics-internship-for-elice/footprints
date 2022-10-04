@@ -4,7 +4,6 @@ import { connect, Connection, Model } from 'mongoose';
 import { Politician, politicianSchema } from 'src/schemas/politician.schema';
 import { PoliticianController } from './politician.controller';
 import { PoliticianService } from './politician.service';
-import { User, userSchema } from 'src/schemas/user.schema';
 import { PoliticianDto } from './dto/politician.dto';
 import { Res } from '@nestjs/common';
 

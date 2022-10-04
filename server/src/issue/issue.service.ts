@@ -16,13 +16,11 @@ export class IssueService {
   ) {}
 
   async addIssue(body: AddIssueDto, regiUser: string): Promise<Issue> {
-    // const week = 7 * 24 * 60 * 60 * 1000;
-    // const regiDueDate = new Date(Date.now() + week);
-    // const { targetPolitician, issueDate, content, title, link } = body;
-    // const result = await new this.issueModel({ targetPolitician, issueDate, content, title, link, regiUser }).save();
+    const { targetPolitician, issueDate, content, title, link } = body;
+    const result = await new this.issueModel({ targetPolitician, issueDate, content, title, link, regiUser }).save();
 
-    // test case 만들기 위한 임시
-    const result = await new this.issueModel({ ...body, regiUser }).save();
+    // // test case 만들기 위한 임시
+    // const result = await new this.issueModel({ ...body, regiUser }).save();
 
     // const setRegiStatusInactiveJob = scheduleJob(regiDueDate, () => {
     //   this.setRegiStatus(save._id, 'expired');
