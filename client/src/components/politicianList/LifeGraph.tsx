@@ -74,7 +74,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
     },
     scales: {
       x: {
-        display: true,
+        display: false,
         grid: {
           display: false,
         },
@@ -92,8 +92,8 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
             }
           },
         },
-        min: min - 10,
-        max: max + 10,
+        min: min - 20,
+        max: max + 20,
       },
     },
     elements: {
