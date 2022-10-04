@@ -10,7 +10,6 @@ const PoliticianBoard = () => {
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
   const politicansName = fetchedPoliticans.map(
     (politician: PoliticiansTypes) => {
-      console.log(politician);
       if (!politician.name) {
         return 'null';
       }

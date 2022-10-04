@@ -10,6 +10,7 @@ import PoliticiansState from '@/store/PoliticiansState';
 import { useNavigate } from 'react-router-dom';
 import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import { HiChevronDoubleRight } from 'react-icons/hi';
+import theme from '@/styles/theme';
 
 interface PoliticianListItemProps {
   politicanName: string;
@@ -52,12 +53,13 @@ const PoliticianListItem = ({
               />
               <Name onClick={handleClickPolitician}>{politicanName}</Name>
               <NavigateButton onClick={handleClickPolitician}>
-                더 보기
+                자세히 보기
                 <HiChevronDoubleRight size="21" />
               </NavigateButton>
             </Row>
-            <AnimationOnScroll animateIn="animate__fadeIn" delay={500}>
+            <AnimationOnScroll animateIn="animate__fadeIn" delay={200}>
               <LifeGraph issues={politican.issues} />
+              <GraphTitle>{politicanName}의 정치 인생</GraphTitle>
             </AnimationOnScroll>
           </Politician>
         </AnimationOnScroll>
@@ -72,7 +74,10 @@ const Container = styled.div`
   ${flexCenter}
   max-width: 100%;
   height: 100%;
-  padding: 50px 0;
+  padding: 40px 0;
+  border: 3px solid ${theme.colors.mainColor};
+  border-radius: 10px;
+  margin: 20px 0 60px 0;
 `;
 
 const Row = styled.div`
@@ -121,14 +126,15 @@ const NavigateButton = styled.button`
   align-items: center;
   justify-content: center;
   align-self: flex-end;
-  width: 128px;
+  width: 200px;
   height: 50px;
   border-radius: 5px;
-  background-color: 
-  border: 1px solid #000;
   color: #000;
   font-size: 1.2em;
-  font-weight: bold;
   margin-top: 20px;
   cursor: pointer;
+`;
+const GraphTitle = styled.div`
+  ${flexCenter};
+  color: ${theme.colors.subColor};
 `;

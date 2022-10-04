@@ -30,10 +30,14 @@ interface lifeGraphProps {
 
 const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   const graphData = issues.map((issue: any) => issue.score);
-
   const issueDates = issues.map(issue => dateFormatter(issue.issueDate, '.'));
+  const max = Math.max(...graphData);
+  const min = Math.min(...graphData);
 
   const options: ChartOptions<'line'> = {
+    animation: {
+      duration: 0,
+    },
     maintainAspectRatio: false,
     plugins: {
       legend: {
@@ -44,8 +48,6 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
       },
       datalabels: {
         formatter: function (value: any, context: any) {
-          const max = Math.max(...context.dataset.data);
-          const min = Math.min(...context.dataset.data);
           if (value === max || value === min) {
             return value;
           } else {
@@ -72,7 +74,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
     },
     scales: {
       x: {
-        display: false,
+        display: true,
         grid: {
           display: false,
         },
@@ -90,6 +92,8 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
             }
           },
         },
+        min: min - 10,
+        max: max + 10,
       },
     },
     elements: {
@@ -116,13 +120,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
 
   return (
     <GraphContainer>
-      <Line
-        width={'1300px'}
-        height={'400px'}
-        data={data}
-        options={options}
-        plugins={[ChartDataLabels]}
-      />
+      <Line data={data} options={options} plugins={[ChartDataLabels]} />
     </GraphContainer>
   );
 };
@@ -130,7 +128,6 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
 export default LifeGraph;
 
 const GraphContainer = styled.div`
-  width: 80vw;
-  height: 400px;
-  padding-top: 40px;
+  height: 50vh;
+  margin: 20px 0;
 `;
