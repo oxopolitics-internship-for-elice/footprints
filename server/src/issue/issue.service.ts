@@ -77,8 +77,6 @@ export class IssueService {
 
   // return type needed
   async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto) {
-    // const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
-    // const pageMeta = new PageMetaDto({ pageOptions, itemCount });
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'active' })
       .sort({ issueDate: -1 })
@@ -109,10 +107,6 @@ export class IssueService {
   // return type needed
   async getIssueNotRegistered(id: string, pageOptions: PageOptionsDto, total: number) {
     const due = DateTime.now().minus({ weeks: 1 }).toBSON();
-    
-    if (total <= 3) {
-      throw new Error('이슈 개수가 부족합니다.')
-    }
 
     const issues = await this.issueModel.aggregate([
       {
