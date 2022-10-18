@@ -521,11 +521,11 @@ function darwTooltip(context: any, resData: ResDataTypes) {
     function drow(div: Element, body: pollDeep, index: number) {
       const Title = CreateTitle();
       tableHead.appendChild(Title);
-      if (index === 5) {
+      if (index === 0) {
         const total = true;
         result[tooltipModel.dataPoints[0].dataIndex].forEach(
           (body: any, index: number) => {
-            if (index === 5) {
+            if (index === 0) {
             } else {
               const imageTh = CreateImg(body, total, index);
               for (let i = 1; i < 4; i++) {
