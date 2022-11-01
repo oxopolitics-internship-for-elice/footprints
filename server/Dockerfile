@@ -4,13 +4,13 @@ FROM node:16-alpine
 # Create a directory to hold the application code inside the image
 WORKDIR /oxo/src/app
 
-COPY package*.json ./
+COPY server/package*.json ./
 
 # Install app dependencies
 RUN npm install
 
 # Bundle app source
-COPY . .
+COPY server/ .
 
 # Bundle app's source code inside the Docker image
 RUN npm run build
