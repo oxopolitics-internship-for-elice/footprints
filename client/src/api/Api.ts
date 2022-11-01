@@ -7,7 +7,7 @@ export const serverUrl = (() => {
     const { protocol, hostname } = window.location;
     return `${protocol}//${hostname}:${localServerPort}/`;
   }
-  return window.location.origin;
+  return window.location.origin.replace(':5173', ':8080/');
 })();
 async function get(endpoint: any) {
   console.log(`%cGET 요청 ${serverUrl + endpoint}`, 'color: #a25cd1;');
