@@ -6,6 +6,7 @@ import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
 import { IssueService } from './issue.service';
 import { UserService } from 'src/user/user.service';
+import { PageMetaDto } from 'src/utils/pagination.dto';
 
 @Controller('issues')
 export class IssueController {
@@ -32,16 +33,13 @@ export class IssueController {
     try {
       const { targetPolitician, regiStatus, ranked, pageOptions } = issueQuery;
 
-      // 메인페이지 모든 정치인, 인생 전체 그래프
-      if (!targetPolitician) {
-        const issues = await this.issueService.getAllIssues();
-        return response.json(issues);
-      }
-
       // 등록된 이슈
       if (regiStatus && !ranked) {
         const issues = await this.issueService.getIssuesRegistered(targetPolitician, pageOptions);
-        return response.json(issues);
+
+        const itemCount = await this.issueService.getAllActiveIssuesCount();
+        const pageMeta = new PageMetaDto({ pageOptions, itemCount });
+        return response.json({ data: issues, meta: pageMeta });
       }
 
       // 미등록 이슈 top 3
@@ -52,8 +50,15 @@ export class IssueController {
 
       // 미등록 이슈 나머지
       else if (!regiStatus && !ranked) {
-        const issues = await this.issueService.getIssueNotRegistered(targetPolitician, pageOptions);
-        return response.json(issues);
+        const itemCount = await this.issueService.getAllInactiveIssuesCount();
+
+        if (itemCount <= 3) {
+          return response.json({ data: [] });
+        }
+
+        const issues = await this.issueService.getIssueNotRegistered(targetPolitician, pageOptions, itemCount);
+        const pageMeta = new PageMetaDto({ pageOptions, itemCount });
+        return response.json({ data: issues, meta: pageMeta });
       } else {
         throw new Error('bad request');
       }

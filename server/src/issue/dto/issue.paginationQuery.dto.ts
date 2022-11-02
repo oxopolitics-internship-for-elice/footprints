@@ -1,6 +1,6 @@
 import { Transform } from 'class-transformer';
 import { IsBoolean, IsInt, IsOptional, IsString, Min } from 'class-validator';
-import { PageOptionsDto } from 'src/common/pagination.dto';
+import { PageOptionsDto } from 'src/utils/pagination.dto';
 
 export class QueryIssueDto {
   @IsString()

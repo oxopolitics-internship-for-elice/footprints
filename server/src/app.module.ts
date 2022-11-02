@@ -15,6 +15,7 @@ import { PoliticianModule } from './politician/politician.module';
       useNewUrlParser: true,
       useUnifiedTopology: true,
       connectionFactory: (connection) => {
+        console.log(process.env.MONGODB_URI)
         if (connection.readyState === 1) {
           Logger.log('DB connected');
           console.log('################ MongoDB connected #################');

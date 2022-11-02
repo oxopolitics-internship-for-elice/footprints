@@ -1,18 +1,39 @@
-import { Controller, Get, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Res, UseFilters } from '@nestjs/common';
+import { HttpExceptionFilter } from 'src/utils/http-exception.filter';
+import { PoliticianDto } from './dto/politician.dto';
 import { PoliticianService } from './politician.service';
 
 @Controller('politicians')
+@UseFilters(HttpExceptionFilter)
 export class PoliticianController {
-  constructor(private politicianService: PoliticianService) {}
+  constructor(private readonly politicianService: PoliticianService) {}
 
   // 메인페이지(모든 정치인 인생 전체 그래프)
   @Get()
-  async getAllPoliticians(@Res() response) {
+  async getAllPoliticians(@Res() res): Promise<Array<any>> {
     try {
-      const result = await this.politicianService.getAllPoliticians();
-      return response.json(result);
+      const politicians = await this.politicianService.getAllPoliticians();
+    
+      return res.status(HttpStatus.OK).json(politicians);
+
     } catch (err) {
-      console.log(err);
+      console.log(err.message)
+    }
+  }
+
+  // 정치인 추가
+  @Post()
+  async addPolitician(@Body() body: PoliticianDto, @Res() res): Promise<Record<string, unknown>> {
+    try {
+      const politician = await this.politicianService.addPolitician(body);
+      
+      if (!politician) {
+        throw new HttpException('create failed', 400)
+      }
+      return res.status(HttpStatus.CREATED).json(politician);
+
+    } catch (err) {
+      console.log(err.message)
     }
   }
 }

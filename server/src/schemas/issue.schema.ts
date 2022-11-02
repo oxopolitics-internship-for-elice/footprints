@@ -28,7 +28,7 @@ export class Issue {
   regi;
 
   @Prop()
-  regiDueDate: Date;
+  regiDueDate?: Date;
 
   @Prop({
     default: {
@@ -50,7 +50,7 @@ export class Issue {
   pollDate: Date;
 
   @Prop()
-  pollDueDate: Date;
+  pollDueDate?: Date;
 
   @Prop({ required: true })
   title: string;

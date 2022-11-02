@@ -2,100 +2,51 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { scheduleJob } from 'node-schedule';
-import { Issue, IssueDocument } from '../schemas/issue.schema';
-import { AddIssueDto } from './dto/issue.addIssue.dto';
+import { Issue, IssueDocument } from 'src/schemas/issue.schema';
 import { SetIssueRegiDto } from './dto/issue.setIssueRegi.dto';
-import { SetIssuePollDto } from './dto/issue.setIssuePoll.dto';
-import { PageOptionsDto, PageMetaDto, PageDto } from 'src/common/pagination.dto';
-import { validateTribe } from 'src/common/validateTribe';
-import { Politician, PoliticianDocument } from '../schemas/politician.schema';
-import { User, UserDocument } from 'src/schemas/user.schema';
-
+import { PageOptionsDto } from 'src/utils/pagination.dto';
+import { validateTribe } from 'src/utils/validateTribe';
+import { AddIssueDto } from './dto/issue.addIssue.dto';
+import { DateTime } from 'luxon';
 @Injectable()
 export class IssueService {
   constructor(
     @InjectModel(Issue.name)
     private readonly issueModel: Model<IssueDocument>,
-    @InjectModel(Politician.name)
-    private readonly politicianModel: Model<PoliticianDocument>,
-    @InjectModel(User.name)
-    private readonly userModel: Model<UserDocument>,
   ) {}
 
-  async addIssue(body: AddIssueDto, regiUser: string): Promise<boolean> {
-    const week = 7 * 24 * 60 * 60 * 1000;
-    const regiDueDate = new Date(Date.now() + week);
-
+  async addIssue(body: AddIssueDto, regiUser: string): Promise<Issue> {
     const { targetPolitician, issueDate, content, title, link } = body;
+    const result = await new this.issueModel({ targetPolitician, issueDate, content, title, link, regiUser }).save();
 
-    const issueData = { targetPolitician, regiUser, issueDate, content, title, link, regiDueDate };
-    const instance = await new this.issueModel(issueData);
-    const save = await instance.save();
-
-    const setRegiStatusInactiveJob = scheduleJob(regiDueDate, () => {
-      this.setRegiStatus(save._id, 'expired');
-    });
-
-    if (!save) {
-      throw new Error('생성 오류');
-    } else {
-      return true;
-    }
+    return result;
   }
 
-  async getAllIssues() {
-    const allIssues = await this.issueModel.aggregate([
-      {
-        $project: {
-          _id: 1,
-          targetPolitician: 1,
-          issueDate: 1,
-          totalPolls: { $add: ['$poll.total.pro', '$poll.total.neu', '$poll.total.con'] },
-          score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
-        },
-      },
-      { $sort: { totalPolls: -1 } },
-      { $limit: 40 },
-      { $sort: { issueDate: 1 } },
-      {
-        $group: { _id: '$targetPolitician', issues: { $push: '$$ROOT' } },
-      },
-      {
-        $lookup: {
-          from: 'politicians',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'politicianInfo',
-          pipeline: [
-            {
-              $project: {
-                issues: 0,
-                _id: 0,
-                createdAt: 0,
-                updatedAt: 0,
-                __v: 0,
-              },
-            },
-          ],
-        },
-      },
-    ]);
-
-    return allIssues;
+  // regiStatus: 'active'
+  async getAllActiveIssuesCount(): Promise<number> {
+    return await this.issueModel.find({ regiStatus: 'active' }).count();
   }
 
-  async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
-    const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'active' }).count();
-    const pageMeta = new PageMetaDto({ pageOptions, itemCount });
+  // regiStatus: 'inactive'
+  async getAllInactiveIssuesCount(): Promise<number> {
+    const due = DateTime.now().minus({ weeks: 1 }).toBSON();
+    return await this.issueModel.find({ regiStatus: 'inactive', createdAt: { $gt: due } }).count();
+  }
+
+  // return type needed
+  async getIssuesRegistered(targetPolitician: string, pageOptions: PageOptionsDto) {
     const issues = await this.issueModel
       .find({ targetPolitician, regiStatus: 'active' })
       .sort({ issueDate: -1 })
       .skip(pageOptions.skip)
       .limit(pageOptions.perPage);
-    return { data: issues, meta: pageMeta };
+    return issues;
   }
 
+  // return type needed
   async getIssueNotRegisteredRanked(id: string): Promise<Issue[]> {
+    const due = DateTime.now().minus({ weeks: 1 }).toBSON();
+
     const issues = await this.issueModel.aggregate([
       {
         $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
@@ -103,6 +54,7 @@ export class IssueService {
       {
         $match: { regiStatus: 'inactive' },
       },
+      { $match: { createdAt: { $gt: due } } },
       { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
       { $sort: { score: -1 } },
       { $limit: 3 },
@@ -110,15 +62,26 @@ export class IssueService {
     return issues;
   }
 
-  async getIssueNotRegistered(targetPolitician: string, pageOptions: PageOptionsDto): Promise<PageDto<Issue>> {
-    const itemCount = await this.issueModel.find({ targetPolitician, regiStatus: 'inactive' }).count();
-    const pageMeta = new PageMetaDto({ pageOptions, itemCount });
-    const issues = await this.issueModel
-      .find({ targetPolitician, regiStatus: 'inactive' })
-      .sort({ createdAt: -1 })
-      .skip(pageOptions.skip)
-      .limit(pageOptions.perPage);
-    return { data: issues, meta: pageMeta };
+  // return type needed
+  async getIssueNotRegistered(id: string, pageOptions: PageOptionsDto, total: number) {
+    const due = DateTime.now().minus({ weeks: 1 }).toBSON();
+
+    const issues = await this.issueModel.aggregate([
+      {
+        $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },
+      },
+      {
+        $match: { regiStatus: 'inactive' },
+      },
+      { $match: { createdAt: { $gt: due } } },
+      { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
+      { $sort: { score: 1 } },
+      { $limit: total },
+      { $sort: { createdAt: 1 } },
+      { $skip: pageOptions.skip },
+      { $limit: pageOptions.perPage },
+    ]);
+    return issues;
   }
 
   // regi pro 개수 확인 함수

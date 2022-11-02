@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Politician, PoliticianDocument } from 'src/schemas/politician.schema';
+import { PoliticianDto } from './dto/politician.dto';
 
 @Injectable()
 export class PoliticianService {
@@ -30,6 +31,11 @@ export class PoliticianService {
           as: 'count',
           pipeline: [
             {
+              $match: {
+                regiStatus: 'active',
+              },
+            },
+            {
               $count: 'count',
             },
           ],
@@ -43,17 +49,17 @@ export class PoliticianService {
           as: 'issues',
           pipeline: [
             {
+              $match: {
+                regiStatus: 'active',
+              },
+            },
+            {
               $project: {
                 issueDate: 1,
                 totalPolls: { $add: ['$poll.total.pro', '$poll.total.neu', '$poll.total.con'] },
                 score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
               },
             },
-            // {
-            //   $facet: {
-            //     counts: [{ $count: 'counts' }],
-            //   },
-            // },
             { $sort: { totalPolls: -1 } },
             { $limit: 40 },
             { $sort: { issueDate: 1 } },
@@ -62,14 +68,24 @@ export class PoliticianService {
       },
     ]);
 
-    politicians.sort((a, b) => {
+    return politicians;
+  }
+
+  sortPoliticians(politicians: Array<PoliticianDto>): Array<PoliticianDto> {
+    return politicians.sort((a, b) => {
       return b.count[0].count - a.count[0].count;
     });
+  }
 
+  deleteProperty(politicians: Array<PoliticianDto>): Array<PoliticianDto> {
     for (const politician of politicians) {
       delete politician.count;
     }
-
     return politicians;
+  }
+
+  async addPolitician(politician: PoliticianDto): Promise<Politician> {
+    const result = await new this.politicianModel(politician).save();
+    return result;
   }
 }
