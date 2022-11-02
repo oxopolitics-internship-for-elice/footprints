@@ -11,7 +11,7 @@ const GlobalLoginModal = () => {
   const serverURL =
     import.meta.env.MODE === 'development'
       ? 'http://localhost:5000'
-      : window.location.origin.replace(':5173', ':8080');
+      : window.location.origin + ':8080';
 
   const setLoginModalState = useSetRecoilState(loginModalState);
   const isLoginModalOpen = useRecoilValue(loginModalState);
