@@ -57,7 +57,7 @@ const PoliticianListItem = ({
                 <HiChevronDoubleRight size="21" />
               </NavigateButton>
             </Row>
-            <AnimationOnScroll animateIn="animate__fadeIn" delay={200}>
+            <AnimationOnScroll animateIn="animate__fadeIn" delay={0}>
               <LifeGraph issues={politican.issues} />
               <GraphTitle>{politicanName}의 정치 인생</GraphTitle>
             </AnimationOnScroll>
