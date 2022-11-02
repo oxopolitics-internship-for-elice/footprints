@@ -19,60 +19,18 @@ export class IssueService {
     const { targetPolitician, issueDate, content, title, link } = body;
     const result = await new this.issueModel({ targetPolitician, issueDate, content, title, link, regiUser }).save();
 
-    // // test case 만들기 위한 임시
-    // const result = await new this.issueModel({ ...body, regiUser }).save();
-
-    // const setRegiStatusInactiveJob = scheduleJob(regiDueDate, () => {
-    //   this.setRegiStatus(save._id, 'expired');
-    // });
-
     return result;
   }
 
-  // async getAllIssues() {
-  //   const allIssues = await this.issueModel.aggregate([
-  //     {
-  //       $project: {
-  //         _id: 1,
-  //         targetPolitician: 1,
-  //         issueDate: 1,
-  //         totalPolls: { $add: ['$poll.total.pro', '$poll.total.neu', '$poll.total.con'] },
-  //         score: { $subtract: ['$poll.total.pro', '$poll.total.con'] },
-  //       },
-  //     },
-  //     { $sort: { totalPolls: -1 } },
-  //     { $limit: 40 },
-  //     { $sort: { issueDate: 1 } },
-  //     {
-  //       $group: { _id: '$targetPolitician', issues: { $push: '$$ROOT' } },
-  //     },
-  //     {
-  //       $lookup: {
-  //         from: 'politicians',
-  //         localField: '_id',
-  //         foreignField: '_id',
-  //         as: 'politicianInfo',
-  //         pipeline: [
-  //           {
-  //             $project: {
-  //               issues: 0,
-  //               _id: 0,
-  //               createdAt: 0,
-  //               updatedAt: 0,
-  //               __v: 0,
-  //             },
-  //           },
-  //         ],
-  //       },
-  //     },
-  //   ]);
+  // regiStatus: 'active'
+  async getAllActiveIssuesCount(): Promise<number> {
+    return await this.issueModel.find({ regiStatus: 'active' }).count();
+  }
 
-  //   return allIssues;
-  // }
-
-  // regiStatus type needed
-  async getAllIssuesCount(regiStatus): Promise<number> {
-    return await this.issueModel.find({ regiStatus }).count();
+  // regiStatus: 'inactive'
+  async getAllInactiveIssuesCount(): Promise<number> {
+    const due = DateTime.now().minus({ weeks: 1 }).toBSON();
+    return await this.issueModel.find({ regiStatus: 'inactive', createdAt: { $gt: due } }).count();
   }
 
   // return type needed
@@ -88,7 +46,7 @@ export class IssueService {
   // return type needed
   async getIssueNotRegisteredRanked(id: string): Promise<Issue[]> {
     const due = DateTime.now().minus({ weeks: 1 }).toBSON();
-    
+
     const issues = await this.issueModel.aggregate([
       {
         $match: { $expr: { $eq: ['$targetPolitician', { $toObjectId: id }] } },

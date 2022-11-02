@@ -31,6 +31,11 @@ export class PoliticianService {
           as: 'count',
           pipeline: [
             {
+              $match: {
+                regiStatus: 'active',
+              },
+            },
+            {
               $count: 'count',
             },
           ],
@@ -43,6 +48,11 @@ export class PoliticianService {
           foreignField: 'targetPolitician',
           as: 'issues',
           pipeline: [
+            {
+              $match: {
+                regiStatus: 'active',
+              },
+            },
             {
               $project: {
                 issueDate: 1,

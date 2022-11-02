@@ -33,17 +33,11 @@ export class IssueController {
     try {
       const { targetPolitician, regiStatus, ranked, pageOptions } = issueQuery;
 
-      // 메인페이지 모든 정치인, 인생 전체 그래프
-      // if (!targetPolitician) {
-      //   const issues = await this.issueService.getAllIssues();
-      //   return response.json(issues);
-      // }
-
       // 등록된 이슈
       if (regiStatus && !ranked) {
         const issues = await this.issueService.getIssuesRegistered(targetPolitician, pageOptions);
 
-        const itemCount = await this.issueService.getAllIssuesCount('active');
+        const itemCount = await this.issueService.getAllActiveIssuesCount();
         const pageMeta = new PageMetaDto({ pageOptions, itemCount });
         return response.json({ data: issues, meta: pageMeta });
       }
@@ -56,7 +50,7 @@ export class IssueController {
 
       // 미등록 이슈 나머지
       else if (!regiStatus && !ranked) {
-        const itemCount = await this.issueService.getAllIssuesCount('inactive');
+        const itemCount = await this.issueService.getAllInactiveIssuesCount();
 
         if (itemCount <= 3) {
           return response.json({ data: [] });
