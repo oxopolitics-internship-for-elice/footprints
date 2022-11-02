@@ -102,4 +102,5 @@ jobs:
             docker pull taewhale/footprints-client:dev 
             docker pull taewhale/footprints-server:dev  
             docker rm -f $(docker ps -qa) 
+            docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
