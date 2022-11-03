@@ -2,7 +2,7 @@ name: Github Actions for politician-footprints 👣
 on: 
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   Front-docker:
