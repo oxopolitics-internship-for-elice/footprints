@@ -62,52 +62,6 @@
 
 <br><br><br>
 
-## 3. 기술 스택
-
-### React
-
-- 현재 현업에서 가장 많이 쓰이므로 다양한 라이브러리나 참고자료가 많아서 선택하게 되었습니다.
-- react는 컴포넌트 기반의 화면구성이 가능하여 컴포넌트 별로 역할과 기능에 따라 관리하기가 용이하여 선택하게 되었습니다.
-<p align="center"><img src="https://user-images.githubusercontent.com/73901433/187951266-0c401322-cd81-4b98-8f1d-56a9b0484296.png" height="200"/><p>
-
-<br>
-
-### Recoil
-
-- react 전용 라이브러리인 만큼 react 내부 접근성이 용이하고 사용하는 방법도 Hooks 기반으로 간단하고 react스럽기 때문에 recoil을 선택했습니다.
-- 또한 react 동시성 모드, suspense 등을 지원하므로 사용자 경험 관점에서도 유리할 것이라 생각해 recoil을 선택했습니다.
-<p align="center"><img alt="" src="https://user-images.githubusercontent.com/73901433/187951273-01040c1d-4c9c-48e4-8fa1-1b82bc0be35c.png" height="100"/></p>
-
-<br>
-
-## TypeScript
-
-- 정적타입 언어로 코드에 대한 타입제어가 가능하여 개발자에게 가독성을 높여주어서 사용하였습니다.
-- 개발자가 예상하지 못한 버그를 예방해주는 효과가 있기 때문에 사용하였습니다.
-<p align="center"><img alt="typescript logo" src="https://user-images.githubusercontent.com/73901433/187951242-0b3cf935-ec5d-4fa8-9107-638ff36ad9af.png" height="150"/></p>
-
-<br>
-
-### MongoDB
-
-- node.js와의 궁합(JS 객체 자체를 넣고 쿼리 가능, json구조로 직관적으로 데이터를 이해하기 용이함 등)이 좋아 선택하게 되었습니다.
-<p align="center"><img alt="mongoDB logo" src="https://user-images.githubusercontent.com/73901433/187951279-be874459-be13-4635-8463-7b9026284593.png" height="100"/></p>
-
-<br>
-
-### Docker
-
-- 개발 환경의 통합과 배포의 신속성을 위해 도커를 선택했습니다.
-<p align="center"><img  alt="docker logo" src="https://user-images.githubusercontent.com/73901433/187951257-528cc372-c9e8-4df9-b472-d2c0caf6920d.png" height="100"/></p>
-
-<br>
-
-### Nest
-
-- typescript 기반으로 코드 안정성이 뛰어나고, 고정된 소프트웨어 아키텍쳐가 있기에 빠른 협업 프로젝트에 적합한 라이브러리라 선택
-<p align="center"><img alt="nest logo" src="https://user-images.githubusercontent.com/73901433/187951250-b4c3bd74-a64c-4eff-b610-617f4edd97d0.png" height="100"/></p>
-
-<br><br><br>
 
 ## 4. 프로젝트 구성도
 
