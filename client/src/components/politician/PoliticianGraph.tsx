@@ -371,6 +371,7 @@ const PoliticianGraph = (): JSX.Element => {
           }}
           overflow="visible"
           cursor="pointer"
+          viewBox="0 0 16 16"
         ></HiQuestionMarkCircle>
         {isHovering && (
           <Manual>
@@ -653,6 +654,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 const GraphContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 30px 0 70px 0;
   position: relative;
 `;
@@ -661,6 +663,7 @@ const ChartContainer = styled.div`
   height: 65vh;
   width: 60vw;
   min-width: 600px;
+  max-height: 600px;
   margin: 0 10px;
 `;
 const ManualContainer = styled.div`
@@ -695,5 +698,6 @@ interface GraphButtonProps {
 const GraphButton = styled.button<GraphButtonProps>`
   opacity: 0.9;
   transition-duration: 0.4s;
-  cursor: ${props => (props.pageable ? 'pointer' : 'none')};
+  height: 30px;
+  cursor: ${props => (props.pageable ? 'pointer' : 'not-allowed')};
 `;

@@ -30,10 +30,18 @@ interface lifeGraphProps {
 
 const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   const graphData = issues.map((issue: any) => issue.score);
-
   const issueDates = issues.map(issue => dateFormatter(issue.issueDate, '.'));
+  const max = Math.max(...graphData);
+  const min = Math.min(...graphData);
+  const maxDate = issueDates[graphData.indexOf(max)];
+  const minDate = issueDates[graphData.indexOf(min)];
+
+  console.log(maxDate, minDate);
 
   const options: ChartOptions<'line'> = {
+    animation: {
+      duration: 0,
+    },
     maintainAspectRatio: false,
     plugins: {
       legend: {
@@ -44,13 +52,9 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
       },
       datalabels: {
         formatter: function (value: any, context: any) {
-          const max = Math.max(...context.dataset.data);
-          const min = Math.min(...context.dataset.data);
-          if (value === max || value === min) {
-            return value;
-          } else {
-            return '';
-          }
+          if (value === max) return maxDate + '\n' + value;
+          if (value === min) return value + '\n' + minDate;
+          return '';
         },
         anchor: 'end',
         clamp: true,
@@ -68,6 +72,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
           }
         },
         offset: 0,
+        textAlign: 'center',
       },
     },
     scales: {
@@ -78,18 +83,17 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
         },
       },
       y: {
-        display: true,
+        display: 'auto',
         grid: {
           lineWidth: 2,
           borderDash: [5, 5],
           color: function (context: { tick: { value: number } }) {
-            if (context.tick.value === 0) {
-              return '#d6d6d6';
-            } else {
-              return 'transparent';
-            }
+            if (context.tick.value === 0) return '#d6d6d6';
+            return 'transparent';
           },
         },
+        min: min - 30,
+        max: max + 30,
       },
     },
     elements: {
@@ -116,13 +120,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
 
   return (
     <GraphContainer>
-      <Line
-        width={'1300px'}
-        height={'400px'}
-        data={data}
-        options={options}
-        plugins={[ChartDataLabels]}
-      />
+      <Line data={data} options={options} plugins={[ChartDataLabels]} />
     </GraphContainer>
   );
 };
@@ -130,7 +128,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
 export default LifeGraph;
 
 const GraphContainer = styled.div`
-  width: 80vw;
-  height: 400px;
-  padding-top: 40px;
+  width: 700px;
+  height: 50vh;
+  margin: 20px 0;
 `;
