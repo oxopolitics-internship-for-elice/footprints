@@ -11,7 +11,7 @@ const PoliticianInfo = (): JSX.Element => {
   const { name, img, party } = useRecoilValue(PoliticianDetailState).find(
     (politician: any) => politician[politicianID!],
   )[politicianID];
-  const imgSrc = `${window.location.origin}/src/${img.slice(2)}`;
+  const imgSrc = `/src${img.slice(2)}`;
   return (
     <InfoContainer>
       <Image src={imgSrc} alt={name} />

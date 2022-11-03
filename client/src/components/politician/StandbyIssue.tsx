@@ -18,7 +18,7 @@ const StandbyIssue = (): JSX.Element => {
   const [issueList, setIssueList] = useState<IssueTypes[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
-  const [maxPage, setMaxPage] = useState(null);
+  const [maxPage, setMaxPage] = useState<number>(0);
 
   const id = useLocation().pathname.split('/')[2];
   const loadMore = () => {

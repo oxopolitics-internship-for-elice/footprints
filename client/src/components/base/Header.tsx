@@ -127,7 +127,6 @@ const NavItem = styled.div`
   outline: none;
   cursor: pointer;
   margin-left: 40px;
-
   &:hover {
     color: ${({ theme }) => theme.colors.mainColor};
   }

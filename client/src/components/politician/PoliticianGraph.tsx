@@ -10,6 +10,7 @@ import {
   Legend,
   Filler,
   InteractionItem,
+  ChartOptions,
 } from 'chart.js';
 import ColoredCircle from '@/assets/selection/ColoredCircle.svg';
 import ColoredTriangle from '@/assets/selection/ColoredTriangle.svg';
@@ -108,7 +109,7 @@ const PoliticianGraph = (): JSX.Element => {
 
     isNextPageable(res.data.meta.hasNextPage);
   };
-  const Img = [tiger, hippo, elephant, dinosaur, lion, oxo];
+  const Img = [oxo, tiger, hippo, elephant, dinosaur, lion];
   const chartPoint = Img.map(img => {
     const chartPoint = new Image();
     chartPoint.src = img;
@@ -128,6 +129,15 @@ const PoliticianGraph = (): JSX.Element => {
         labels: resData.issueDate,
         datasets: [
           {
+            label: '합계',
+
+            data: resData.score.map((score: any) => {
+              return score.total.score;
+            }),
+            pointStyle: chartPoint[0],
+            tension: 0.3,
+          },
+          {
             label: '호랑이',
 
             data: resData.score.map((score: any) => {
@@ -136,7 +146,7 @@ const PoliticianGraph = (): JSX.Element => {
             tension: 0.3,
             borderColor: '#E48F05',
             backgroundColor: 'transparent',
-            pointStyle: chartPoint[0],
+            pointStyle: chartPoint[1],
           },
           {
             label: '하마',
@@ -146,7 +156,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#8D39A8',
-            pointStyle: chartPoint[1],
+            pointStyle: chartPoint[2],
           },
           {
             label: '코끼리',
@@ -156,7 +166,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#2d8bb2',
-            pointStyle: chartPoint[2],
+            pointStyle: chartPoint[3],
           },
           {
             label: '공룡',
@@ -165,7 +175,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#91A401',
-            pointStyle: chartPoint[3],
+            pointStyle: chartPoint[4],
           },
 
           {
@@ -176,17 +186,7 @@ const PoliticianGraph = (): JSX.Element => {
             }),
             tension: 0.3,
             borderColor: '#C2403D',
-            pointStyle: chartPoint[4],
-          },
-
-          {
-            label: '합계',
-
-            data: resData.score.map((score: any) => {
-              return score.total.score;
-            }),
             pointStyle: chartPoint[5],
-            tension: 0.3,
           },
         ],
       });
@@ -218,7 +218,7 @@ const PoliticianGraph = (): JSX.Element => {
   }, [isFirst]);
 
   let count = 1;
-  const options = {
+  const options: ChartOptions<'line'> = {
     animation: {
       duration: 0,
     },
@@ -226,8 +226,7 @@ const PoliticianGraph = (): JSX.Element => {
     plugins: {
       tooltip: {
         enabled: false,
-        maintainAspectRatio: true,
-        position: 'customPositioner' as 'customPositioner',
+        position: 'customPositioner' as 'average',
         external: function (context: any) {
           darwTooltip(context, resData);
         },
@@ -291,6 +290,8 @@ const PoliticianGraph = (): JSX.Element => {
             return 'end';
           } else if (dataset.data[dataIndex] < 0) {
             return 'start';
+          } else {
+            return 'end';
           }
         },
         offset: 0,
@@ -370,6 +371,7 @@ const PoliticianGraph = (): JSX.Element => {
           }}
           overflow="visible"
           cursor="pointer"
+          viewBox="0 0 16 16"
         ></HiQuestionMarkCircle>
         {isHovering && (
           <Manual>
@@ -479,7 +481,7 @@ const PoliticianGraph = (): JSX.Element => {
 export default PoliticianGraph;
 
 function darwTooltip(context: any, resData: ResDataTypes) {
-  const ImgTribe = [tiger, hippo, elephant, dinosaur, lion, oxo];
+  const ImgTribe = [oxo, tiger, hippo, elephant, dinosaur, lion];
   const ImgPoll = [ColoredCircle, ColoredTriangle, ColoredX];
   const dataIndex = context.chart.tooltip.dataPoints[0];
   let tooltipEl = document.getElementById('chartjs-tooltip');
@@ -652,6 +654,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 const GraphContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   margin: 30px 0 70px 0;
   position: relative;
 `;
@@ -660,6 +663,7 @@ const ChartContainer = styled.div`
   height: 65vh;
   width: 60vw;
   min-width: 600px;
+  max-height: 600px;
   margin: 0 10px;
 `;
 const ManualContainer = styled.div`
@@ -694,5 +698,6 @@ interface GraphButtonProps {
 const GraphButton = styled.button<GraphButtonProps>`
   opacity: 0.9;
   transition-duration: 0.4s;
-  cursor: ${props => (props.pageable ? 'pointer' : 'none')};
+  height: 30px;
+  cursor: ${props => (props.pageable ? 'pointer' : 'not-allowed')};
 `;
