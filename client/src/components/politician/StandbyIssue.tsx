@@ -16,7 +16,6 @@ export interface IssueProps {
 
 const StandbyIssue = (): JSX.Element => {
   const [issueList, setIssueList] = useState<IssueTypes[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [pageNum, setPageNum] = useState(1);
   const [maxPage, setMaxPage] = useState<number>(0);
 
@@ -34,14 +33,12 @@ const StandbyIssue = (): JSX.Element => {
   //데이터 fetch
   const getIssue = async () => {
     try {
-      setIsLoading(true);
       const res = await StandbyIssueAPI.getList(id, pageNum);
       setIssueList([...issueList, ...res.data.data]);
       setMaxPage(res.data.meta.pageCount);
     } catch (error) {
       errorHandler(error);
     } finally {
-      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -50,21 +47,13 @@ const StandbyIssue = (): JSX.Element => {
 
   return (
     <StandbyIssueContainer>
-      {!isLoading ? (
-        <div>
-          {issueList.map(issue => {
-            return (
-              <Issue
-                issue={issue}
-                setIssueList={setIssueList}
-                key={issue._id}
-              />
-            );
-          })}
-        </div>
-      ) : (
-        <Loading />
-      )}
+      <div>
+        {issueList.map(issue => {
+          return (
+            <Issue issue={issue} setIssueList={setIssueList} key={issue._id} />
+          );
+        })}
+      </div>
       {pageNum <= maxPage && (
         <PaginationButton onClick={loadMore}>더 보기</PaginationButton>
       )}
