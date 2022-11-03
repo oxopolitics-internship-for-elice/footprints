@@ -70,7 +70,7 @@
 ### 2. [API 문서](https://documenter.getpostman.com/view/20906923/VUqrMwaw)
     
 ### 3. 아키텍쳐
-<p align="center"><img height="400" alt="project architecture" src="https://user-images.githubusercontent.com/73901433/188267543-4b0dc63c-1c30-486d-94df-63682b576a3c.png"></p>
+<p align="center"><img height="400" alt="project architecture" src="https://user-images.githubusercontent.com/102276240/199756858-646fe620-461a-4cb7-8949-efa814787abe.png"></p>
 
 
 ### 4. 백엔드 데이터처리 구조
