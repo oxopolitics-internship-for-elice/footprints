@@ -83,7 +83,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
         },
       },
       y: {
-        display: true,
+        display: 'auto',
         grid: {
           lineWidth: 2,
           borderDash: [5, 5],
@@ -92,8 +92,8 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
             return 'transparent';
           },
         },
-        min: min - 50,
-        max: max + 50,
+        min: min - 30,
+        max: max + 30,
       },
     },
     elements: {
