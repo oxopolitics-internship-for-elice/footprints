@@ -99,8 +99,8 @@ jobs:
           host: ${{ secrets.HOST }} 
           username: ${{ secrets.USER }}
           script: |
-            docker pull taewhale/footprints-client:dev 
-            docker pull taewhale/footprints-server:dev  
+            docker pull taewhale/footprints-client:main 
+            docker pull taewhale/footprints-server:main  
             docker rm -f $(docker ps -qa) 
             docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
