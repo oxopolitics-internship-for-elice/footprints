@@ -11,7 +11,7 @@ const GlobalLoginModal = () => {
   const serverURL =
     import.meta.env.MODE === 'development'
       ? 'http://localhost:5000'
-      : `http://politician-footprints.site:8080`;
+      : 'http://politician-footprints.site:8080';
 
   const setLoginModalState = useSetRecoilState(loginModalState);
   const isLoginModalOpen = useRecoilValue(loginModalState);
