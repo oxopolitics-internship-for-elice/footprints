@@ -71,6 +71,8 @@
     
 ### 3. 아키텍쳐
 <p align="center"><img height="400" alt="project architecture" src="https://user-images.githubusercontent.com/73901433/188267543-4b0dc63c-1c30-486d-94df-63682b576a3c.png](https://user-images.githubusercontent.com/102276240/199755990-39bafbce-f0e3-4e70-a392-ca345d67ee16.png"></p>
+![정치발자국 아키텍쳐](https://user-images.githubusercontent.com/102276240/199756384-726a9c60-67df-444e-bcd7-34beccc217d1.png)
+
 
 
 ### 4. 백엔드 데이터처리 구조
