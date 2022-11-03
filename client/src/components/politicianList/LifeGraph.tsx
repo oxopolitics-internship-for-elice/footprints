@@ -128,7 +128,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
 export default LifeGraph;
 
 const GraphContainer = styled.div`
-  width: 60vw;
+  width: 700px;
   height: 50vh;
   margin: 20px 0;
 `;
