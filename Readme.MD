@@ -63,7 +63,7 @@
 <br><br><br>
 
 
-## 4. 프로젝트 구성도
+## 3. 프로젝트 구성도
 
 ### 1. [와이어프레임](https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FhxRdK7tAlhO9maj57ZVcTf%2F%25EC%2599%2580%25EC%259D%25B4%25EC%2596%25B4%25ED%2594%2584%25EB%25A0%2588%25EC%259E%2584%3Fnode-id%3D33%253A9)
     
@@ -78,13 +78,13 @@
 
 <br><br><br>
     
-## 5. 팀원 소개 및 역할 
+## 4. 팀원 소개 및 역할 
 
 | 이름 | 역할 | 담당 부분 |
 | --- | --- | --- |
 | 배장한 | BE | 1. Issue API 설계 및 작성 <br> 2. 이슈 목록 pagination 로직 구현 <br> 3. 이슈 등록 상태 변경하는 cronjob 적용 <br> 4. 이슈 투표 수 집계 후 정렬 구현  |
 | 장소영 | BE | 1. Issue API 설계 및 작성 <br> 2. 이슈 부족별 투표 로직 구현 <br> 3. 이슈 등록 투표 로직 구현 <br> 4. 정치인 목록 로직 구현 |
 | 권필주 | BE | 1. 카카오 소셜로그인 및 토큰 인증 로직 구현 <br> 2. 로그인한 유저의 이슈에 대한 투표 결과 반영 로직 구현 <br> 3. 유저의 투표 중복 방지 로직 구현 <br> 4. aws 배포|
-| 황채림 | FE | 1. chartjs를 통한 메인페이지 정치인 그래프 작성 <br> 2. 정치인 페이지 이슈 구현 <br> 3. intersection observer를 이용한 무한스크롤 적용 <br> 4. css 및 디자인 |
+| 황채림 | FE | 1. chartjs를 통한 메인페이지 정치인 그래프 작성 <br> 2. 정치인 페이지 이슈 구현 <br> 3. css 및 디자인 |
 | 홍주완 | FE | 1.chartjs를 통한 정치인 상세페이지 구현 <br> 2.chartjs tooltip 직접 구현 <br> 3.chartjs로 페이지네이션 적용 <br> 4.모달 팝업 구현 |
 | 김하영 | FE | 1. vite와 prettier, tsconfig 등 프론트엔드 개발환경 셋팅 <br> 2. 메인페이지 및 헤더 등 레이아웃 구현 <br> 3. 로그인 구현 <br> 4. 이슈 등록 구현 |
