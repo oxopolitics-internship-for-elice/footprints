@@ -76,7 +76,7 @@ export class IssueService {
       { $match: { createdAt: { $gt: due } } },
       { $addFields: { score: { $subtract: ['$regi.pro', '$regi.con'] } } },
       { $sort: { score: 1 } },
-      { $limit: total },
+      { $limit: total - 3 },
       { $sort: { createdAt: 1 } },
       { $skip: pageOptions.skip },
       { $limit: pageOptions.perPage },
