@@ -104,3 +104,5 @@ jobs:
             docker rm -f $(docker ps -qa) 
             docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
+    needs: [Front-docker, Back-docker]
+          

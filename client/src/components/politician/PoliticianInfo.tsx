@@ -3,18 +3,25 @@ import { useRecoilValue } from 'recoil';
 import PoliticianDetailState from '@/store/PoliticianDetailState';
 import { useParams } from 'react-router-dom';
 import theme from '@/styles/theme';
+import Leejaemyung from '@/assets/Leejaemyung.webp';
+import Yoonseokyeol from '@/assets/Yoonseokyeol.webp';
 interface Params {
   politicianID: string;
 }
+type ImgSrc = { [politicanNames: string]: string };
+
 const PoliticianInfo = (): JSX.Element => {
   const { politicianID } = useParams<keyof Params>() as Params;
   const { name, img, party } = useRecoilValue(PoliticianDetailState).find(
     (politician: any) => politician[politicianID!],
   )[politicianID];
-  const imgSrc = `${window.location.origin}/src/${img.slice(2)}`;
+  const imgSrc: ImgSrc = {
+    Leejaemyung: Leejaemyung,
+    Yoonseokyeol: Yoonseokyeol,
+  };
   return (
     <InfoContainer>
-      <Image src={imgSrc} alt={name} />
+      <Image src={imgSrc[img.split('/')[2].split('.')[0]]} alt={name} />
       <Name>
         {name}
         <Party>{party}</Party>

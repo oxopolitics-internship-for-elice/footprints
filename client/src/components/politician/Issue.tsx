@@ -93,7 +93,7 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
       <Content>{content}</Content>
       {link && (
         <Link href={link} target="_blank">
-          {link}
+          <LinkContent>{link}</LinkContent>
         </Link>
       )}
       <RegiContainer>
@@ -191,4 +191,8 @@ const Link = styled.a`
   text-decoration: underline;
   font-size: 14px;
   padding-bottom: 10px;
+`;
+const LinkContent = styled.div`
+  width: 100%;
+  overflow-wrap: break-word;
 `;
