@@ -33,6 +33,10 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
   const issueDates = issues.map(issue => dateFormatter(issue.issueDate, '.'));
   const max = Math.max(...graphData);
   const min = Math.min(...graphData);
+  const maxDate = issueDates[graphData.indexOf(max)];
+  const minDate = issueDates[graphData.indexOf(min)];
+
+  console.log(maxDate, minDate);
 
   const options: ChartOptions<'line'> = {
     animation: {
@@ -48,11 +52,9 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
       },
       datalabels: {
         formatter: function (value: any, context: any) {
-          if (value === max || value === min) {
-            return value;
-          } else {
-            return '';
-          }
+          if (value === max) return maxDate + '\n' + value;
+          if (value === min) return value + '\n' + minDate;
+          return '';
         },
         anchor: 'end',
         clamp: true,
@@ -70,6 +72,7 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
           }
         },
         offset: 0,
+        textAlign: 'center',
       },
     },
     scales: {
@@ -85,15 +88,12 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
           lineWidth: 2,
           borderDash: [5, 5],
           color: function (context: { tick: { value: number } }) {
-            if (context.tick.value === 0) {
-              return '#d6d6d6';
-            } else {
-              return 'transparent';
-            }
+            if (context.tick.value === 0) return '#d6d6d6';
+            return 'transparent';
           },
         },
-        min: min - 20,
-        max: max + 20,
+        min: min - 50,
+        max: max + 50,
       },
     },
     elements: {
