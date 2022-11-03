@@ -7,7 +7,6 @@ export const serverUrl = (() => {
     const { protocol, hostname } = window.location;
     return `${protocol}//${hostname}:${localServerPort}/`;
   }
-  // return window.location.origin +':8080/';
   return `http://politician-footprints.site:8080/`;
 })();
 async function get(endpoint: any) {
