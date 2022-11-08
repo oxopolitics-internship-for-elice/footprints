@@ -16,7 +16,7 @@ jobs:
        uses: docker/metadata-action@v4
        with: 
         images: |
-          name=taewhale/footprints-client
+          name=${{ secrets.DOCKERHUB_REPO }}/${{ secrets.DOCKERHUB_IMG_CLIENT }}
         tag: |
           {{version}}
           {{major}}.{{minor}}
@@ -52,7 +52,7 @@ jobs:
        uses: docker/metadata-action@v4
        with: 
         images: |
-          name=taewhale/footprints-server
+          name=${{ secrets.DOCKERHUB_REPO }}/${{ secrets.DOCKERHUB_IMG_SERVER }}
         tag: |
           {{version}}
           {{major}}.{{minor}}
@@ -99,8 +99,8 @@ jobs:
           host: ${{ secrets.HOST }} 
           username: ${{ secrets.USER }}
           script: |
-            docker pull taewhale/footprints-client:main 
-            docker pull taewhale/footprints-server:main  
+            docker pull ${{ secrets.DOCKERHUB_REPO }}/${{ secrets.DOCKERHUB_IMG_CLIENT }}:main 
+            docker pull ${{ secrets.DOCKERHUB_REPO }}/${{ secrets.DOCKERHUB_IMG_SERVER }}:main  
             docker rm -f $(docker ps -qa) 
             docker rmi $(docker images -f "dangling=true" -q)
             docker-compose up -d
