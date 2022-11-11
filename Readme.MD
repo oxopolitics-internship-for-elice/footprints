@@ -41,7 +41,7 @@
 ## 2. 서비스 기능
 
 ### ⚛ 로그인
-<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201256986-0d53cca1-bac4-4b2c-825c-871fb654a620.mp4" height="400"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257830-83e405d5-bf57-4686-a444-0010128f9581.gif" height="400"/></p>
 
 - 사용자의 편의성을 고려하여 소셜 로그인으로 회원가입과 동시에 로그인이 됩니다.
 - 쿠키로 access-token을 보관해 브라우저를 닫은 뒤에도 로그인이 되어있도록 했습니다.
@@ -50,14 +50,14 @@
 <br>
 
 ### ⚛ 메인 페이지
-<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257042-9c99dbc2-5639-4fd9-82d6-0041bef1ffc9.mp4" height="400"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257903-d69ac81c-9dbf-4e6a-8d82-c2c33a76aac2.gif" height="400"/></p>
 
 - 정치인의 전체 이슈를 가져와 인생 전체에 대한 그래프를 볼 수 있습니다.
 
 <br>
 
 ### ⚛ 정치인 그래프
-<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257203-3bd0d113-7f6e-422f-b311-fac6914f7569.mp4" height="400"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257961-063ba4fb-63be-4616-bace-a4b8bbc9ba8e.gif" height="400"/></p>
 
 - 페이지네이션으로 등록된 이슈를 가져와 날짜를 x축에 여론 투표 결과를 Y축에 나타내 선 그래프로 나타내었습니다.
 - 부족 별 그래프를 체크박스로 선택할 수 있어 나타내 같은 이슈, 정치인이더라도 부족 간 반응의 차이를 확인 할 수 있습니다.
@@ -67,7 +67,7 @@
 <br>
 
 ### ⚛ 대기 중 이슈
-<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257211-2ec4c9fa-b220-4d65-8bfe-fb6f56357d5b.mp4" height="400"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257903-d69ac81c-9dbf-4e6a-8d82-c2c33a76aac2.gif" height="400"/></p>
 
 - 모달을 통해 날짜와 이슈 내용을 입력하고 대기 중 이슈로 등록 가능합니다.
 - 무한스크롤으로 대기 중 이슈를 가져오도록 구현했습니다.
