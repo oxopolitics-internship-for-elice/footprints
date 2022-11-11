@@ -1,6 +1,9 @@
-# ![정치 발자국](https://raw.githubusercontent.com/oxopolitics-internship-for-elice/footprints/main/client/src/assets/MainLogo.gif)
+# [![정치 발자국](https://raw.githubusercontent.com/oxopolitics-internship-for-elice/footprints/main/client/src/assets/MainLogo.gif)](http://politician-footprints.site/)
 
 > A community that graphs politician evaluations and issues
+
+## 배포 사이트
+[정치 발자국](http://politician-footprints.site/)
 
 ## 기술 스택
 
@@ -38,7 +41,7 @@
 ## 2. 서비스 기능
 
 ### ⚛ 로그인
-<p align="center"><img src="https://user-images.githubusercontent.com/70076564/188615305-42480ede-b397-4fe6-86b4-990ed7f8bb12.gif" height="400"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201256986-0d53cca1-bac4-4b2c-825c-871fb654a620.mp4" height="400"/></p>
 
 - 사용자의 편의성을 고려하여 소셜 로그인으로 회원가입과 동시에 로그인이 됩니다.
 - 쿠키로 access-token을 보관해 브라우저를 닫은 뒤에도 로그인이 되어있도록 했습니다.
@@ -47,28 +50,28 @@
 <br>
 
 ### ⚛ 메인 페이지
-<p align="center"><img src="https://user-images.githubusercontent.com/70076564/188617253-a918007d-a2e3-4f2b-be14-ccc1f19bcb04.gif" height="400"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257042-9c99dbc2-5639-4fd9-82d6-0041bef1ffc9.mp4" height="400"/></p>
 
 - 정치인의 전체 이슈를 가져와 인생 전체에 대한 그래프를 볼 수 있습니다.
 
 <br>
 
-### ⚛ 대기 중 이슈
-<p align="center"><img src="https://user-images.githubusercontent.com/70076564/188618160-903d2bc3-61b2-4232-b63e-937e1c1175eb.gif" height="400"/></p>
-
-- 모달을 통해 날짜와 이슈 내용을 입력하고 대기 중 이슈로 등록 가능합니다.
-- 무한스크롤으로 대기 중 이슈를 가져오도록 구현했습니다.
-- 마감이 임박한 top3 이슈가 상위에 고정되어 보여집니다.
-
-<br>
-
 ### ⚛ 정치인 그래프
-<p align="center"><img src="https://user-images.githubusercontent.com/70076564/188618182-a7059880-fbab-45a0-84e3-1e9d7b83a7c9.gif" height="400"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257203-3bd0d113-7f6e-422f-b311-fac6914f7569.mp4" height="400"/></p>
 
 - 페이지네이션으로 등록된 이슈를 가져와 날짜를 x축에 여론 투표 결과를 Y축에 나타내 선 그래프로 나타내었습니다.
 - 부족 별 그래프를 체크박스로 선택할 수 있어 나타내 같은 이슈, 정치인이더라도 부족 간 반응의 차이를 확인 할 수 있습니다.
 - 포인트에 마우스를 올리면 O△X 값과 이슈 제목을 나타내는 툴팁을 보여줍니다.
 - 포인트 클릭 시 해당 이슈에 투표를 할 수 있는 모달을 띄워 이슈에 대한 평가를 수집합니다.
+
+<br>
+
+### ⚛ 대기 중 이슈
+<p align="center"><img src="https://user-images.githubusercontent.com/93570122/201257211-2ec4c9fa-b220-4d65-8bfe-fb6f56357d5b.mp4" height="400"/></p>
+
+- 모달을 통해 날짜와 이슈 내용을 입력하고 대기 중 이슈로 등록 가능합니다.
+- 무한스크롤으로 대기 중 이슈를 가져오도록 구현했습니다.
+- 마감이 임박한 top3 이슈가 상위에 고정되어 보여집니다.
 
 <br><br><br>
 
@@ -85,6 +88,57 @@
 
 ### 4. 백엔드 데이터처리 구조
  <p align="center"><img width="3000" alt="backend data process" src="https://user-images.githubusercontent.com/73901433/188047964-8f069faa-7c2a-4e71-8f1d-27fc12ed72d3.png"></p>
+ 
+### 5. 폴더구조
+
+#### client
+```
+📦src
+ ┣ 📂api
+ ┣ 📂assets
+ ┣ 📂components
+ ┃ ┣ 📂base
+ ┃ ┣ 📂home
+ ┃ ┣ 📂layout
+ ┃ ┣ 📂politician
+ ┃ ┣ 📂politicianList
+ ┃ ┗ 📂
+ ┣ 📂config
+ ┣ 📂hooks
+ ┣ 📂pages
+ ┣ 📂router
+ ┣ 📂store
+ ┣ 📂styles
+ ┣ 📂types
+ ┃ ┣ 📂chart.js
+ ┃ ┣ 📂react-full-page
+ ┃ ┣ 📂react-slick
+ ┣ 📂utils
+ ┣ 📜App.tsx
+ ┣ 📜main.tsx
+ ┗ 📜vite-env.d.ts
+```
+
+#### server
+```
+📦src
+ ┣ 📂auth
+ ┃ ┣ 📂dto
+ ┃ ┣ 📂guard
+ ┃ ┣ 📂strategy
+ ┣ 📂common
+ ┣ 📂issue
+ ┃ ┣ 📂dto
+ ┣ 📂politician
+ ┣ 📂schemas
+ ┣ 📂user
+ ┃ ┣ 📂dto
+ ┣ 📜app.controller.spec.ts
+ ┣ 📜app.controller.ts
+ ┣ 📜app.module.ts
+ ┣ 📜app.service.ts
+ ┗ 📜main.ts
+```
 
 <br><br><br>
     
