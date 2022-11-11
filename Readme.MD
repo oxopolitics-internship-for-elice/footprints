@@ -1,4 +1,14 @@
-# 정치발자국 서비스를 소개합니다!:footprints:
+# ![정치 발자국](https://raw.githubusercontent.com/oxopolitics-internship-for-elice/footprints/main/client/src/assets/MainLogo.gif)
+
+> A community that graphs politician evaluations and issues
+
+## 기술 스택
+
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white" /><img src="https://img.shields.io/badge/Typescript-3178C6?style=flat-square&logo=Typescript&logoColor=white" /><img src="https://img.shields.io/badge/styled-components-DB7093?style=flat-square&logo=styled-components&logoColor=white" /><img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=Vite&logoColor=white" />
+<br />
+<img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=Node.js&logoColor=white" /><img src="https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=NestJS&logoColor=white" /><img src="https://img.shields.io/badge/MongoDB-47A248?style=flat-square&logo=MongoDB&logoColor=white" />
+<br />
+<img src="https://img.shields.io/badge/Amazon_EC2-FF9900?style=flat-square&logo=Amazon_EC2&logoColor=white" /><img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white" /><img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=NGINX&logoColor=white" />
 
 ## 1. 기획 의도
 
