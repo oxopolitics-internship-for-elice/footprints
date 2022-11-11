@@ -27,7 +27,7 @@ import tiger from '@/assets/tribe/tiger.png';
 import oxo from '@/assets/tribe/oxo.png';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import { ResTypes, ResDataTypes, pollDeep } from '@/types/GraphTypes';
+import { ResTypes, ResDataTypes, pollDeep, Poll } from '@/types/GraphTypes';
 import { useParams } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import MinMax from '@/utils/MinMax';
@@ -38,6 +38,7 @@ import {
   HiQuestionMarkCircle,
 } from 'react-icons/hi';
 import { keyframes } from '@emotion/react';
+import SortKey from "@/utils/SortKey"
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -93,7 +94,7 @@ const PoliticianGraph = (): JSX.Element => {
           const link = [res.link];
 
           return { issueDate, poll, content, score, id, title, link };
-        } else {
+        } 
           const issueDate = [tempData, ...current.issueDate];
           const poll = [tempPoll, ...current.poll];
           const content = [res.content, ...current.content];
@@ -103,7 +104,7 @@ const PoliticianGraph = (): JSX.Element => {
           const link = [res.link, ...current.link];
 
           return { issueDate, poll, content, score, id, title, link };
-        }
+  
       });
     });
 
@@ -130,7 +131,6 @@ const PoliticianGraph = (): JSX.Element => {
         datasets: [
           {
             label: '합계',
-
             data: resData.score.map((score: any) => {
               return score.total.score;
             }),
@@ -371,7 +371,6 @@ const PoliticianGraph = (): JSX.Element => {
           }}
           overflow="visible"
           cursor="pointer"
-          viewBox="0 0 16 16"
         ></HiQuestionMarkCircle>
         {isHovering && (
           <Manual>
@@ -514,9 +513,12 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   // Set Text
   if (tooltipModel.body) {
     const bodyLines = tooltipModel.body.map(getBody);
-    const result = bodyLines[0].map((body: any) => {
-      return Object.values(body);
+    const result = bodyLines[0].map((body: Poll) => {
+      
+      let tempArray=SortKey(body)
+      return Object.values(tempArray);
     });
+
     const tableHead = document.createElement('div');
 
     function drow(div: Element, body: pollDeep, index: number) {
@@ -526,12 +528,12 @@ function darwTooltip(context: any, resData: ResDataTypes) {
         const total = true;
         result[tooltipModel.dataPoints[0].dataIndex].forEach(
           (body: any, index: number) => {
+            console.log(body)
             if (index === 0) {
             } else {
               const imageTh = CreateImg(body, total, index);
               for (let i = 1; i < 4; i++) {
-                const elements =
-                  imageTh.children as HTMLCollectionOf<HTMLElement>;
+                const elements = imageTh.children as HTMLCollectionOf<HTMLElement>;
                 elements[i].style.display = 'inline-block';
                 elements[i].style.width = '60px';
               }
@@ -654,7 +656,6 @@ function darwTooltip(context: any, resData: ResDataTypes) {
 const GraphContainer = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
   margin: 30px 0 70px 0;
   position: relative;
 `;
@@ -663,7 +664,6 @@ const ChartContainer = styled.div`
   height: 65vh;
   width: 60vw;
   min-width: 600px;
-  max-height: 600px;
   margin: 0 10px;
 `;
 const ManualContainer = styled.div`
@@ -698,6 +698,5 @@ interface GraphButtonProps {
 const GraphButton = styled.button<GraphButtonProps>`
   opacity: 0.9;
   transition-duration: 0.4s;
-  height: 30px;
-  cursor: ${props => (props.pageable ? 'pointer' : 'not-allowed')};
+  cursor: ${props => (props.pageable ? 'pointer' : 'none')};
 `;
