@@ -15,6 +15,6 @@ export class AddIssueDto {
   @IsString()
   readonly title: string;
 
-  @IsFQDN()
+  @IsString()
   readonly link: string;
 }
