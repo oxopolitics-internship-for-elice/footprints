@@ -102,7 +102,7 @@
  ┃ ┣ 📂layout
  ┃ ┣ 📂politician
  ┃ ┣ 📂politicianList
- ┃ ┗ 📂
+ ┃ ┗ 📂system
  ┣ 📂pages
  ┣ 📂router
  ┣ 📂store
