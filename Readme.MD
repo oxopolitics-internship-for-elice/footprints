@@ -103,8 +103,6 @@
  ┃ ┣ 📂politician
  ┃ ┣ 📂politicianList
  ┃ ┗ 📂
- ┣ 📂config
- ┣ 📂hooks
  ┣ 📂pages
  ┣ 📂router
  ┣ 📂store
