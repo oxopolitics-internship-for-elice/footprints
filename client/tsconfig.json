@@ -27,7 +27,9 @@
     },
     "typeRoots": ["./src/types", "./node_modules/@types"], // 보통 types 폴더를 만들어 타입 정의
     "declaration": true, // lib 만들 때 .d.ts 파일을 자동으로
-    "declarationDir": "./src/types" // 이 폴더에 만들어주는 옵션
+    "declarationDir": "./src/types", // 이 폴더에 만들어주는 옵션
+    "noImplicitAny": true, // any 타입을 사용하지 않겠다.
+    "strictNullChecks": true // null, undefined를 참조하지 않겠다.
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }],
