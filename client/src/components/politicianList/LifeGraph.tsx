@@ -10,9 +10,10 @@ import {
   Legend,
   ChartOptions,
 } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import ChartDataLabels, { Context } from 'chartjs-plugin-datalabels';
 import styled from '@emotion/styled';
 import dateFormatter from '@/utils/DateFormatter';
+import { PoliticianIssue } from '@/types/PoliticiansTypes';
 
 ChartJS.register(
   CategoryScale,
@@ -25,18 +26,34 @@ ChartJS.register(
 );
 
 interface lifeGraphProps {
-  issues: any[];
+  issues: PoliticianIssue[];
 }
 
 const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
-  const graphData = issues.map((issue: any) => issue.score);
-  const issueDates = issues.map(issue => dateFormatter(issue.issueDate, '.'));
+  const graphData = issues.map(issue => issue.score);
+  const issueDates = issues.map(issue => dateFormatter(issue.issueDate));
   const max = Math.max(...graphData);
   const min = Math.min(...graphData);
   const maxDate = issueDates[graphData.indexOf(max)];
   const minDate = issueDates[graphData.indexOf(min)];
-
-  console.log(maxDate, minDate);
+  const formatter = (value: number) => {
+    if (value === max) {
+      return maxDate + '\n' + value;
+    } else if (value === min) {
+      return value + '\n' + minDate;
+    } else {
+      return '';
+    }
+  };
+  const dataLabelAlignHandler = ({ dataset, dataIndex }: Context) => {
+    if (dataset.data[dataIndex] === max) {
+      return 'end';
+    } else if (dataset.data[dataIndex] === min) {
+      return 'start';
+    } else {
+      return 'center';
+    }
+  };
 
   const options: ChartOptions<'line'> = {
     animation: {
@@ -51,26 +68,10 @@ const LifeGraph = ({ issues }: lifeGraphProps): JSX.Element => {
         enabled: false,
       },
       datalabels: {
-        formatter: function (value: any, context: any) {
-          if (value === max) return maxDate + '\n' + value;
-          if (value === min) return value + '\n' + minDate;
-          return '';
-        },
+        formatter,
         anchor: 'end',
         clamp: true,
-        align: function ({
-          dataIndex,
-          dataset,
-        }: {
-          dataIndex: any;
-          dataset: any;
-        }) {
-          if (dataset.data[dataIndex] > 0) {
-            return 'end';
-          } else {
-            return 'start';
-          }
-        },
+        align: dataLabelAlignHandler,
         offset: 0,
         textAlign: 'center',
       },

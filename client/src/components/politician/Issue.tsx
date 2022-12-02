@@ -56,14 +56,6 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
     }
   };
 
-  // const mouseDownHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   event.preventDefault();
-  //   const targetElem = event.target as HTMLButtonElement;
-  // };
-
-  // const mouseUpHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   event.preventDefault();
-  // };
   return (
     <IssueContainer>
       <SubContainer>
