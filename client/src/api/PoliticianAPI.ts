@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import * as Api from './AxiosService';
+import AxiosService from './AxiosService';
 
 export type postIssueBody = {
   targetPolitician: string;
@@ -20,10 +20,10 @@ const PoliticianAPI: IPoliticianAPI = (() => {
     getList: () => {
       // somethingCommon();
 
-      return Api.get(`politicians`);
+      return AxiosService.get(`politicians`);
     },
     postIssue: (body: postIssueBody) => {
-      return Api.post(`issues`, body);
+      return AxiosService.post(`issues`, body);
     },
   };
 })();

@@ -1,18 +1,14 @@
 import { AxiosResponse } from 'axios';
-import * as Api from './AxiosService';
+import AxiosService from './AxiosService';
 
 interface IStandbyIssueAPI {
   getList(target: string, pageNum: number): Promise<AxiosResponse<any>>; // response type 선언 후 수정
 }
 
 const StandbyIssueAPI: IStandbyIssueAPI = (() => {
-  // const somethingCommon = () => { /* ... */ };
-
   return {
     getList: (target, pageNum) => {
-      // somethingCommon();
-
-      return Api.get(
+      return AxiosService.get(
         `issues?targetPolitician=${target}&perPage=10&pageNum=${pageNum}`,
       );
     },
