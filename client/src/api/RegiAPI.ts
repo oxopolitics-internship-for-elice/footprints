@@ -5,12 +5,10 @@ interface IRegiAPI {
   patch(target: string, result: object): Promise<AxiosResponse<any>>;
 }
 
-const RegiAPI: IRegiAPI = (() => {
-  return {
-    patch: (target, result) => {
-      return AxiosService.patch(`issues/${target}/regi`, result);
-    },
-  };
-})();
+class RegiAPI implements IRegiAPI {
+  patch(target: string, result: object) {
+    return AxiosService.patch(`issues/${target}/regi`, result);
+  }
+}
 
-export default RegiAPI;
+export default new RegiAPI();

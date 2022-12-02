@@ -10,20 +10,20 @@ interface GraphAPI {
   getPollInfo(target: string): Promise<AxiosResponse<any>>;
 }
 
-const GraphAPI: GraphAPI = (() => {
-  return {
-    getGraph: (targetPolitician, index) => {
-      return AxiosService.get(
-        `issues?targetPolitician=${targetPolitician}&regiStatus=true&perPage=10&pageNum=${index}`,
-      );
-    },
-    updatePoll: (target, newPoll) => {
-      return AxiosService.patch(`issues/${target}/poll`, newPoll);
-    },
-    getPollInfo: target => {
-      return AxiosService.get(`issues/${target}/poll`);
-    },
-  };
-})();
+class GraphAPI implements GraphAPI {
+  getGraph(targetPolitician: string, index: Number) {
+    return AxiosService.get(
+      `issues?targetPolitician=${targetPolitician}&regiStatus=true&perPage=10&pageNum=${index}`,
+    );
+  }
 
-export default GraphAPI;
+  updatePoll(target: string, newPoll: Object) {
+    return AxiosService.patch(`issues/${target}/poll`, newPoll);
+  }
+
+  getPollInfo(target: string) {
+    return AxiosService.get(`issues/${target}/poll`);
+  }
+}
+
+export default new GraphAPI();

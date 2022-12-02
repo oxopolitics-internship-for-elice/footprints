@@ -13,19 +13,13 @@ interface IPoliticianAPI {
   postIssue(body: postIssueBody): Promise<AxiosResponse<any>>;
 }
 
-const PoliticianAPI: IPoliticianAPI = (() => {
-  // const somethingCommon = () => { /* ... */ };
+class PoliticianAPI implements IPoliticianAPI {
+  getList(): Promise<AxiosResponse<any>> {
+    return AxiosService.get(`politicians`);
+  }
+  postIssue(body: postIssueBody): Promise<AxiosResponse<any>> {
+    return AxiosService.post(`issues`, body);
+  }
+}
 
-  return {
-    getList: () => {
-      // somethingCommon();
-
-      return AxiosService.get(`politicians`);
-    },
-    postIssue: (body: postIssueBody) => {
-      return AxiosService.post(`issues`, body);
-    },
-  };
-})();
-
-export default PoliticianAPI;
+export default new PoliticianAPI();

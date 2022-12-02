@@ -5,14 +5,12 @@ interface IStandbyIssueAPI {
   getList(target: string, pageNum: number): Promise<AxiosResponse<any>>; // response type 선언 후 수정
 }
 
-const StandbyIssueAPI: IStandbyIssueAPI = (() => {
-  return {
-    getList: (target, pageNum) => {
-      return AxiosService.get(
-        `issues?targetPolitician=${target}&perPage=10&pageNum=${pageNum}`,
-      );
-    },
-  };
-})();
+class StandbyIssueAPI implements IStandbyIssueAPI {
+  getList(target: string, pageNum: number) {
+    return AxiosService.get(
+      `issues?targetPolitician=${target}&perPage=10&pageNum=${pageNum}`,
+    );
+  }
+}
 
-export default StandbyIssueAPI;
+export default new StandbyIssueAPI();

@@ -1,35 +1,32 @@
-import { Axios } from 'axios';
+import Axios from 'axios';
 import { getCookie } from '@/utils/Cookie';
 import errorHandler from './ErrorHandler';
 
-class AxiosService extends Axios {
-  constructor() {
-    super();
-    this.interceptors.request.use(
-      config => {
-        const serverUrl = (() => {
-          if (import.meta.env.MODE === 'development') {
-            const localServerPort = 5000;
-            const { protocol, hostname } = window.location;
-            return `${protocol}//${hostname}:${localServerPort}/`;
-          }
-          return `http://politician-footprints.site:8080/`;
-        })();
-        config.headers = {
-          Authorization: `Bearer ${getCookie('access_token')}`,
-          ContentType: 'application/json',
-        };
-        config.baseURL = serverUrl;
-        config.timeout = 10000;
-        config.withCredentials = true;
-        return config;
-      },
-      error => {
-        errorHandler(error);
-        return Promise.reject(error);
-      },
-    );
+const serverURL = (() => {
+  if (import.meta.env.MODE === 'development') {
+    const localServerPort = 5000;
+    const { protocol, hostname } = window.location;
+    return `${protocol}//${hostname}:${localServerPort}/`;
   }
-}
+  return `http://politician-footprints.site:8080/`;
+})();
 
-export default new AxiosService();
+const AxiosService = Axios.create();
+
+AxiosService.interceptors.request.use(
+  config => {
+    config.headers = {
+      Authorization: `Bearer ${getCookie('access_token')}`,
+      ContentType: 'application/json',
+    };
+    config.baseURL = serverURL;
+    config.timeout = 10000;
+    return config;
+  },
+  error => {
+    errorHandler(error);
+    return Promise.reject(error);
+  },
+);
+
+export default AxiosService;
