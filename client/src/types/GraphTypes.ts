@@ -50,3 +50,34 @@ export interface ResDataTypes {
   title: string;
   link?: string;
 }
+
+type Regi = {
+  pro: number;
+  con: number;
+};
+
+export interface GetGraphData {
+  _id: string;
+  targetPolitician: string;
+  regiUser: string;
+  regiStatus: string;
+  regi: Regi;
+  regiDueDate: string;
+  poll: Poll;
+  issueDate: string;
+  title: string;
+  content: string;
+  isPollActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface GetGraphMeta {
+  pageNum: number;
+  perPage: number;
+  itemCount: number;
+  pageCount: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
+}
