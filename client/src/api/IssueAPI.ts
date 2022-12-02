@@ -1,23 +1,60 @@
+import { IssueMeta, IssueType } from '@/types/IssueTypes';
 import { AxiosResponse } from 'axios';
 import AxiosService from './AxiosService';
 
+export interface GetStandByIssueListResponse {
+  data: IssueType[];
+  meta: IssueMeta;
+}
+export type GetTopIssueListReponse = IssueType[];
+
+interface PatchRegiBody {
+  con: boolean;
+  pro: boolean;
+}
+
+interface IssueRegiResponse {
+  message: string;
+  hasVoted: string;
+}
+
 interface IIssueAPI {
-  getStanbyList(target: string, pageNum: number): Promise<AxiosResponse<any>>;
-  getTopList(target: string): Promise<AxiosResponse<any>>;
-  patchRegi(target: string, result: object): Promise<AxiosResponse<any>>;
+  getStanbyList(
+    targetPolitician: string,
+    pageNum: number,
+  ): Promise<AxiosResponse<GetStandByIssueListResponse>>;
+  getTopList(
+    targetPolitician: string,
+  ): Promise<AxiosResponse<GetTopIssueListReponse>>;
+  patchRegi(
+    target: string,
+    result: PatchRegiBody,
+  ): Promise<AxiosResponse<IssueRegiResponse>>;
 }
 
 class IssueAPI implements IIssueAPI {
-  getStanbyList(target: string, pageNum: number) {
-    return AxiosService.get(
-      `issues?targetPolitician=${target}&perPage=10&pageNum=${pageNum}`,
+  getStanbyList(targetPolitician: string, pageNum: number) {
+    return AxiosService.get<GetStandByIssueListResponse>(`issues`, {
+      params: {
+        targetPolitician,
+        perPage: 10,
+        pageNum,
+      },
+    });
+  }
+  getTopList(targetPolitician: string) {
+    return AxiosService.get<GetTopIssueListReponse>(`issues`, {
+      params: {
+        targetPolitician,
+        ranked: true,
+      },
+    });
+  }
+  patchRegi(target: string, result: PatchRegiBody) {
+    return AxiosService.patch<IssueRegiResponse>(
+      `issues/${target}/regi`,
+      result,
     );
-  }
-  getTopList(target: string) {
-    return AxiosService.get(`issues?targetPolitician=${target}&ranked=true`);
-  }
-  patchRegi(target: string, result: object) {
-    return AxiosService.patch(`issues/${target}/regi`, result);
   }
 }
 

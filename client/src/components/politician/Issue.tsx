@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { IssueProps } from '@components/politician/StandbyIssue';
 import dateFormatter from '@/utils/DateFormatter';
-import RegiAPI from '@/api/RegiAPI';
+import IssueAPI from '@/api/IssueAPI';
 import theme from '@/styles/theme';
 import { Alert, errorAlert } from '../base/Alert';
 
@@ -12,7 +12,7 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
     if (targetElem.innerText === '반대') {
-      const { data } = await RegiAPI.patch(_id, {
+      const { data } = await IssueAPI.patchRegi(_id, {
         pro: false,
         con: true,
       });
@@ -33,7 +33,7 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         );
       }
     } else {
-      const { data } = await RegiAPI.patch(_id, {
+      const { data } = await IssueAPI.patchRegi(_id, {
         pro: true,
         con: false,
       });

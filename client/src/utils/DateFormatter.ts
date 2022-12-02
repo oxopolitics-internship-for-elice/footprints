@@ -1,4 +1,4 @@
-const dateFormatter = (date: Date, option: string) => {
+const dateFormatter = (date: string, option: string) => {
   const dateDate = new Date(date);
   const year = dateDate.getFullYear();
   const month = dateDate.getMonth() + 1;

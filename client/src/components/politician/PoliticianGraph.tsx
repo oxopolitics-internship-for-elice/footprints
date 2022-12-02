@@ -27,7 +27,7 @@ import tiger from '@/assets/tribe/tiger.png';
 import oxo from '@/assets/tribe/oxo.png';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import { ResTypes, ResDataTypes, pollDeep, Poll } from '@/types/GraphTypes';
+import { GraphDataType, pollDeep, Poll } from '@/types/GraphTypes';
 import { useParams } from 'react-router-dom';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import MinMax from '@/utils/MinMax';
@@ -38,7 +38,8 @@ import {
   HiQuestionMarkCircle,
 } from 'react-icons/hi';
 import { keyframes } from '@emotion/react';
-import SortKey from "@/utils/SortKey"
+import SortKey from '@/utils/SortKey';
+import { IssueType } from '@/types/IssueTypes';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -78,33 +79,29 @@ const PoliticianGraph = (): JSX.Element => {
 
   const getData = async (index: number | Number) => {
     const res = await GraphAPI.getGraph(politicianID, index);
-    res.data.data.map(async (res: ResTypes, index: number) => {
+    res.data.data.map(async (res: IssueType, index: number) => {
       setResData((current: any) => {
-        let tempData = DateFormatter(res.issueDate, '.');
         let tempPoll = PollFormatter(res);
         let tempScore = ScoreFormatter(res);
 
         if (index === 0) {
-          const issueDate = [tempData];
+          const issueDate = [res.issueDate];
           const poll = [tempPoll];
           const content = [res.content];
           const score = [tempScore];
           const id = [res._id];
           const title = [res.title];
-          const link = [res.link];
 
-          return { issueDate, poll, content, score, id, title, link };
-        } 
-          const issueDate = [tempData, ...current.issueDate];
-          const poll = [tempPoll, ...current.poll];
-          const content = [res.content, ...current.content];
-          const score = [tempScore, ...current.score];
-          const id = [res._id, ...current.id];
-          const title = [res.title, ...current.title];
-          const link = [res.link, ...current.link];
+          return { issueDate, poll, content, score, id, title };
+        }
+        const issueDate = [res.issueDate, ...current.issueDate];
+        const poll = [tempPoll, ...current.poll];
+        const content = [res.content, ...current.content];
+        const score = [tempScore, ...current.score];
+        const id = [res._id, ...current.id];
+        const title = [res.title, ...current.title];
 
-          return { issueDate, poll, content, score, id, title, link };
-  
+        return { issueDate, poll, content, score, id, title };
       });
     });
 
@@ -479,7 +476,7 @@ const PoliticianGraph = (): JSX.Element => {
 
 export default PoliticianGraph;
 
-function darwTooltip(context: any, resData: ResDataTypes) {
+function darwTooltip(context: any, resData: GraphDataType) {
   const ImgTribe = [oxo, tiger, hippo, elephant, dinosaur, lion];
   const ImgPoll = [ColoredCircle, ColoredTriangle, ColoredX];
   const dataIndex = context.chart.tooltip.dataPoints[0];
@@ -514,8 +511,7 @@ function darwTooltip(context: any, resData: ResDataTypes) {
   if (tooltipModel.body) {
     const bodyLines = tooltipModel.body.map(getBody);
     const result = bodyLines[0].map((body: Poll) => {
-      
-      let tempArray=SortKey(body)
+      let tempArray = SortKey(body);
       return Object.values(tempArray);
     });
 
@@ -528,12 +524,12 @@ function darwTooltip(context: any, resData: ResDataTypes) {
         const total = true;
         result[tooltipModel.dataPoints[0].dataIndex].forEach(
           (body: any, index: number) => {
-            console.log(body)
             if (index === 0) {
             } else {
               const imageTh = CreateImg(body, total, index);
               for (let i = 1; i < 4; i++) {
-                const elements = imageTh.children as HTMLCollectionOf<HTMLElement>;
+                const elements =
+                  imageTh.children as HTMLCollectionOf<HTMLElement>;
                 elements[i].style.display = 'inline-block';
                 elements[i].style.width = '60px';
               }

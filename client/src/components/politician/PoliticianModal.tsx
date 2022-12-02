@@ -5,7 +5,7 @@ import BasicCircle from '@/assets/selection/BasicCircle.svg';
 import BasicTriangle from '@/assets/selection/BasicTriangle.svg';
 import BasicX from '@/assets/selection/BasicX.svg';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { ResDataTypes } from '@/types/GraphTypes';
+import { GraphDataType } from '@/types/GraphTypes';
 import errorHandler from '@/api/ErrorHandler';
 import theme from '@/styles/theme';
 import { getCookie } from '@/utils/Cookie';
@@ -24,7 +24,7 @@ interface ModalProps {
   element: Element;
   content: [];
   issueDate: [];
-  resData: ResDataTypes;
+  resData: GraphDataType;
 }
 const Modal = ({
   setOpen,

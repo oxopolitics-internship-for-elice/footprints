@@ -1,6 +1,6 @@
-import { ResTypes, ResDataTypes } from '@/types/GraphTypes';
+import { GraphDataType } from '@/types/GraphTypes';
 
-const MinMax = (res: ResDataTypes) => {
+const MinMax = (res: GraphDataType) => {
   const tempMinMax = res.score.map((score: any) => {
     return [
       score.dinosaur.score,

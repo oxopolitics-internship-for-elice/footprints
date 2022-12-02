@@ -1,9 +1,9 @@
-import { GetGraphData, GetGraphMeta } from '@/types/GraphTypes';
+import { IssueMeta, IssueType } from '@/types/IssueTypes';
 import { AxiosResponse } from 'axios';
 import AxiosService from './AxiosService';
 export interface GetGraphResponse {
-  data: GetGraphData[];
-  meta: GetGraphMeta;
+  data: IssueType[];
+  meta: IssueMeta;
 }
 
 export interface UpdatePollBody {
@@ -37,9 +37,14 @@ interface GraphAPI {
 
 class GraphAPI implements GraphAPI {
   getGraph(targetPolitician: string, index: Number) {
-    return AxiosService.get<GetGraphResponse>(
-      `issues?targetPolitician=${targetPolitician}&regiStatus=true&perPage=10&pageNum=${index}`,
-    );
+    return AxiosService.get<GetGraphResponse>(`issues`, {
+      params: {
+        targetPolitician,
+        regiStatus: true,
+        perPage: 10,
+        pageNum: index,
+      },
+    });
   }
 
   updatePoll(target: string, newPoll: UpdatePollBody) {
