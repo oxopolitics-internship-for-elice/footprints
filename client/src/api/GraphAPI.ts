@@ -17,12 +17,14 @@ type pollType = 'pro' | 'neu' | 'con';
 export interface UpdatePollResponse {
   message: string;
   now: pollType;
+  before?: pollType;
 }
 
 export interface getPollInfoResponse {
   message: string;
-  now: pollType | null;
+  pollResult: pollType | null;
 }
+
 interface GraphAPI {
   getGraph(
     targetPolitician: string,

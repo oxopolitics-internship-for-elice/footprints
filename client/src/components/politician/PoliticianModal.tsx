@@ -6,7 +6,6 @@ import BasicTriangle from '@/assets/selection/BasicTriangle.svg';
 import BasicX from '@/assets/selection/BasicX.svg';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { GraphDataType } from '@/types/GraphTypes';
-import errorHandler from '@/api/ErrorHandler';
 import theme from '@/styles/theme';
 import { getCookie } from '@/utils/Cookie';
 
@@ -33,7 +32,11 @@ const Modal = ({
   issueDate,
   resData,
 }: ModalProps) => {
-  const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
+  const [poll, setPoll] = useState<{
+    pro: boolean;
+    neu: boolean;
+    con: boolean;
+  }>({ pro: false, neu: false, con: false });
   const accessToken = getCookie('access_token');
 
   const ref = useRef<null | HTMLDivElement>(null);
@@ -46,47 +49,24 @@ const Modal = ({
     };
   }, [ref]);
 
-  function handleClickOutside(event: any) {
-    if (ref.current && !ref.current.contains(event.target)) {
+  function handleClickOutside(event: MouseEvent) {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
       setOpen(false);
       document.body.style.overflow = 'unset';
     }
   }
   async function ClickHandler(index: number) {
-    let target = resData.id[element.$context.dataIndex];
-    let newPoll = {};
-    switch (index) {
-      case 0:
-        newPoll = { pro: true, neu: false, con: false };
-        break;
-      case 1:
-        newPoll = { pro: false, neu: true, con: false };
-        break;
-      case 2:
-        newPoll = { pro: false, neu: false, con: true };
-        break;
+    const target = resData.id[element.$context.dataIndex];
+    const newPoll = { pro: false, neu: false, con: false };
+    if (index === 0) {
+      newPoll.pro = true;
+    } else if (index === 1) {
+      newPoll.neu = true;
+    } else {
+      newPoll.con = true;
     }
-    try {
-      const { data } = await GraphAPI.updatePoll(target, newPoll);
-      if (data.before) {
-        setPoll((prev: any) => {
-          return {
-            ...prev,
-            [data.before]: false,
-          };
-        });
-      }
-      if (data.now) {
-        setPoll((prev: any) => {
-          return {
-            ...prev,
-            [data.now]: true,
-          };
-        });
-      }
-    } catch (error: any) {
-      errorHandler(error);
-    }
+    await GraphAPI.updatePoll(target, newPoll);
+    setPoll(newPoll);
   }
 
   const pollHandler = (index: number) => {
@@ -108,7 +88,7 @@ const Modal = ({
       const { data } = await GraphAPI.getPollInfo(target);
       const pollResult = data.pollResult;
       if (pollResult) {
-        setPoll((prev: any) => {
+        setPoll(prev => {
           return { ...prev, [pollResult]: true };
         });
       }
@@ -156,7 +136,7 @@ const Modal = ({
                   onClick={() => {
                     ClickHandler(index);
                   }}
-                  clicked={pollHandler(index)}
+                  clicked={pollHandler(index) || false}
                   btnType={src}
                 >
                   <img src={src} width="30px" />
