@@ -5,6 +5,7 @@ import RegiAPI from '@/api/RegiAPI';
 import theme from '@/styles/theme';
 import errorHandler from '@/api/ErrorHandler';
 import { Alert, errorAlert } from '../base/Alert';
+import { AxiosError } from 'axios';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
   const { _id, issueDate, title, content, regi, link } = issue;
@@ -12,56 +13,47 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
-    try {
-      if (targetElem.innerText === '반대') {
-        const { data } = await RegiAPI.patch(_id, {
-          pro: false,
-          con: true,
-        });
-        if (data.hasVoted) {
-          errorAlert('이미 투표하셨습니다.');
-        } else {
-          Alert.fire({
-            icon: 'success',
-            title: '투표되었습니다.',
-          });
-          setIssueList(prev =>
-            prev.map(item => {
-              if (item._id === _id) {
-                item.regi.con++;
-              }
-              return item;
-            }),
-          );
-        }
+    if (targetElem.innerText === '반대') {
+      const { data } = await RegiAPI.patch(_id, {
+        pro: false,
+        con: true,
+      });
+      if (data.hasVoted) {
+        errorAlert('이미 투표하셨습니다.');
       } else {
-        const { data } = await RegiAPI.patch(_id, {
-          pro: true,
-          con: false,
+        Alert.fire({
+          icon: 'success',
+          title: '투표되었습니다.',
         });
-        if (data.hasVoted) {
-          errorAlert('이미 투표하셨습니다.');
-        } else {
-          Alert.fire({
-            icon: 'success',
-            title: '투표되었습니다.',
-          });
-          setIssueList(prev =>
-            prev.map(item => {
-              if (item._id === _id) {
-                item.regi.pro++;
-              }
-              return item;
-            }),
-          );
-        }
+        setIssueList(prev =>
+          prev.map(item => {
+            if (item._id === _id) {
+              item.regi.con++;
+            }
+            return item;
+          }),
+        );
       }
-    } catch (e: any) {
-      console.log(e.response.status);
-      if (e.response.status == 401) {
-        errorHandler(' 로그인이 필요합니다.');
+    } else {
+      const { data } = await RegiAPI.patch(_id, {
+        pro: true,
+        con: false,
+      });
+      if (data.hasVoted) {
+        errorAlert('이미 투표하셨습니다.');
       } else {
-        errorHandler(e);
+        Alert.fire({
+          icon: 'success',
+          title: '투표되었습니다.',
+        });
+        setIssueList(prev =>
+          prev.map(item => {
+            if (item._id === _id) {
+              item.regi.pro++;
+            }
+            return item;
+          }),
+        );
       }
     }
   };
