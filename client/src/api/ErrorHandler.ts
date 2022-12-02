@@ -31,7 +31,7 @@ const errorHandler = (error: unknown) => {
         title: '알 수 없는 오류가 발생했습니다.',
       });
     }
-    return error.message;
+    return error;
   } else {
     let message;
     if (error instanceof Error) message = error.message;
@@ -41,7 +41,7 @@ const errorHandler = (error: unknown) => {
       icon: 'error',
       title: `에러:${message}`,
     });
-    return message;
+    return error;
   }
 };
 

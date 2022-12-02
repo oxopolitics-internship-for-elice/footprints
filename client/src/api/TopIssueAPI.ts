@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import * as Api from './Api';
+import * as Api from './AxiosService';
 
 interface ITopIssueAPI {
   getList(target: string): Promise<AxiosResponse<any>>; // response type 선언 후 수정
