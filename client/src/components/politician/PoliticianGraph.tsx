@@ -11,6 +11,11 @@ import {
   Filler,
   InteractionItem,
   ChartOptions,
+  ChartEvent,
+  ActiveElement,
+  ScatterDataPoint,
+  Chart,
+  ChartData,
 } from 'chart.js';
 import ColoredCircle from '@/assets/selection/ColoredCircle.svg';
 import ColoredTriangle from '@/assets/selection/ColoredTriangle.svg';
@@ -27,10 +32,8 @@ import tiger from '@/assets/tribe/tiger.png';
 import oxo from '@/assets/tribe/oxo.png';
 import GraphAPI from '@/api/GraphAPI';
 import Modal from './PoliticianModal';
-import { GraphDataType, pollDeep, Poll } from '@/types/GraphTypes';
 import { useParams } from 'react-router-dom';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import MinMax from '@/utils/MinMax';
+import ChartDataLabels, { Context } from 'chartjs-plugin-datalabels';
 import theme from '@/styles/theme';
 import {
   HiArrowCircleLeft,
@@ -39,7 +42,10 @@ import {
 } from 'react-icons/hi';
 import { keyframes } from '@emotion/react';
 import SortKey from '@/utils/SortKey';
-import { IssueType } from '@/types/IssueTypes';
+import { Poll, pollDeep } from '@/types/IssueTypes';
+import { GraphIssueDataType } from '@/types/GraphTypes';
+import dateFormatter from '@/utils/DateFormatter';
+import MinMax from '@/utils/MinMax';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -50,145 +56,94 @@ ChartJS.register(
   Legend,
   Filler,
 );
-interface Params {
-  politicianID: string;
-}
 
-const PoliticianGraph = (): JSX.Element => {
-  const chartRef = useRef<any>(null);
+export type GraphDataType = ChartData<'line', number[], string> | null;
+
+const PoliticianGraph = () => {
+  const chartRef = useRef<Chart<'line'> | null>(null);
   const [open, setOpen] = useState(false);
-  const [point, setPoint] = useState<any>();
-  const [issueDate, setIssueDate] = useState<any>([]);
-  const [content, setContent] = useState<any>([]);
-  const [data, setData] = useState<any>();
-  const [isFirst, setIsFirst] = useState(true);
+  const [issueIndex, setIssueIndex] = useState<number | null>(null);
   const [index, setIndex] = useState<number>(1);
-  const [NextPageable, isNextPageable] = useState<boolean>(true);
-  const [resData, setResData] = useState<any>([]);
-  const [minmax, setMinmax] = useState<any>([]);
-  const [isHovering, setIsHovering] = useState(false);
-  const { politicianID } = useParams<keyof Params>() as Params;
-
-  function ClickHandler(element: InteractionItem[]) {
-    if (element.length !== 0) {
-      setOpen(!open);
-      document.body.style.overflow = 'hidden';
-      return element[0].element;
-    }
-  }
-
-  const getData = async (index: number | Number) => {
-    const res = await GraphAPI.getGraph(politicianID, index);
-    res.data.data.map(async (res: IssueType, index: number) => {
-      setResData((current: any) => {
-        let tempPoll = PollFormatter(res);
-        let tempScore = ScoreFormatter(res);
-
-        if (index === 0) {
-          const issueDate = [res.issueDate];
-          const poll = [tempPoll];
-          const content = [res.content];
-          const score = [tempScore];
-          const id = [res._id];
-          const title = [res.title];
-
-          return { issueDate, poll, content, score, id, title };
-        }
-        const issueDate = [res.issueDate, ...current.issueDate];
-        const poll = [tempPoll, ...current.poll];
-        const content = [res.content, ...current.content];
-        const score = [tempScore, ...current.score];
-        const id = [res._id, ...current.id];
-        const title = [res.title, ...current.title];
-
-        return { issueDate, poll, content, score, id, title };
-      });
-    });
-
-    isNextPageable(res.data.meta.hasNextPage);
-  };
-  const Img = [oxo, tiger, hippo, elephant, dinosaur, lion];
-  const chartPoint = Img.map(img => {
-    const chartPoint = new Image();
-    chartPoint.src = img;
-    chartPoint.width = 30;
-    chartPoint.height = 30;
-    return chartPoint;
+  const [graphData, setGraphData] = useState<GraphDataType>(null);
+  const [graphIssueData, setGraphIssueData] =
+    useState<GraphIssueDataType | null>(null);
+  const [minMax, setMinMax] = useState<{ min: number; max: number }>({
+    min: 0,
+    max: 0,
   });
+  const { politicianID } = useParams();
 
-  const start = async () => {
-    if (isFirst === true) {
-      await getData(index);
-      setIsFirst(false);
-    } else {
-      const temp = MinMax(resData);
-      setMinmax(temp);
-      setData({
-        labels: resData.issueDate,
-        datasets: [
-          {
-            label: '합계',
-            data: resData.score.map((score: any) => {
-              return score.total.score;
-            }),
-            pointStyle: chartPoint[0],
-            tension: 0.3,
-          },
-          {
-            label: '호랑이',
+  const getData = async (index: number) => {
+    if (!politicianID) return;
+    const { data } = await GraphAPI.getGraph(politicianID, index);
+    setGraphIssueData({
+      issueDate: data.data.map(issue => DateFormatter(issue.issueDate)),
+      poll: data.data.map(issue => PollFormatter(issue)),
+      content: data.data.map(issue => issue.content),
+      id: data.data.map(issue => issue._id),
+      title: data.data.map(issue => issue.title),
+    });
+    const Img = [oxo, tiger, hippo, elephant, dinosaur, lion];
+    const chartPoint = Img.map(img => {
+      const chartPoint = new Image();
+      chartPoint.src = img;
+      chartPoint.width = 30;
+      chartPoint.height = 30;
+      return chartPoint;
+    });
+    const score = data.data.map(issue => ScoreFormatter(issue));
+    const chartData = {
+      labels: data.data.map(issue => dateFormatter(issue.issueDate)),
+      datasets: [
+        {
+          label: '합계',
+          data: score.map(score => score.total.score),
+          pointStyle: chartPoint[0],
+          tension: 0.3,
+        },
+        {
+          label: '호랑이',
+          data: score.map(score => score.tiger.score),
+          tension: 0.3,
+          borderColor: '#E48F05',
+          backgroundColor: 'transparent',
+          pointStyle: chartPoint[1],
+        },
+        {
+          label: '하마',
+          data: score.map(score => score.hippo.score),
+          tension: 0.3,
+          borderColor: '#8D39A8',
+          pointStyle: chartPoint[2],
+        },
+        {
+          label: '코끼리',
+          data: score.map(score => score.elephant.score),
+          tension: 0.3,
+          borderColor: '#2d8bb2',
+          pointStyle: chartPoint[3],
+        },
+        {
+          label: '공룡',
+          data: score.map(score => score.dinosaur.score),
+          tension: 0.3,
+          borderColor: '#91A401',
+          pointStyle: chartPoint[4],
+        },
 
-            data: resData.score.map((score: any) => {
-              return score.tiger.score;
-            }),
-            tension: 0.3,
-            borderColor: '#E48F05',
-            backgroundColor: 'transparent',
-            pointStyle: chartPoint[1],
-          },
-          {
-            label: '하마',
-
-            data: resData.score.map((score: any) => {
-              return score.hippo.score;
-            }),
-            tension: 0.3,
-            borderColor: '#8D39A8',
-            pointStyle: chartPoint[2],
-          },
-          {
-            label: '코끼리',
-
-            data: resData.score.map((score: any) => {
-              return score.elephant.score;
-            }),
-            tension: 0.3,
-            borderColor: '#2d8bb2',
-            pointStyle: chartPoint[3],
-          },
-          {
-            label: '공룡',
-            data: resData.score.map((score: any) => {
-              return score.dinosaur.score;
-            }),
-            tension: 0.3,
-            borderColor: '#91A401',
-            pointStyle: chartPoint[4],
-          },
-
-          {
-            label: '사자',
-
-            data: resData.score.map((score: any) => {
-              return score.lion.score;
-            }),
-            tension: 0.3,
-            borderColor: '#C2403D',
-            pointStyle: chartPoint[5],
-          },
-        ],
-      });
-    }
+        {
+          label: '사자',
+          data: score.map(score => score.lion.score),
+          tension: 0.3,
+          borderColor: '#C2403D',
+          pointStyle: chartPoint[5],
+        },
+      ],
+    };
+    setGraphData(chartData);
+    setMinMax(MinMax(data.data));
   };
+
   const getNextData = async () => {
     await getData(index + 1);
     setIndex(index + 1);
@@ -197,24 +152,18 @@ const PoliticianGraph = (): JSX.Element => {
     await getData(index - 1);
     setIndex(index - 1);
   };
-  const ClickButton = async () => {
-    await start();
+
+  const graphIssueClickHandler = (
+    event: React.MouseEvent<HTMLCanvasElement>,
+  ) => {
+    if (event.target instanceof Element && chartRef.current) {
+      const index = getElementAtEvent(chartRef.current, event)[0]?.index;
+      setIssueIndex(index);
+      console.log(index);
+      setOpen(true);
+    }
   };
 
-  useEffect(() => {
-    if (isFirst === false) {
-      ClickButton();
-    }
-  }, [index]);
-
-  useEffect(() => {
-    start();
-    if (!isFirst) {
-      start();
-    }
-  }, [isFirst]);
-
-  let count = 1;
   const options: ChartOptions<'line'> = {
     animation: {
       duration: 0,
@@ -224,8 +173,8 @@ const PoliticianGraph = (): JSX.Element => {
       tooltip: {
         enabled: false,
         position: 'customPositioner' as 'average',
-        external: function (context: any) {
-          darwTooltip(context, resData);
+        external: args => {
+          drawTooltip(args, graphIssueData);
         },
       },
 
@@ -241,34 +190,6 @@ const PoliticianGraph = (): JSX.Element => {
           },
           padding: 20,
         },
-        onHover: function (event: any) {
-          event.native.target.style.cursor = 'pointer';
-        },
-        onClick: (evt: any, legendItem: any, legend: any) => {
-          const index = legendItem.datasetIndex;
-          const chart = legend.chart;
-
-          if (count === 1) {
-            legend.chart.data.datasets.forEach((data: any, index: number) => {
-              if (legendItem.text === data.label) {
-                chart.show(index);
-              } else {
-                chart.hide(index);
-                data.hidden = true;
-              }
-            });
-          } else {
-            if (legendItem.hidden === true) {
-              chart.show(index);
-              legendItem.hidden = false;
-            } else {
-              chart.hide(index);
-              legendItem.hidden = true;
-            }
-          }
-
-          count += 1;
-        },
       },
       datalabels: {
         font: {
@@ -276,20 +197,10 @@ const PoliticianGraph = (): JSX.Element => {
         },
         anchor: 'end',
         clamp: true,
-        align: function ({
-          dataIndex,
-          dataset,
-        }: {
-          dataIndex: any;
-          dataset: any;
-        }) {
-          if (dataset.data[dataIndex] > 0) {
-            return 'end';
-          } else if (dataset.data[dataIndex] < 0) {
-            return 'start';
-          } else {
-            return 'end';
-          }
+        align: (context: Context) => {
+          const index = context.dataIndex;
+          const value = context.dataset.data[index] || 0;
+          return value < 0 ? 'start' : 'end';
         },
         offset: 0,
         display: 'auto',
@@ -310,9 +221,9 @@ const PoliticianGraph = (): JSX.Element => {
         grid: {
           display: false,
         },
-        min: minmax[1] - 30,
-        max: minmax[0] + 30,
-        afterFit: (axis: any) => {
+        min: graphData?.datasets[0].data.reduce((a, b) => Math.min(a, b)) || 0,
+        max: graphData?.datasets[0].data.reduce((a, b) => Math.max(a, b)) || 0,
+        afterFit: axis => {
           axis.paddingRight = 12;
         },
       },
@@ -322,161 +233,142 @@ const PoliticianGraph = (): JSX.Element => {
         },
       },
     },
-    onHover: (event: any, chartElement: any) => {
-      const target = event.native ? event.native.target : event.target;
-      target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-    },
   };
 
-  Tooltip.positioners.customPositioner = function (
-    this,
-    elements: any,
-    position: any,
-  ) {
+  Tooltip.positioners.customPositioner = (elements, position) => {
     if (!elements.length) {
       return false;
     }
-    var offset = 0;
-    if (((window.innerWidth - 300) / 5) * 3 > position.x) {
-      offset = 10;
-    } else {
-      offset = -340;
-    }
+    const offset = ((window.innerWidth - 300) / 5) * 3 > position.x ? -10 : 340;
+
     return {
       x: position.x + offset,
       y: position.y,
     };
   };
 
+  useEffect(() => {
+    getData(index);
+  }, []);
+
   return (
-    <GraphContainer>
-      <ManualContainer>
-        <HiQuestionMarkCircle
-          size="25"
-          color={theme.colors.mainColor}
-          onMouseOver={event => {
-            (
-              event.target as HTMLButtonElement
-            ).style.color = `${theme.colors.subColor}`;
-            setIsHovering(true);
-          }}
-          onMouseOut={event => {
-            (
-              event.target as HTMLButtonElement
-            ).style.color = `${theme.colors.mainColor}`;
-            setIsHovering(false);
-          }}
-          overflow="visible"
-          cursor="pointer"
-        ></HiQuestionMarkCircle>
-        {isHovering && (
-          <Manual>
-            - 부족 이름을 클릭하여 각 그래프를 켜거나 끌 수 있습니다.
-            <br />- 스코어에 마우스를 올리면 통계를 볼 수 있으며 클릭하여 투표를
-            진행할 수 있습니다.
-          </Manual>
-        )}
-      </ManualContainer>
-
-      <GraphButton
-        onClick={getNextData}
-        disabled={!NextPageable}
-        pageable={NextPageable}
-      >
-        <HiArrowCircleLeft
-          size="30"
-          color={theme.colors.thirdColor}
-          onMouseOver={event => {
-            if (NextPageable) {
-              (
-                event.target as HTMLButtonElement
-              ).style.color = `${theme.colors.subColor}`;
-            } else {
-              (
-                event.target as HTMLButtonElement
-              ).style.color = `${theme.colors.lighterColor}`;
+    <>
+      {graphIssueData && (
+        <GraphContainer>
+          <ManualContainer>
+            <HiQuestionMarkCircle
+              size="25"
+              color={theme.colors.mainColor}
+              overflow="visible"
+              cursor="pointer"
+            ></HiQuestionMarkCircle>
+            {
+              <Manual>
+                - 부족 이름을 클릭하여 각 그래프를 켜거나 끌 수 있습니다.
+                <br />- 스코어에 마우스를 올리면 통계를 볼 수 있으며 클릭하여
+                투표를 진행할 수 있습니다.
+              </Manual>
             }
-          }}
-          onMouseOut={event => {
-            if (NextPageable) {
-              (
-                event.target as HTMLButtonElement
-              ).style.color = `${theme.colors.thirdColor}`;
-            } else {
-              (
-                event.target as HTMLButtonElement
-              ).style.color = `${theme.colors.lighterColor}`;
-            }
-          }}
-        />
-      </GraphButton>
-      {data && (
-        <ChartContainer>
-          <Line
-            ref={chartRef}
-            onClick={event => {
-              let point = ClickHandler(
-                getElementAtEvent(chartRef.current, event),
-              );
-              setPoint(point);
-            }}
-            options={options}
-            data={data}
-            plugins={[ChartDataLabels]}
-          />
-        </ChartContainer>
+          </ManualContainer>
+          <GraphButton
+            onClick={getNextData}
+            // disabled={!NextPageable}
+            // pageable={NextPageable}
+          >
+            <HiArrowCircleLeft
+              size="30"
+              color={theme.colors.thirdColor}
+              // onMouseOver={event => {
+              //   if (NextPageable) {
+              //     (
+              //       event.target as HTMLButtonElement
+              //     ).style.color = `${theme.colors.subColor}`;
+              //   } else {
+              //     (
+              //       event.target as HTMLButtonElement
+              //     ).style.color = `${theme.colors.lighterColor}`;
+              //   }
+              // }}
+              // onMouseOut={event => {
+              //   if (NextPageable) {
+              //     (
+              //       event.target as HTMLButtonElement
+              //     ).style.color = `${theme.colors.thirdColor}`;
+              //   } else {
+              //     (
+              //       event.target as HTMLButtonElement
+              //     ).style.color = `${theme.colors.lighterColor}`;
+              //   }
+              // }}
+            />
+          </GraphButton>
+          {graphData && (
+            <ChartContainer>
+              <Line
+                ref={chartRef}
+                onClick={graphIssueClickHandler}
+                options={options}
+                data={graphData}
+                plugins={[ChartDataLabels]}
+              />
+            </ChartContainer>
+          )}
+          <div>
+            {open && issueIndex && graphIssueData && (
+              <Modal
+                setOpen={setOpen}
+                issueIndex={issueIndex}
+                resData={graphIssueData}
+              />
+            )}
+          </div>
+          <GraphButton
+            onClick={getPreData}
+            disabled={index === 1}
+            pageable={index !== 1}
+          >
+            <HiArrowCircleRight
+              size="30"
+              color={theme.colors.thirdColor}
+              onMouseOver={event => {
+                if (index !== 1) {
+                  (
+                    event.target as HTMLButtonElement
+                  ).style.color = `${theme.colors.subColor}`;
+                } else {
+                  (
+                    event.target as HTMLButtonElement
+                  ).style.color = `${theme.colors.lighterColor}`;
+                }
+              }}
+              onMouseOut={event => {
+                if (index !== 1) {
+                  (
+                    event.target as HTMLButtonElement
+                  ).style.color = `${theme.colors.thirdColor}`;
+                } else {
+                  (
+                    event.target as HTMLButtonElement
+                  ).style.color = `${theme.colors.lighterColor}`;
+                }
+              }}
+            />
+          </GraphButton>
+        </GraphContainer>
       )}
-      <div>
-        {open && (
-          <Modal
-            setOpen={setOpen}
-            element={point}
-            content={content}
-            issueDate={issueDate}
-            resData={resData}
-          />
-        )}
-      </div>
-
-      <GraphButton
-        onClick={getPreData}
-        disabled={index === 1}
-        pageable={index !== 1}
-      >
-        <HiArrowCircleRight
-          size="30"
-          color={theme.colors.thirdColor}
-          onMouseOver={event => {
-            if (index !== 1) {
-              (
-                event.target as HTMLButtonElement
-              ).style.color = `${theme.colors.subColor}`;
-            } else {
-              (
-                event.target as HTMLButtonElement
-              ).style.color = `${theme.colors.lighterColor}`;
-            }
-          }}
-          onMouseOut={event => {
-            if (index !== 1) {
-              (
-                event.target as HTMLButtonElement
-              ).style.color = `${theme.colors.thirdColor}`;
-            } else {
-              (
-                event.target as HTMLButtonElement
-              ).style.color = `${theme.colors.lighterColor}`;
-            }
-          }}
-        />
-      </GraphButton>
-    </GraphContainer>
+    </>
   );
 };
 
 export default PoliticianGraph;
 
-function darwTooltip(context: any, resData: GraphDataType) {
+function drawTooltip(
+  context: { chart: any; tooltip: any },
+  graphIssueData: GraphIssueDataType | null,
+) {
+  if (!graphIssueData) {
+    return;
+  }
   const ImgTribe = [oxo, tiger, hippo, elephant, dinosaur, lion];
   const ImgPoll = [ColoredCircle, ColoredTriangle, ColoredX];
   const dataIndex = context.chart.tooltip.dataPoints[0];
@@ -505,7 +397,7 @@ function darwTooltip(context: any, resData: GraphDataType) {
   }
 
   function getBody() {
-    return resData.poll;
+    return graphIssueData?.poll;
   }
   // Set Text
   if (tooltipModel.body) {
@@ -523,7 +415,7 @@ function darwTooltip(context: any, resData: GraphDataType) {
       if (index === 0) {
         const total = true;
         result[tooltipModel.dataPoints[0].dataIndex].forEach(
-          (body: any, index: number) => {
+          (body: pollDeep, index: number) => {
             if (index === 0) {
             } else {
               const imageTh = CreateImg(body, total, index);
@@ -592,7 +484,7 @@ function darwTooltip(context: any, resData: GraphDataType) {
   function CreateTitle() {
     const Title = document.createElement('div');
     const TitleText = document.createTextNode(
-      resData.title[tooltipModel.dataPoints[0].dataIndex],
+      graphIssueData?.title[tooltipModel.dataPoints[0].dataIndex] as string,
     );
     Title.style.whiteSpace = 'wrap';
     Title.style.width = '300px';
@@ -686,13 +578,20 @@ const Manual = styled.div`
   right: -10px;
   top: -135px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-  animation: ${ManualFade} 1s 1s linear;
 `;
 interface GraphButtonProps {
   pageable: boolean;
 }
 const GraphButton = styled.button<GraphButtonProps>`
-  opacity: 0.9;
-  transition-duration: 0.4s;
-  cursor: ${props => (props.pageable ? 'pointer' : 'none')};
+  display: ${props => (props.pageable ? 'block' : 'none')};
+  background-color: ${props =>
+    props.pageable ? theme.colors.mainColor : theme.colors.lighterColor};
+  color: ${props =>
+    props.pageable ? theme.colors.lighterColor : theme.colors.mainColor};
+  border: 1px solid ${theme.colors.mainColor};
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  font-size: 15px;
+  font-weight: 700;
 `;

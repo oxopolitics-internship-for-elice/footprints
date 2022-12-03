@@ -1,33 +1,41 @@
-export type pollDeep = {
-  pro: number;
-  neu: number;
-  con: number;
-};
+import { Poll } from './IssueTypes';
 
-export type Poll = {
-  dinosaur: pollDeep;
-  elephant: pollDeep;
-  hippo: pollDeep;
-  lion: pollDeep;
-  tiger: pollDeep;
-  total: pollDeep;
-};
+// export interface GraphDataType {
+//   id: string[];
+//   _id: string;
+//   targetPolitician: string;
+//   createdAt: Date;
+//   regiUser: string;
+//   regiStatus: string;
+//   regi: { pro: number; con: number };
+//   poll: Poll;
+//   issueDate: Date;
+//   pollDate: Date;
+//   content: string;
+//   isPollActive: boolean;
+//   updatedAt: Date;
+//   title: string;
+//   link?: string;
+// }
 
-export interface GraphDataType {
+export interface GraphIssueDataType {
+  issueDate: string[];
+  poll: Poll[];
+  content: string[];
   id: string[];
-  _id: string;
-  targetPolitician: string;
-  createdAt: Date;
-  regiUser: string;
-  regiStatus: string;
-  regi: { pro: number; con: number };
-  poll: Poll;
-  issueDate: Date;
-  pollDate: Date;
-  content: string;
-  isPollActive: boolean;
-  updatedAt: Date;
-  score: any;
-  title: string;
-  link?: string;
+  title: string[];
+}
+
+export interface GraphDataSetsType {
+  label: string;
+  data: number[];
+  backgroundColor?: string;
+  borderColor?: string;
+  tension?: number;
+  pointStyle?: React.ReactNode;
+}
+
+export interface GraphDataStateType {
+  labels: string[];
+  datasets: GraphDataSetsType[];
 }

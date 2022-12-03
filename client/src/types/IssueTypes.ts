@@ -1,5 +1,3 @@
-import { Poll } from './GraphTypes';
-
 export interface IssueType {
   _id: string;
   targetPolitician: string;
@@ -27,3 +25,17 @@ export interface IssueMeta {
   hasPreviousPage: boolean;
   hasNextPage: boolean;
 }
+export type pollDeep = {
+  pro: number;
+  neu: number;
+  con: number;
+};
+
+export type Poll = {
+  dinosaur: pollDeep;
+  elephant: pollDeep;
+  hippo: pollDeep;
+  lion: pollDeep;
+  tiger: pollDeep;
+  total: pollDeep;
+};

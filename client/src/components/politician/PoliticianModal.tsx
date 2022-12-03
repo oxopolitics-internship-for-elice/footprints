@@ -5,7 +5,7 @@ import BasicCircle from '@/assets/selection/BasicCircle.svg';
 import BasicTriangle from '@/assets/selection/BasicTriangle.svg';
 import BasicX from '@/assets/selection/BasicX.svg';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { GraphDataType } from '@/types/GraphTypes';
+import { GraphIssueDataType } from '@/types/GraphTypes';
 import theme from '@/styles/theme';
 import { getCookie } from '@/utils/Cookie';
 
@@ -20,18 +20,10 @@ type Object = {
 };
 interface ModalProps {
   setOpen: (boolean: boolean) => void;
-  element: Element;
-  content: [];
-  issueDate: [];
-  resData: GraphDataType;
+  issueIndex: number;
+  resData: GraphIssueDataType;
 }
-const Modal = ({
-  setOpen,
-  element,
-  content,
-  issueDate,
-  resData,
-}: ModalProps) => {
+const Modal = ({ setOpen, issueIndex, resData }: ModalProps) => {
   const [poll, setPoll] = useState<{
     pro: boolean;
     neu: boolean;
@@ -56,7 +48,7 @@ const Modal = ({
     }
   }
   async function ClickHandler(index: number) {
-    const target = resData.id[element.$context.dataIndex];
+    const target = resData.id[issueIndex];
     const newPoll = { pro: false, neu: false, con: false };
     if (index === 0) {
       newPoll.pro = true;
@@ -84,7 +76,7 @@ const Modal = ({
 
   useEffect(() => {
     const fetchPollInfo = async () => {
-      const target = resData.id[element.$context.dataIndex];
+      const target = resData.id[issueIndex];
       const { data } = await GraphAPI.getPollInfo(target);
       const pollResult = data.pollResult;
       if (pollResult) {
@@ -96,16 +88,16 @@ const Modal = ({
     if (accessToken) {
       fetchPollInfo();
     }
-    console.log(resData);
+    console.log(issueIndex);
   }, []);
 
   return (
     <>
       <Background>
-        <Container {...element} ref={ref}>
+        <Container ref={ref}>
           <Header ref={ref}>
             <div />
-            <HeaderText>{resData.title[element.$context.dataIndex]}</HeaderText>
+            <HeaderText>{resData.title[issueIndex]}</HeaderText>
             <CloseButton
               onClick={() => {
                 setOpen(false);
@@ -116,17 +108,12 @@ const Modal = ({
             </CloseButton>
           </Header>
           <Content>
-            <ContentText>
-              {resData.content[element.$context.dataIndex]}
-            </ContentText>
-            {resData?.link && (
-              <Link
-                href={resData.link[element.$context.dataIndex]}
-                target="_blank"
-              >
-                {resData.link[element.$context.dataIndex]}
+            <ContentText>{resData.content[issueIndex]}</ContentText>
+            {/* {resData?.link && (
+              <Link href={resData.link[issueIndex]} target="_blank">
+                {resData.link[issueIndex]}
               </Link>
-            )}
+            )} */}
           </Content>
           <ChooseBox>
             {Imgsrc.map((src, index) => {
@@ -152,10 +139,6 @@ const Modal = ({
 
 export default Modal;
 
-interface ContainerProps {
-  x: number;
-  y: number;
-}
 const Background = styled.div`
   position: fixed;
   top: 0;
@@ -169,7 +152,7 @@ const Background = styled.div`
   animation-fill-mode: forwards;
   z-index: 1000;
 `;
-const Container = styled.div<ContainerProps>`
+const Container = styled.div`
   width: 600px;
   overflow-y: initial !important;
   position: relative;
