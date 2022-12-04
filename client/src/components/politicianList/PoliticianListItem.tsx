@@ -8,7 +8,6 @@ import LifeGraph from '@/components/politicianList/LifeGraph';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
 import { useNavigate } from 'react-router-dom';
-import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import { HiChevronDoubleRight } from 'react-icons/hi';
 import theme from '@/styles/theme';
 
