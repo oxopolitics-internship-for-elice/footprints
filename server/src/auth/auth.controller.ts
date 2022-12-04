@@ -20,8 +20,12 @@ export class AuthController {
     // console.log('accessToken', req.user.accessToken);
     // console.log('refresh_token', req.user.refreshToken);
     if (req.user.type === 'login') {
-      res.cookie('access_token', req.user.accessToken);
-      res.cookie('refresh_token', req.user.refreshToken);
+      res.cookie('access_token', req.user.accessToken, {
+        httpOnly: true,
+      });
+      res.cookie('refresh_token', req.user.refreshToken, {
+        httpOnly: true,
+      });
     } else {
       res.cookie('once_token', req.user.onceToken);
     }
