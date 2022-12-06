@@ -16,6 +16,7 @@ import {
   ScatterDataPoint,
   Chart,
   ChartData,
+  TooltipModel,
 } from 'chart.js';
 import ColoredCircle from '@/assets/selection/ColoredCircle.svg';
 import ColoredTriangle from '@/assets/selection/ColoredTriangle.svg';
@@ -62,7 +63,9 @@ export type GraphDataType = ChartData<'line', number[], string> | null;
 const PoliticianGraph = () => {
   const chartRef = useRef<Chart<'line'> | null>(null);
   const [open, setOpen] = useState(false);
-  const [issueIndex, setIssueIndex] = useState<number | null>(null);
+  const [selectedIssueIndex, setselectedIssueIndex] = useState<number | null>(
+    null,
+  );
   const [index, setIndex] = useState<number>(1);
   const [graphData, setGraphData] = useState<GraphDataType>(null);
   const [graphIssueData, setGraphIssueData] =
@@ -158,7 +161,7 @@ const PoliticianGraph = () => {
   ) => {
     if (event.target instanceof Element && chartRef.current) {
       const index = getElementAtEvent(chartRef.current, event)[0]?.index;
-      setIssueIndex(index);
+      setselectedIssueIndex(index);
       console.log(index);
       setOpen(true);
     }
@@ -314,10 +317,10 @@ const PoliticianGraph = () => {
             </ChartContainer>
           )}
           <div>
-            {open && issueIndex && graphIssueData && (
+            {open && selectedIssueIndex && graphIssueData && (
               <Modal
                 setOpen={setOpen}
-                issueIndex={issueIndex}
+                selectedIssueIndex={selectedIssueIndex}
                 resData={graphIssueData}
               />
             )}
@@ -363,15 +366,18 @@ const PoliticianGraph = () => {
 export default PoliticianGraph;
 
 function drawTooltip(
-  context: { chart: any; tooltip: any },
+  context: { chart: Chart; tooltip: TooltipModel<'line'> },
   graphIssueData: GraphIssueDataType | null,
 ) {
   if (!graphIssueData) {
     return;
   }
+  const dataIndex = context?.chart?.tooltip?.dataPoints[0];
+  if (!dataIndex) {
+    return;
+  }
   const ImgTribe = [oxo, tiger, hippo, elephant, dinosaur, lion];
   const ImgPoll = [ColoredCircle, ColoredTriangle, ColoredX];
-  const dataIndex = context.chart.tooltip.dataPoints[0];
   let tooltipEl = document.getElementById('chartjs-tooltip');
   // Create element on first render
   if (!tooltipEl) {
@@ -400,8 +406,8 @@ function drawTooltip(
     return graphIssueData?.poll;
   }
   // Set Text
-  if (tooltipModel.body) {
-    const bodyLines = tooltipModel.body.map(getBody);
+  const bodyLines = tooltipModel.body.map(getBody);
+  if (bodyLines[0]) {
     const result = bodyLines[0].map((body: Poll) => {
       let tempArray = SortKey(body);
       return Object.values(tempArray);

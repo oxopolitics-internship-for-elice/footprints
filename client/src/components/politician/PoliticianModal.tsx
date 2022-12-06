@@ -20,10 +20,10 @@ type Object = {
 };
 interface ModalProps {
   setOpen: (boolean: boolean) => void;
-  issueIndex: number;
+  selectedIssueIndex: number;
   resData: GraphIssueDataType;
 }
-const Modal = ({ setOpen, issueIndex, resData }: ModalProps) => {
+const Modal = ({ setOpen, selectedIssueIndex, resData }: ModalProps) => {
   const [poll, setPoll] = useState<{
     pro: boolean;
     neu: boolean;
@@ -48,7 +48,7 @@ const Modal = ({ setOpen, issueIndex, resData }: ModalProps) => {
     }
   }
   async function ClickHandler(index: number) {
-    const target = resData.id[issueIndex];
+    const target = resData.id[selectedIssueIndex];
     const newPoll = { pro: false, neu: false, con: false };
     if (index === 0) {
       newPoll.pro = true;
@@ -76,7 +76,7 @@ const Modal = ({ setOpen, issueIndex, resData }: ModalProps) => {
 
   useEffect(() => {
     const fetchPollInfo = async () => {
-      const target = resData.id[issueIndex];
+      const target = resData.id[selectedIssueIndex];
       const { data } = await GraphAPI.getPollInfo(target);
       const pollResult = data.pollResult;
       if (pollResult) {
@@ -88,7 +88,7 @@ const Modal = ({ setOpen, issueIndex, resData }: ModalProps) => {
     if (accessToken) {
       fetchPollInfo();
     }
-    console.log(issueIndex);
+    console.log(selectedIssueIndex);
   }, []);
 
   return (
@@ -97,7 +97,7 @@ const Modal = ({ setOpen, issueIndex, resData }: ModalProps) => {
         <Container ref={ref}>
           <Header ref={ref}>
             <div />
-            <HeaderText>{resData.title[issueIndex]}</HeaderText>
+            <HeaderText>{resData.title[selectedIssueIndex]}</HeaderText>
             <CloseButton
               onClick={() => {
                 setOpen(false);
@@ -108,10 +108,10 @@ const Modal = ({ setOpen, issueIndex, resData }: ModalProps) => {
             </CloseButton>
           </Header>
           <Content>
-            <ContentText>{resData.content[issueIndex]}</ContentText>
+            <ContentText>{resData.content[selectedIssueIndex]}</ContentText>
             {/* {resData?.link && (
-              <Link href={resData.link[issueIndex]} target="_blank">
-                {resData.link[issueIndex]}
+              <Link href={resData.link[selectedIssueIndex]} target="_blank">
+                {resData.link[selectedIssueIndex]}
               </Link>
             )} */}
           </Content>
