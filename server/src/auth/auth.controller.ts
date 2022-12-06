@@ -17,9 +17,7 @@ export class AuthController {
   @UseGuards(new KakaoAuthGuard('kakao'))
   async kakaoCallback(@Req() req: any, @Res() res: any) {
     if (req.user.type === 'login') {
-      res.cookie('access_token', req.user.accessToken, {
-        httpOnly: true,
-      });
+      res.cookie('access_token', req.user.accessToken);
       res.cookie('refresh_token', req.user.refreshToken, {
         httpOnly: true,
       });
