@@ -1,13 +1,13 @@
-import { Poll } from "@/types/GraphTypes";
+import { Poll } from '@/types/IssueTypes';
 
 export default function SortKey(body: Poll) {
-    let SorkArray={
-        "total":body.total,
-        "tiger":body.tiger,
-        "hippo":body.hippo,
-        "elephant":body.elephant,
-        "dinosaur":body.dinosaur,
-        "lino":body.lion}  
-    return SorkArray;
-  }
-  
+  const SorkArray = {
+    total: body.total,
+    tiger: body.tiger,
+    hippo: body.hippo,
+    elephant: body.elephant,
+    dinosaur: body.dinosaur,
+    lino: body.lion,
+  };
+  return SorkArray;
+}
