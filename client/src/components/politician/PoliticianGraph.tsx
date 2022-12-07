@@ -46,7 +46,6 @@ import SortKey from '@/utils/SortKey';
 import { Poll, pollDeep } from '@/types/IssueTypes';
 import { GraphIssueDataType } from '@/types/GraphTypes';
 import dateFormatter from '@/utils/DateFormatter';
-import MinMax from '@/utils/MinMax';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -70,15 +69,17 @@ const PoliticianGraph = () => {
   const [graphData, setGraphData] = useState<GraphDataType>(null);
   const [graphIssueData, setGraphIssueData] =
     useState<GraphIssueDataType | null>(null);
-  const [minMax, setMinMax] = useState<{ min: number; max: number }>({
-    min: 0,
-    max: 0,
-  });
+  const [nextPageable, setNextPageable] = useState<boolean>(false);
+  const [isHover, setIsHover] = useState<boolean>(false);
   const { politicianID } = useParams();
 
   const getData = async (index: number) => {
     if (!politicianID) return;
     const { data } = await GraphAPI.getGraph(politicianID, index);
+    if (data.data.length === 0) {
+      setNextPageable(false);
+      return;
+    }
     setGraphIssueData({
       issueDate: data.data.map(issue => DateFormatter(issue.issueDate)),
       poll: data.data.map(issue => PollFormatter(issue)),
@@ -144,7 +145,7 @@ const PoliticianGraph = () => {
       ],
     };
     setGraphData(chartData);
-    setMinMax(MinMax(data.data));
+    setNextPageable(true);
   };
 
   const getNextData = async () => {
@@ -152,8 +153,9 @@ const PoliticianGraph = () => {
     setIndex(index + 1);
   };
   const getPreData = async () => {
-    await getData(index - 1);
-    setIndex(index - 1);
+    const prevIndex = nextPageable === false ? index - 2 : index - 1;
+    await getData(prevIndex);
+    setIndex(prevIndex);
   };
 
   const graphIssueClickHandler = (
@@ -165,6 +167,36 @@ const PoliticianGraph = () => {
       console.log(index);
       setOpen(true);
     }
+  };
+
+  const graphAxisYMin = () => {
+    if (!graphData) return;
+    const min =
+      graphData?.datasets
+        .reduce((a, b) => {
+          return a.data.reduce((a, b) => Math.min(a, b)) <
+            b.data.reduce((a, b) => Math.min(a, b))
+            ? a
+            : b;
+        })
+        .data.reduce((a, b) => Math.min(a, b)) - 30 ?? 0;
+
+    return min;
+  };
+
+  const graphAxisYMax = () => {
+    if (!graphData) return;
+    const max =
+      graphData?.datasets
+        .reduce((a, b) => {
+          return a.data.reduce((a, b) => Math.max(a, b)) >
+            b.data.reduce((a, b) => Math.max(a, b))
+            ? a
+            : b;
+        })
+        .data.reduce((a, b) => Math.max(a, b)) + 30 ?? 0;
+
+    return max;
   };
 
   const options: ChartOptions<'line'> = {
@@ -224,8 +256,8 @@ const PoliticianGraph = () => {
         grid: {
           display: false,
         },
-        min: graphData?.datasets[0].data.reduce((a, b) => Math.min(a, b)) || 0,
-        max: graphData?.datasets[0].data.reduce((a, b) => Math.max(a, b)) || 0,
+        min: graphAxisYMin(),
+        max: graphAxisYMax(),
         afterFit: axis => {
           axis.paddingRight = 12;
         },
@@ -264,46 +296,19 @@ const PoliticianGraph = () => {
               color={theme.colors.mainColor}
               overflow="visible"
               cursor="pointer"
+              onMouseEnter={() => setIsHover(true)}
+              onMouseLeave={() => setIsHover(false)}
             ></HiQuestionMarkCircle>
-            {
+            {isHover && (
               <Manual>
                 - 부족 이름을 클릭하여 각 그래프를 켜거나 끌 수 있습니다.
                 <br />- 스코어에 마우스를 올리면 통계를 볼 수 있으며 클릭하여
                 투표를 진행할 수 있습니다.
               </Manual>
-            }
+            )}
           </ManualContainer>
-          <GraphButton
-            onClick={getNextData}
-            // disabled={!NextPageable}
-            // pageable={NextPageable}
-          >
-            <HiArrowCircleLeft
-              size="30"
-              color={theme.colors.thirdColor}
-              // onMouseOver={event => {
-              //   if (NextPageable) {
-              //     (
-              //       event.target as HTMLButtonElement
-              //     ).style.color = `${theme.colors.subColor}`;
-              //   } else {
-              //     (
-              //       event.target as HTMLButtonElement
-              //     ).style.color = `${theme.colors.lighterColor}`;
-              //   }
-              // }}
-              // onMouseOut={event => {
-              //   if (NextPageable) {
-              //     (
-              //       event.target as HTMLButtonElement
-              //     ).style.color = `${theme.colors.thirdColor}`;
-              //   } else {
-              //     (
-              //       event.target as HTMLButtonElement
-              //     ).style.color = `${theme.colors.lighterColor}`;
-              //   }
-              // }}
-            />
+          <GraphButton onClick={getNextData} disabled={!nextPageable}>
+            <HiArrowCircleLeft size="30" color={theme.colors.thirdColor} />
           </GraphButton>
           {graphData && (
             <ChartContainer>
@@ -321,41 +326,12 @@ const PoliticianGraph = () => {
               <Modal
                 setOpen={setOpen}
                 selectedIssueIndex={selectedIssueIndex}
-                resData={graphIssueData}
+                issueData={graphIssueData}
               />
             )}
           </div>
-          <GraphButton
-            onClick={getPreData}
-            disabled={index === 1}
-            pageable={index !== 1}
-          >
-            <HiArrowCircleRight
-              size="30"
-              color={theme.colors.thirdColor}
-              onMouseOver={event => {
-                if (index !== 1) {
-                  (
-                    event.target as HTMLButtonElement
-                  ).style.color = `${theme.colors.subColor}`;
-                } else {
-                  (
-                    event.target as HTMLButtonElement
-                  ).style.color = `${theme.colors.lighterColor}`;
-                }
-              }}
-              onMouseOut={event => {
-                if (index !== 1) {
-                  (
-                    event.target as HTMLButtonElement
-                  ).style.color = `${theme.colors.thirdColor}`;
-                } else {
-                  (
-                    event.target as HTMLButtonElement
-                  ).style.color = `${theme.colors.lighterColor}`;
-                }
-              }}
-            />
+          <GraphButton onClick={getPreData} disabled={index === 1}>
+            <HiArrowCircleRight size="30" color={theme.colors.thirdColor} />
           </GraphButton>
         </GraphContainer>
       )}
@@ -445,7 +421,7 @@ function drawTooltip(
     }
 
     const div = document.createElement('div');
-    dataIndex === 5
+    dataIndex === undefined
       ? null
       : drow(
           div,
@@ -510,10 +486,11 @@ function drawTooltip(
     const imageCircle = document.createElement('img');
     const imageTriangle = document.createElement('img');
     const imageX = document.createElement('img');
+    const imageIndex = dataIndex === undefined ? 0 : dataIndex.datasetIndex;
     if (total) {
       imageTribe.src = ImgTribe[index];
     } else {
-      imageTribe.src = ImgTribe[dataIndex.datasetIndex];
+      imageTribe.src = ImgTribe[imageIndex];
     }
     imageTribe.height = 40;
     imageTribe.width = 40;
@@ -567,14 +544,6 @@ const ManualContainer = styled.div`
   z-index: 2;
   overflow: visible;
 `;
-const ManualFade = keyframes`
-  from {
-    width: 0
-  }
-  to {
-    width: 250
-  }
-`;
 const Manual = styled.div`
   background-color: ${theme.colors.lighterColor};
   border-radius: 10px;
@@ -585,19 +554,18 @@ const Manual = styled.div`
   top: -135px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 `;
-interface GraphButtonProps {
-  pageable: boolean;
-}
-const GraphButton = styled.button<GraphButtonProps>`
-  display: ${props => (props.pageable ? 'block' : 'none')};
-  background-color: ${props =>
-    props.pageable ? theme.colors.mainColor : theme.colors.lighterColor};
-  color: ${props =>
-    props.pageable ? theme.colors.lighterColor : theme.colors.mainColor};
-  border: 1px solid ${theme.colors.mainColor};
+
+const GraphButton = styled.button`
+  width: 50px;
+  height: 30px;
+  align-self: center;
   border-radius: 10px;
-  padding: 5px 10px;
-  margin: 0 5px;
   font-size: 15px;
   font-weight: 700;
+  &:disabled svg {
+    display: none;
+  }
+  &:disabled {
+    cursor: default;
+  }
 `;

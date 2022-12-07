@@ -10,12 +10,6 @@ import theme from '@/styles/theme';
 import { useRecoilValue } from 'recoil';
 import { authTokenState } from '@/store/AuthTokenState';
 
-type Element = {
-  $context: Object;
-  x: number;
-  y: number;
-};
-
 type Object = {
   dataIndex: number;
 };
