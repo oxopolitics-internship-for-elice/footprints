@@ -5,36 +5,27 @@ import BasicCircle from '@/assets/selection/BasicCircle.svg';
 import BasicTriangle from '@/assets/selection/BasicTriangle.svg';
 import BasicX from '@/assets/selection/BasicX.svg';
 import { IoCloseCircleOutline } from 'react-icons/io5';
-import { ResDataTypes } from '@/types/GraphTypes';
-import errorHandler from '@/api/ErrorHandler';
+import { GraphIssueDataType } from '@/types/GraphTypes';
 import theme from '@/styles/theme';
-import { getCookie } from '@/utils/Cookie';
-
-type Element = {
-  $context: Object;
-  x: number;
-  y: number;
-};
+import { useRecoilValue } from 'recoil';
+import { authTokenState } from '@/store/AuthTokenState';
 
 type Object = {
   dataIndex: number;
 };
 interface ModalProps {
   setOpen: (boolean: boolean) => void;
-  element: Element;
-  content: [];
-  issueDate: [];
-  resData: ResDataTypes;
+  selectedIssueIndex: number;
+  issueData: GraphIssueDataType;
 }
-const Modal = ({
-  setOpen,
-  element,
-  content,
-  issueDate,
-  resData,
-}: ModalProps) => {
-  const [poll, setPoll] = useState<any>({ pro: false, neu: false, con: false });
-  const accessToken = getCookie('access_token');
+
+const Modal = ({ setOpen, selectedIssueIndex, issueData }: ModalProps) => {
+  const [poll, setPoll] = useState<{
+    pro: boolean;
+    neu: boolean;
+    con: boolean;
+  }>({ pro: false, neu: false, con: false });
+  const isLogined = useRecoilValue(authTokenState).access_token !== '';
 
   const ref = useRef<null | HTMLDivElement>(null);
   const Imgsrc = [BasicCircle, BasicTriangle, BasicX];
@@ -46,47 +37,24 @@ const Modal = ({
     };
   }, [ref]);
 
-  function handleClickOutside(event: any) {
-    if (ref.current && !ref.current.contains(event.target)) {
+  function handleClickOutside(event: MouseEvent) {
+    if (ref.current && !ref.current.contains(event.target as Node)) {
       setOpen(false);
       document.body.style.overflow = 'unset';
     }
   }
   async function ClickHandler(index: number) {
-    let target = resData.id[element.$context.dataIndex];
-    let newPoll = {};
-    switch (index) {
-      case 0:
-        newPoll = { pro: true, neu: false, con: false };
-        break;
-      case 1:
-        newPoll = { pro: false, neu: true, con: false };
-        break;
-      case 2:
-        newPoll = { pro: false, neu: false, con: true };
-        break;
+    const target = issueData.id[selectedIssueIndex];
+    const newPoll = { pro: false, neu: false, con: false };
+    if (index === 0) {
+      newPoll.pro = true;
+    } else if (index === 1) {
+      newPoll.neu = true;
+    } else {
+      newPoll.con = true;
     }
-    try {
-      const { data } = await GraphAPI.updatePoll(target, newPoll);
-      if (data.before) {
-        setPoll((prev: any) => {
-          return {
-            ...prev,
-            [data.before]: false,
-          };
-        });
-      }
-      if (data.now) {
-        setPoll((prev: any) => {
-          return {
-            ...prev,
-            [data.now]: true,
-          };
-        });
-      }
-    } catch (error: any) {
-      errorHandler(error);
-    }
+    await GraphAPI.updatePoll(target, newPoll);
+    setPoll(newPoll);
   }
 
   const pollHandler = (index: number) => {
@@ -104,28 +72,28 @@ const Modal = ({
 
   useEffect(() => {
     const fetchPollInfo = async () => {
-      const target = resData.id[element.$context.dataIndex];
+      const target = issueData.id[selectedIssueIndex];
       const { data } = await GraphAPI.getPollInfo(target);
       const pollResult = data.pollResult;
       if (pollResult) {
-        setPoll((prev: any) => {
+        setPoll(prev => {
           return { ...prev, [pollResult]: true };
         });
       }
     };
-    if (accessToken) {
+    if (isLogined) {
       fetchPollInfo();
     }
-    console.log(resData);
+    console.log(selectedIssueIndex);
   }, []);
 
   return (
     <>
       <Background>
-        <Container {...element} ref={ref}>
+        <Container ref={ref}>
           <Header ref={ref}>
             <div />
-            <HeaderText>{resData.title[element.$context.dataIndex]}</HeaderText>
+            <HeaderText>{issueData.title[selectedIssueIndex]}</HeaderText>
             <CloseButton
               onClick={() => {
                 setOpen(false);
@@ -136,17 +104,12 @@ const Modal = ({
             </CloseButton>
           </Header>
           <Content>
-            <ContentText>
-              {resData.content[element.$context.dataIndex]}
-            </ContentText>
-            {resData?.link && (
-              <Link
-                href={resData.link[element.$context.dataIndex]}
-                target="_blank"
-              >
-                {resData.link[element.$context.dataIndex]}
+            <ContentText>{issueData.content[selectedIssueIndex]}</ContentText>
+            {/* {issueData?.link && (
+              <Link href={issueData.link[selectedIssueIndex]} target="_blank">
+                {issueData.link[selectedIssueIndex]}
               </Link>
-            )}
+            )} */}
           </Content>
           <ChooseBox>
             {Imgsrc.map((src, index) => {
@@ -156,7 +119,7 @@ const Modal = ({
                   onClick={() => {
                     ClickHandler(index);
                   }}
-                  clicked={pollHandler(index)}
+                  clicked={pollHandler(index) || false}
                   btnType={src}
                 >
                   <img src={src} width="30px" />
@@ -172,10 +135,6 @@ const Modal = ({
 
 export default Modal;
 
-interface ContainerProps {
-  x: number;
-  y: number;
-}
 const Background = styled.div`
   position: fixed;
   top: 0;
@@ -189,7 +148,7 @@ const Background = styled.div`
   animation-fill-mode: forwards;
   z-index: 1000;
 `;
-const Container = styled.div<ContainerProps>`
+const Container = styled.div`
   width: 600px;
   overflow-y: initial !important;
   position: relative;

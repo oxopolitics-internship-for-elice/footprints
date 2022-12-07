@@ -1,31 +1,30 @@
+import { politicianResponse } from '@/types/PoliticiansTypes';
 import { AxiosResponse } from 'axios';
-import * as Api from './Api';
+import AxiosService from './AxiosService';
 
-export type postIssueBody = {
+export interface postIssueBody {
   targetPolitician: string;
   issueDate: Date;
   title: string;
   content: string;
   link?: string;
-};
-interface IPoliticianAPI {
-  getList(): Promise<AxiosResponse<any>>;
-  postIssue(body: postIssueBody): Promise<AxiosResponse<any>>;
 }
 
-const PoliticianAPI: IPoliticianAPI = (() => {
-  // const somethingCommon = () => { /* ... */ };
+export interface postIssueReponse {
+  message: string;
+}
+interface IPoliticianAPI {
+  getList(): Promise<AxiosResponse<politicianResponse>>;
+  postIssue(body: postIssueBody): Promise<AxiosResponse<postIssueReponse>>;
+}
 
-  return {
-    getList: () => {
-      // somethingCommon();
+class PoliticianAPI implements IPoliticianAPI {
+  getList() {
+    return AxiosService.get<politicianResponse>(`politicians`);
+  }
+  postIssue(body: postIssueBody) {
+    return AxiosService.post<postIssueReponse>(`issues`, body);
+  }
+}
 
-      return Api.get(`politicians`);
-    },
-    postIssue: (body: postIssueBody) => {
-      return Api.post(`issues`, body);
-    },
-  };
-})();
-
-export default PoliticianAPI;
+export default new PoliticianAPI();

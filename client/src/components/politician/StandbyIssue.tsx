@@ -1,21 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { IssueTypes } from '@/types/IssueTypes';
+import { IssueType } from '@/types/IssueTypes';
 import Issue from './Issue';
 import styled from '@emotion/styled';
 import errorHandler from '@/api/ErrorHandler';
-import StandbyIssueAPI from '@/api/StandbyIssueAPI';
+import IssueAPI from '@/api/IssueAPI';
 import Loading from '@components/base/Loading';
 import { Alert } from '@components/base/Alert';
 import theme from '@/styles/theme';
 
 export interface IssueProps {
-  issue: IssueTypes;
-  setIssueList: (value: React.SetStateAction<IssueTypes[]>) => void;
+  issue: IssueType;
+  setIssueList: (value: React.SetStateAction<IssueType[]>) => void;
 }
 
 const StandbyIssue = (): JSX.Element => {
-  const [issueList, setIssueList] = useState<IssueTypes[]>([]);
+  const [issueList, setIssueList] = useState<IssueType[]>([]);
   const [pageNum, setPageNum] = useState(1);
   const [maxPage, setMaxPage] = useState<number>(0);
 
@@ -33,7 +33,7 @@ const StandbyIssue = (): JSX.Element => {
   //데이터 fetch
   const getIssue = async () => {
     try {
-      const res = await StandbyIssueAPI.getList(id, pageNum);
+      const res = await IssueAPI.getStanbyList(id, pageNum);
       setIssueList([...issueList, ...res.data.data]);
       setMaxPage(res.data.meta.pageCount);
     } catch (error) {

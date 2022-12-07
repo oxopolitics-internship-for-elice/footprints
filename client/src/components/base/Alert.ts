@@ -12,7 +12,7 @@ export const Alert = Swal.mixin({
   },
 });
 
-export const warningAlert = (e: any, title: string, callback: () => void) =>
+export const warningAlert = (title: string, callback: () => void) =>
   Swal.fire({
     title: title,
     icon: 'warning',

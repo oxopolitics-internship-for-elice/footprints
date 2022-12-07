@@ -1,20 +1,22 @@
 import { useEffect, useState } from 'react';
-import TopIssueAPI from '@/api/TopIssueAPI';
+import IssueAPI from '@/api/IssueAPI';
 import styled from '@emotion/styled';
 import Issue from './Issue';
-import { IssueTypes } from '@/types/IssueTypes';
+import { IssueType } from '@/types/IssueTypes';
 import theme from '@/styles/theme';
 import errorHandler from '@/api/ErrorHandler';
 import { useLocation } from 'react-router-dom';
 
 const Top3Issue = () => {
   const id = useLocation().pathname.split('/')[2];
-  const [topIssue, setTopIssue] = useState<IssueTypes[]>([]);
+  const [topIssue, setTopIssue] = useState<IssueType[]>([]);
   useEffect(() => {
     const getTopIssue = async () => {
       try {
-        const res = await TopIssueAPI.getList(id);
-        setTopIssue(res.data);
+        const res = await IssueAPI.getTopList(id);
+
+        const topIssue = res.data;
+        setTopIssue(topIssue);
       } catch (error) {
         errorHandler(error);
       }

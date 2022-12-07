@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
 import { IssueProps } from '@components/politician/StandbyIssue';
 import dateFormatter from '@/utils/DateFormatter';
-import RegiAPI from '@/api/RegiAPI';
+import IssueAPI from '@/api/IssueAPI';
 import theme from '@/styles/theme';
-import errorHandler from '@/api/ErrorHandler';
 import { Alert, errorAlert } from '../base/Alert';
 
 const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
@@ -12,68 +11,51 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
 
   const regiHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const targetElem = e.target as HTMLButtonElement;
-    try {
-      if (targetElem.innerText === '반대') {
-        const { data } = await RegiAPI.patch(_id, {
-          pro: false,
-          con: true,
-        });
-        if (data.hasVoted) {
-          errorAlert('이미 투표하셨습니다.');
-        } else {
-          Alert.fire({
-            icon: 'success',
-            title: '투표되었습니다.',
-          });
-          setIssueList(prev =>
-            prev.map(item => {
-              if (item._id === _id) {
-                item.regi.con++;
-              }
-              return item;
-            }),
-          );
-        }
+    if (targetElem.innerText === '반대') {
+      const { data } = await IssueAPI.patchRegi(_id, {
+        pro: false,
+        con: true,
+      });
+      if (data.hasVoted) {
+        errorAlert('이미 투표하셨습니다.');
       } else {
-        const { data } = await RegiAPI.patch(_id, {
-          pro: true,
-          con: false,
+        Alert.fire({
+          icon: 'success',
+          title: '투표되었습니다.',
         });
-        if (data.hasVoted) {
-          errorAlert('이미 투표하셨습니다.');
-        } else {
-          Alert.fire({
-            icon: 'success',
-            title: '투표되었습니다.',
-          });
-          setIssueList(prev =>
-            prev.map(item => {
-              if (item._id === _id) {
-                item.regi.pro++;
-              }
-              return item;
-            }),
-          );
-        }
+        setIssueList(prev =>
+          prev.map(item => {
+            if (item._id === _id) {
+              item.regi.con++;
+            }
+            return item;
+          }),
+        );
       }
-    } catch (e: any) {
-      console.log(e.response.status);
-      if (e.response.status == 401) {
-        errorHandler(' 로그인이 필요합니다.');
+    } else {
+      const { data } = await IssueAPI.patchRegi(_id, {
+        pro: true,
+        con: false,
+      });
+      if (data.hasVoted) {
+        errorAlert('이미 투표하셨습니다.');
       } else {
-        errorHandler(e);
+        Alert.fire({
+          icon: 'success',
+          title: '투표되었습니다.',
+        });
+        setIssueList(prev =>
+          prev.map(item => {
+            if (item._id === _id) {
+              item.regi.pro++;
+            }
+            return item;
+          }),
+        );
       }
     }
   };
 
-  const mouseDownHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const targetElem = event.target as HTMLButtonElement;
-  };
-
-  const mouseUpHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
   return (
     <IssueContainer>
       <SubContainer>
@@ -97,20 +79,10 @@ const Issue = ({ issue, setIssueList }: IssueProps): JSX.Element => {
         </Link>
       )}
       <RegiContainer>
-        <RegiProButton
-          data-id={_id}
-          onClick={regiHandler}
-          onMouseDown={mouseDownHandler}
-          onMouseUp={mouseUpHandler}
-        >
+        <RegiProButton data-id={_id} onClick={regiHandler}>
           찬성
         </RegiProButton>
-        <RegiConButton
-          data-id={_id}
-          onClick={regiHandler}
-          onMouseDown={mouseDownHandler}
-          onMouseUp={mouseUpHandler}
-        >
+        <RegiConButton data-id={_id} onClick={regiHandler}>
           반대
         </RegiConButton>
       </RegiContainer>

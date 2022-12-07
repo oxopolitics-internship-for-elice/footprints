@@ -17,10 +17,12 @@ const Home = () => {
       setCookie('access_token', access, {
         path: '/',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5),
+        httpOnly: true,
       });
       setCookie('refresh_token', refresh, {
         path: '/',
         expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5),
+        httpOnly: true,
       });
       setAuthTokenState(prev => (prev = { access_token: access }));
     }

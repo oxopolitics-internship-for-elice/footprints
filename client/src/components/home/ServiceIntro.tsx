@@ -3,18 +3,18 @@ import laptop from '@/assets/Laptop.png';
 import { HiArrowSmRight } from 'react-icons/hi';
 import { loginModalState, LoginModalState } from '@/store/LoginModalState';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLogined } from '@/store/AuthTokenState';
+import { authTokenState } from '@/store/AuthTokenState';
 import { useNavigate } from 'react-router-dom';
 
 const ServiceIntro = (): JSX.Element => {
   const navigate = useNavigate();
-  const isLoginState = useRecoilValue(isLogined);
+  const isLogin = useRecoilValue(authTokenState).access_token !== '';
   const setLoginModalState = useSetRecoilState(loginModalState);
   const handleIntoButtonClick = (
     event: React.MouseEvent<HTMLButtonElement>,
   ) => {
     event.preventDefault();
-    if (!isLoginState) {
+    if (!isLogin) {
       setLoginModalState((prev: LoginModalState) => {
         return {
           ...prev,

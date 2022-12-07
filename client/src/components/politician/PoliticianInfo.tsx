@@ -11,10 +11,12 @@ interface Params {
 type ImgSrc = { [politicanNames: string]: string };
 
 const PoliticianInfo = (): JSX.Element => {
-  const { politicianID } = useParams<keyof Params>() as Params;
-  const { name, img, party } = useRecoilValue(PoliticianDetailState).find(
-    (politician: any) => politician[politicianID!],
-  )[politicianID];
+  const { politicianID } = useParams<keyof Params>();
+  const selectedPolitician = useRecoilValue(PoliticianDetailState).find(
+    politician => politician.id === politicianID,
+  );
+  if (!selectedPolitician) return <></>;
+  const { name, party, img } = selectedPolitician;
   const imgSrc: ImgSrc = {
     Leejaemyung: Leejaemyung,
     Yoonseokyeol: Yoonseokyeol,

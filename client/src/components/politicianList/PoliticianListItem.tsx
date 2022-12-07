@@ -8,7 +8,6 @@ import LifeGraph from '@/components/politicianList/LifeGraph';
 import { useRecoilValue } from 'recoil';
 import PoliticiansState from '@/store/PoliticiansState';
 import { useNavigate } from 'react-router-dom';
-import { PoliticiansTypes } from '@/types/PoliticiansTypes';
 import { HiChevronDoubleRight } from 'react-icons/hi';
 import theme from '@/styles/theme';
 
@@ -25,10 +24,9 @@ const PoliticianListItem = ({
 }: PoliticianListItemProps) => {
   const navigate = useNavigate();
   const fetchedPoliticans = useRecoilValue(PoliticiansState);
-  const politican = fetchedPoliticans.find(
-    (politician: PoliticiansTypes) => politician._id === politicansID,
+  const selectedPolitician = fetchedPoliticans.find(
+    politician => politician._id === politicansID,
   );
-
   const imgSrc: ImgSrc = {
     이재명: leejaemyung,
     윤석열: yoonseokyeol,
@@ -58,7 +56,11 @@ const PoliticianListItem = ({
               </NavigateButton>
             </Row>
             <AnimationOnScroll animateIn="animate__fadeIn" delay={0}>
-              <LifeGraph issues={politican.issues} />
+              {selectedPolitician ? (
+                <LifeGraph issues={selectedPolitician.issues} />
+              ) : (
+                <></>
+              )}
               <GraphTitle>{politicanName}의 정치 인생</GraphTitle>
             </AnimationOnScroll>
           </Politician>
