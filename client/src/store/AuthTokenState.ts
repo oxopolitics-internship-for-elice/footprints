@@ -10,11 +10,3 @@ export const authTokenState = atom<AuthTokenState>({
     access_token: '',
   },
 });
-
-export const isLogined = selector({
-  key: 'isLogined',
-  get: ({ get }) => {
-    const authToken = get(authTokenState);
-    return authToken.access_token !== '';
-  },
-});

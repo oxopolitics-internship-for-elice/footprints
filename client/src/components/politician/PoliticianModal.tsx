@@ -7,7 +7,8 @@ import BasicX from '@/assets/selection/BasicX.svg';
 import { IoCloseCircleOutline } from 'react-icons/io5';
 import { GraphIssueDataType } from '@/types/GraphTypes';
 import theme from '@/styles/theme';
-import { getCookie } from '@/utils/Cookie';
+import { useRecoilValue } from 'recoil';
+import { authTokenState } from '@/store/AuthTokenState';
 
 type Element = {
   $context: Object;
@@ -21,15 +22,16 @@ type Object = {
 interface ModalProps {
   setOpen: (boolean: boolean) => void;
   selectedIssueIndex: number;
-  resData: GraphIssueDataType;
+  issueData: GraphIssueDataType;
 }
-const Modal = ({ setOpen, selectedIssueIndex, resData }: ModalProps) => {
+
+const Modal = ({ setOpen, selectedIssueIndex, issueData }: ModalProps) => {
   const [poll, setPoll] = useState<{
     pro: boolean;
     neu: boolean;
     con: boolean;
   }>({ pro: false, neu: false, con: false });
-  const accessToken = getCookie('access_token');
+  const isLogined = useRecoilValue(authTokenState).access_token !== '';
 
   const ref = useRef<null | HTMLDivElement>(null);
   const Imgsrc = [BasicCircle, BasicTriangle, BasicX];
@@ -48,7 +50,7 @@ const Modal = ({ setOpen, selectedIssueIndex, resData }: ModalProps) => {
     }
   }
   async function ClickHandler(index: number) {
-    const target = resData.id[selectedIssueIndex];
+    const target = issueData.id[selectedIssueIndex];
     const newPoll = { pro: false, neu: false, con: false };
     if (index === 0) {
       newPoll.pro = true;
@@ -76,7 +78,7 @@ const Modal = ({ setOpen, selectedIssueIndex, resData }: ModalProps) => {
 
   useEffect(() => {
     const fetchPollInfo = async () => {
-      const target = resData.id[selectedIssueIndex];
+      const target = issueData.id[selectedIssueIndex];
       const { data } = await GraphAPI.getPollInfo(target);
       const pollResult = data.pollResult;
       if (pollResult) {
@@ -85,7 +87,7 @@ const Modal = ({ setOpen, selectedIssueIndex, resData }: ModalProps) => {
         });
       }
     };
-    if (accessToken) {
+    if (isLogined) {
       fetchPollInfo();
     }
     console.log(selectedIssueIndex);
@@ -97,7 +99,7 @@ const Modal = ({ setOpen, selectedIssueIndex, resData }: ModalProps) => {
         <Container ref={ref}>
           <Header ref={ref}>
             <div />
-            <HeaderText>{resData.title[selectedIssueIndex]}</HeaderText>
+            <HeaderText>{issueData.title[selectedIssueIndex]}</HeaderText>
             <CloseButton
               onClick={() => {
                 setOpen(false);
@@ -108,10 +110,10 @@ const Modal = ({ setOpen, selectedIssueIndex, resData }: ModalProps) => {
             </CloseButton>
           </Header>
           <Content>
-            <ContentText>{resData.content[selectedIssueIndex]}</ContentText>
-            {/* {resData?.link && (
-              <Link href={resData.link[selectedIssueIndex]} target="_blank">
-                {resData.link[selectedIssueIndex]}
+            <ContentText>{issueData.content[selectedIssueIndex]}</ContentText>
+            {/* {issueData?.link && (
+              <Link href={issueData.link[selectedIssueIndex]} target="_blank">
+                {issueData.link[selectedIssueIndex]}
               </Link>
             )} */}
           </Content>
