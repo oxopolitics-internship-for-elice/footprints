@@ -2,9 +2,6 @@
 
 > A community that graphs politician evaluations and issues
 
-## 배포 사이트
-[정치 발자국](http://politician-footprints.site/)
-
 ## 기술 스택
 
 <img src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=React&logoColor=white" /><img src="https://img.shields.io/badge/Typescript-3178C6?style=flat-square&logo=Typescript&logoColor=white" /><img src="https://img.shields.io/badge/styled-components-DB7093?style=flat-square&logo=styled-components&logoColor=white" /><img src="https://img.shields.io/badge/Vite-646CFF?style=flat-square&logo=Vite&logoColor=white" />
